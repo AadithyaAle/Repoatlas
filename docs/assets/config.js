@@ -8,5 +8,5 @@
  * Empty strings are safe: "Open the app" buttons show a "not configured yet" hint and the API
  * reference shows a placeholder base URL.
  */
-window.REPOATLAS_APP_URL = "";
-window.REPOATLAS_API_URL = "";
+window.REPOATLAS_APP_URL = "https://repoatlas-nine.vercel.app";
+window.REPOATLAS_API_URL = "https://repoatlas-oszf.onrender.com";

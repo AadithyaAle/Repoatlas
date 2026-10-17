@@ -12,6 +12,7 @@
 [![Docs](https://github.com/AadithyaAle/Repoatlas/actions/workflows/docs.yml/badge.svg)](https://aadithyaale.github.io/Repoatlas/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
+[**Live app**](https://repoatlas-nine.vercel.app) ·
 [**Documentation**](https://aadithyaale.github.io/Repoatlas/) ·
 [Getting started](https://aadithyaale.github.io/Repoatlas/getting-started.html) ·
 [Architecture](https://aadithyaale.github.io/Repoatlas/architecture.html) ·
@@ -21,6 +22,13 @@
 </div>
 
 ---
+
+<p align="center">
+  <img src="docs/assets/screenshots/blast-radius.png" alt="RepoAtlas graph workspace showing the blast radius of src/vanilla.ts in pmndrs/zustand: 26 impacted files, risk score 43.4 (critical)" width="900">
+</p>
+
+> The API runs on Render's free plan, so the **first request after a period of inactivity can take
+> about 50 seconds** while the instance wakes up.
 
 ## Problem statement
 
@@ -191,8 +199,8 @@ Never commit real values.
 
 | Component | Platform | Link |
 |---|---|---|
-| Web app | Vercel | _added after deployment_ |
-| API | Render (Docker, [`render.yaml`](render.yaml)) | _added after deployment_ |
+| Web app | Vercel | <https://repoatlas-nine.vercel.app> |
+| API | Render (Docker, [`render.yaml`](render.yaml)) | <https://repoatlas-oszf.onrender.com> ([health](https://repoatlas-oszf.onrender.com/api/v1/health), [interactive docs](https://repoatlas-oszf.onrender.com/docs)) |
 | Database & auth | Supabase | n/a |
 | Documentation | GitHub Pages ([`docs.yml`](.github/workflows/docs.yml)) | <https://aadithyaale.github.io/Repoatlas/> |
 
