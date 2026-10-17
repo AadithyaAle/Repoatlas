@@ -1,6 +1,7 @@
 import uuid
+from typing import Annotated
 
-from fastapi import APIRouter, Query, status
+from fastapi import APIRouter, Depends, Query, status
 
 from app.api.deps import AuthUser, DbSession, OptionalUser
 from app.schemas.atlas import (
@@ -19,9 +20,13 @@ from app.schemas.atlas import (
     TourSummaryOut,
     TourUpdate,
 )
-from app.schemas.common import ApiResponse
+from app.schemas.common import ApiResponse, ok
+from app.services import drift_service, progress_service, tour_service
+from app.services.github_service import GitHubClient, get_github_client
 
 router = APIRouter(prefix="/tours", tags=["tours"])
+
+GitHub = Annotated[GitHubClient, Depends(get_github_client)]
 
 
 # ----- Tours -----
@@ -29,7 +34,7 @@ router = APIRouter(prefix="/tours", tags=["tours"])
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=ApiResponse[TourOut])
 async def create_tour(body: TourCreate, db: DbSession, user: AuthUser) -> ApiResponse[TourOut]:
-    raise NotImplementedError
+    return ok(await tour_service.create_tour(db, body, user))
 
 
 @router.get(
@@ -43,24 +48,25 @@ async def list_tours(
     repository_id: uuid.UUID | None = Query(default=None),
     mine: bool = Query(default=False),
 ) -> ApiResponse[list[TourSummaryOut]]:
-    raise NotImplementedError
+    return ok(await tour_service.list_tours(db, user, repository_id=repository_id, mine=mine))
 
 
 @router.get("/{tour_id}", response_model=ApiResponse[TourOut])
 async def get_tour(tour_id: uuid.UUID, db: DbSession, user: OptionalUser) -> ApiResponse[TourOut]:
-    raise NotImplementedError
+    return ok(await tour_service.get_tour(db, tour_id, user))
 
 
 @router.patch("/{tour_id}", response_model=ApiResponse[TourOut])
 async def update_tour(
     tour_id: uuid.UUID, body: TourUpdate, db: DbSession, user: AuthUser
 ) -> ApiResponse[TourOut]:
-    raise NotImplementedError
+    return ok(await tour_service.update_tour(db, tour_id, body, user))
 
 
 @router.delete("/{tour_id}", response_model=ApiResponse[DeletedOut])
 async def delete_tour(tour_id: uuid.UUID, db: DbSession, user: AuthUser) -> ApiResponse[DeletedOut]:
-    raise NotImplementedError
+    await tour_service.delete_tour(db, tour_id, user)
+    return ok(DeletedOut(id=tour_id))
 
 
 # ----- Steps (owner only) -----
@@ -75,28 +81,29 @@ async def delete_tour(tour_id: uuid.UUID, db: DbSession, user: AuthUser) -> ApiR
 async def create_step(
     tour_id: uuid.UUID, body: StepCreate, db: DbSession, user: AuthUser
 ) -> ApiResponse[StepOut]:
-    raise NotImplementedError
+    return ok(await tour_service.create_step(db, tour_id, body, user))
 
 
 @router.patch("/{tour_id}/steps/{step_id}", response_model=ApiResponse[StepOut])
 async def update_step(
     tour_id: uuid.UUID, step_id: uuid.UUID, body: StepUpdate, db: DbSession, user: AuthUser
 ) -> ApiResponse[StepOut]:
-    raise NotImplementedError
+    return ok(await tour_service.update_step(db, tour_id, step_id, body, user))
 
 
 @router.delete("/{tour_id}/steps/{step_id}", response_model=ApiResponse[DeletedOut])
 async def delete_step(
     tour_id: uuid.UUID, step_id: uuid.UUID, db: DbSession, user: AuthUser
 ) -> ApiResponse[DeletedOut]:
-    raise NotImplementedError
+    await tour_service.delete_step(db, tour_id, step_id, user)
+    return ok(DeletedOut(id=step_id))
 
 
 @router.put("/{tour_id}/steps/order", response_model=ApiResponse[list[StepOut]])
 async def reorder_steps(
     tour_id: uuid.UUID, body: StepReorder, db: DbSession, user: AuthUser
 ) -> ApiResponse[list[StepOut]]:
-    raise NotImplementedError
+    return ok(await tour_service.reorder_steps(db, tour_id, body, user))
 
 
 # ----- Drift engine (owner only) -----
@@ -108,9 +115,9 @@ async def reorder_steps(
     summary="Sync & verify tour health against the latest commit",
 )
 async def sync_tour(
-    tour_id: uuid.UUID, db: DbSession, user: AuthUser
+    tour_id: uuid.UUID, db: DbSession, user: AuthUser, gh: GitHub
 ) -> ApiResponse[SyncReportOut]:
-    raise NotImplementedError
+    return ok(await drift_service.sync_tour(db, tour_id, user, gh))
 
 
 @router.post(
@@ -125,7 +132,7 @@ async def resolve_step(
     db: DbSession,
     user: AuthUser,
 ) -> ApiResponse[StepOut]:
-    raise NotImplementedError
+    return ok(await drift_service.resolve_step(db, tour_id, step_id, body, user))
 
 
 # ----- Player / progress -----
@@ -135,7 +142,7 @@ async def resolve_step(
 async def get_progress(
     tour_id: uuid.UUID, db: DbSession, user: AuthUser
 ) -> ApiResponse[TourProgressOut]:
-    raise NotImplementedError
+    return ok(await progress_service.get_progress(db, tour_id, user))
 
 
 @router.post(
@@ -146,4 +153,4 @@ async def get_progress(
 async def answer_step(
     tour_id: uuid.UUID, step_id: uuid.UUID, body: AnswerRequest, db: DbSession, user: AuthUser
 ) -> ApiResponse[AnswerOut]:
-    raise NotImplementedError
+    return ok(await progress_service.answer_step(db, tour_id, step_id, body, user))
