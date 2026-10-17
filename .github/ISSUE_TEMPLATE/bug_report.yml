@@ -1,0 +1,46 @@
+name: Bug report
+description: Something in RepoAtlas is not working as expected
+labels: ["bug", "triage"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Include the error code shown in the UI (e.g. GITHUB_RATE_LIMITED) if any.
+    validations:
+      required: true
+  - type: input
+    id: repo
+    attributes:
+      label: Repository analyzed
+      placeholder: https://github.com/owner/repo
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Ingestion / analysis
+        - Graph / blast radius
+        - Tours (builder / player)
+        - Drift sync
+        - Dashboard
+        - Auth
+        - Docs
+    validations:
+      required: true
