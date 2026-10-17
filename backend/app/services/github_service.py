@@ -411,4 +411,5 @@ class GitHubClient:
 def get_github_client() -> GitHubClient:
     """Process-wide singleton built from Settings (FastAPI dependency / worker use)."""
     settings = get_settings()
-    return GitHubClient(settings.github_token, settings.github_api_url)
+    token = settings.github_token.get_secret_value() if settings.github_token else None
+    return GitHubClient(token or None, settings.github_api_url)

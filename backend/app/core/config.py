@@ -1,32 +1,38 @@
+import os
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import Field, PostgresDsn, field_validator
+from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     """Typed, validated runtime configuration. Loaded from env vars / `.env`."""
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    # Tests must never pick up a developer's local .env (real keys, real database).
+    model_config = SettingsConfigDict(
+        env_file=None if os.getenv("ENVIRONMENT") == "test" else ".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
     environment: Literal["development", "test", "production"] = "development"
     log_level: str = "INFO"
 
-    database_url: PostgresDsn | str = Field(
-        default="postgresql+asyncpg://atlas:atlas@localhost:5433/repoatlas",
+    database_url: SecretStr = Field(
+        default=SecretStr("postgresql+asyncpg://atlas:atlas@localhost:5433/repoatlas"),
         description="SQLAlchemy async URL. Supabase: use the pooler connection string.",
     )
 
     cors_origins: list[str] = ["http://localhost:3000"]
 
     # GitHub: optional server token raises the rate limit from 60 to 5000 req/h.
-    github_token: str | None = None
+    github_token: SecretStr | None = None
     github_api_url: str = "https://api.github.com"
 
     # Supabase auth: JWTs are verified via JWKS (asymmetric keys) or the legacy HS256 secret.
     supabase_url: str | None = None
-    supabase_jwt_secret: str | None = None
+    supabase_jwt_secret: SecretStr | None = None
     supabase_jwt_audience: str = "authenticated"
 
     # Ingestion limits
@@ -42,7 +48,7 @@ class Settings(BaseSettings):
     worker_stale_lock_seconds: int = 600
 
     # Optional LLM features
-    gemini_api_key: str | None = None
+    gemini_api_key: SecretStr | None = None
     gemini_model: str = "gemini-2.5-flash"
 
     @field_validator("database_url", mode="before")
@@ -54,7 +60,7 @@ class Settings(BaseSettings):
 
     @property
     def ai_enabled(self) -> bool:
-        return bool(self.gemini_api_key)
+        return bool(self.gemini_api_key and self.gemini_api_key.get_secret_value())
 
 
 @lru_cache

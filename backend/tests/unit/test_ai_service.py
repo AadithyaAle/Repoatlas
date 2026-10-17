@@ -2,6 +2,7 @@ from dataclasses import replace
 from typing import Any
 
 import pytest
+from pydantic import SecretStr
 
 from app.core.config import get_settings
 from app.core.errors import AppError, ErrorCode
@@ -98,7 +99,7 @@ def test_build_prompt_includes_graph_facts_and_numbered_snippet() -> None:
 def test_build_prompt_is_pure_and_never_contains_the_api_key(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(get_settings(), "gemini_api_key", SECRET)
+    monkeypatch.setattr(get_settings(), "gemini_api_key", SecretStr(SECRET))
     first = build_prompt(CTX)
     assert first == build_prompt(CTX)
     assert all(SECRET not in part for part in first)
@@ -116,10 +117,13 @@ def test_request_body_shape_and_no_key() -> None:
     client = ai_service.GeminiClient(SECRET, "gemini-2.5-flash")
     body = client.request_body("sys", "usr")
     cfg = body["generationConfig"]
-    assert cfg["temperature"] == 0.3 and cfg["maxOutputTokens"] == 1024
+    assert cfg["temperature"] == 0.3 and cfg["maxOutputTokens"] == 4096
     assert cfg["responseMimeType"] == "application/json"
     assert cfg["responseSchema"]["required"] == ["title", "body_markdown", "checkpoint"]
     assert body["systemInstruction"]["parts"][0]["text"] == "sys"
+    assert cfg["thinkingConfig"] == {"thinkingBudget": 0}
+    gemini3 = ai_service.GeminiClient(SECRET, "gemini-3.8-flash").request_body("s", "u")
+    assert gemini3["generationConfig"]["thinkingConfig"] == {"thinkingLevel": "low"}
     assert body["contents"][0]["parts"][0]["text"] == "usr"
     assert SECRET not in repr(body)
 

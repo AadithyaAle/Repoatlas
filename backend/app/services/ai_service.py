@@ -210,14 +210,17 @@ class GeminiClient:
     def request_body(self, system: str, user: str) -> dict[str, Any]:
         config: dict[str, Any] = {
             "temperature": 0.3,
-            "maxOutputTokens": 1024,
+            "maxOutputTokens": 4096,
             "responseMimeType": "application/json",
             "responseSchema": RESPONSE_SCHEMA,
         }
+        # Thinking tokens count against maxOutputTokens and would truncate the JSON. The task is
+        # grounded summarisation, so keep reasoning minimal: 2.x uses a token budget,
+        # Gemini 3+ uses thinking levels ("low" is supported by every 3.x/4 model).
         if self._model.startswith("gemini-2.5-flash"):
-            # 2.5 Flash "thinks" by default and thinking tokens count against maxOutputTokens,
-            # which would truncate the JSON. Budget 0 disables thinking for Flash models.
             config["thinkingConfig"] = {"thinkingBudget": 0}
+        elif not self._model.startswith(("gemini-1", "gemini-2")):
+            config["thinkingConfig"] = {"thinkingLevel": "low"}
         return {
             "systemInstruction": {"parts": [{"text": system}]},
             "contents": [{"role": "user", "parts": [{"text": user}]}],
@@ -273,10 +276,9 @@ def _ai_disabled() -> AppError:
 def get_gemini_client() -> GeminiClient:
     """Process-wide singleton built from Settings; AI_DISABLED without GEMINI_API_KEY."""
     settings = get_settings()
-    key = settings.gemini_api_key
-    if not settings.ai_enabled or not key:
+    if not settings.ai_enabled or settings.gemini_api_key is None:
         raise _ai_disabled()
-    return GeminiClient(key, settings.gemini_model)
+    return GeminiClient(settings.gemini_api_key.get_secret_value(), settings.gemini_model)
 
 
 def get_ai_client() -> AIClient:

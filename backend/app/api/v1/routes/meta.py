@@ -42,7 +42,9 @@ async def meta() -> ApiResponse[MetaOut]:
             version=VERSION,
             ai_enabled=settings.ai_enabled,
             max_files=settings.max_files,
-            github_authenticated=bool(settings.github_token),
+            github_authenticated=bool(
+                settings.github_token and settings.github_token.get_secret_value()
+            ),
         )
     )
 

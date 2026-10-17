@@ -61,7 +61,7 @@ def _extract_token(request: Request) -> str | None:
 async def _signing_key(token: str, alg: str) -> Any:
     settings = get_settings()
     if alg == "HS256" and settings.supabase_jwt_secret:
-        return settings.supabase_jwt_secret
+        return settings.supabase_jwt_secret.get_secret_value()
     if alg in _ASYMMETRIC_ALGS and settings.supabase_url:
         client = get_jwks_client(settings.supabase_url)
         try:

@@ -17,7 +17,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name, disable_existing_loggers=False)
 
 target_metadata = Base.metadata
-DATABASE_URL = str(get_settings().database_url)
+DATABASE_URL = get_settings().database_url.get_secret_value()
 
 
 def run_migrations_offline() -> None:
