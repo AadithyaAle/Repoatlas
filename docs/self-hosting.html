@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Self-hosting · RepoAtlas Docs</title>
+  <meta name="description" content="Run RepoAtlas locally and deploy it on free tiers: environment variable reference, Supabase (Postgres + GitHub OAuth), Render (Docker API with embedded worker), Vercel (Next.js), GitHub Pages docs, CI overview and troubleshooting.">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://aadithyaale.github.io/Repoatlas/self-hosting.html">
+  <link rel="stylesheet" href="assets/css/docs.css">
+  <script>(function(){try{var t=localStorage.getItem("repoatlas-docs-theme");if(!t){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script src="assets/config.js"></script>
+  <script src="assets/js/docs.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <a class="brand" href="index.html"><img src="assets/img/logo.svg" alt="" width="30" height="30"><span>RepoAtlas</span><span class="brand-sub">Docs</span></a>
+  <nav class="top-nav" aria-label="Primary">
+    <a href="getting-started.html">Guide</a>
+    <a href="architecture.html">Architecture</a>
+    <a href="workflows.html">Workflows</a>
+    <a href="algorithms.html">Algorithms</a>
+    <a href="api.html">API</a>
+    <a href="self-hosting.html" aria-current="page">Self-hosting</a>
+    <a href="faq.html">FAQ</a>
+  </nav>
+  <div class="header-actions">
+    <a class="icon-btn" href="#" data-app-link data-app-optional hidden>Open app</a>
+    <a class="icon-btn" href="https://github.com/AadithyaAle/Repoatlas" aria-label="RepoAtlas on GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+    <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle colour theme" aria-pressed="false">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+</header>
+<div class="nav-overlay" aria-hidden="true"></div>
+<div class="layout">
+  <aside class="sidebar" id="sidebar" aria-label="Documentation navigation">
+    <button class="icon-btn sidebar-close" type="button" data-menu-close aria-label="Close navigation">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <nav aria-label="Documentation pages">
+      <h2>Introduction</h2>
+      <ul>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="getting-started.html">Getting started</a></li>
+      </ul>
+      <h2>Concepts</h2>
+      <ul>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="workflows.html">Workflows</a></li>
+        <li><a href="algorithms.html">Algorithms</a></li>
+      </ul>
+      <h2>Reference</h2>
+      <ul>
+        <li><a href="api.html">API reference</a></li>
+        <li><a href="self-hosting.html" aria-current="page">Self-hosting</a></li>
+        <li><a href="faq.html">FAQ &amp; limitations</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-ext">
+      <ul>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas">GitHub repository</a></li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/CONTRIBUTING.md">Contributing</a></li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">Security policy</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main" class="content" tabindex="-1">
+    <article class="prose">
+      <span class="eyebrow">Reference</span>
+      <h1>Self-hosting</h1>
+      <p class="lead">RepoAtlas runs on a laptop with Docker, and in production on three free tiers: <strong>Supabase</strong> (Postgres + Auth), <strong>Render</strong> (the API, with its worker embedded) and <strong>Vercel</strong> (the frontend). These docs deploy to <strong>GitHub Pages</strong>.</p>
+
+      <h2 id="local">Local development</h2>
+      <p>Requirements: Docker, Python 3.12+ with <a href="https://docs.astral.sh/uv/">uv</a>, and Node.js with npm (CI uses Node 24).</p>
+      <ol class="steps">
+        <li>
+          <p><strong>Start Postgres 16</strong> from the repository root. It listens on <strong>localhost:5433</strong> (user/password/database <code>atlas</code>/<code>atlas</code>/<code>repoatlas</code>), so it never clashes with a local Postgres on 5432.</p>
+<pre><code class="language-bash">docker compose up -d db</code></pre>
+        </li>
+        <li>
+          <p><strong>Run the API</strong> on port 8000. The defaults in <code>.env.example</code> already point at the Docker database; the embedded worker starts with the server.</p>
+<pre><code class="language-bash">cd backend
+cp .env.example .env
+uv sync
+uv run alembic upgrade head
+uv run uvicorn app.main:app --reload --port 8000</code></pre>
+          <p>Interactive API docs: <code>http://localhost:8000/docs</code>.</p>
+        </li>
+        <li>
+          <p><strong>Run the frontend</strong> on port 3000 in a second terminal. Leave the Supabase variables blank to run anonymously — analysis, graphs, blast radius and public tours work; sign-in shows a “not configured” state.</p>
+<pre><code class="language-bash">cd frontend
+cp .env.example .env.local
+npm ci
+npm run dev</code></pre>
+        </li>
+      </ol>
+      <div class="callout tip"><span class="callout-title">Tests and quality gates</span>
+        <p>CI runs exactly these. Backend integration tests use the separate database <code>repoatlas_test</code> on the same server — create it once, e.g. with <code>docker compose exec db createdb -U atlas repoatlas_test</code>.</p>
+<pre><code class="language-bash"># backend/
+uv run ruff format --check . &amp;&amp; uv run ruff check .
+uv run mypy app
+uv run pytest
+# frontend/
+npm run lint &amp;&amp; npm run typecheck &amp;&amp; npm run test &amp;&amp; npm run build
+npm run gen:api   # after changing backend schemas: regenerate openapi.json + TS types</code></pre>
+      </div>
+      <p>To run the worker as its own process, set <code>WORKER_MODE=standalone</code> on the API and start <code>uv run python -m app.workers.analysis_worker</code>. The container image builds with <code>docker build -t repoatlas-api backend</code> and runs migrations before starting uvicorn.</p>
+
+      <h2 id="env">Environment variables</h2>
+      <h3 id="env-backend">Backend</h3>
+      <p>Validated by <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/core/config.py">app/core/config.py</a> from the environment or <code>backend/.env</code> (template: <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/.env.example">backend/.env.example</a>). Names are case-insensitive.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Variable</th><th>Default</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>ENVIRONMENT</code></td><td><code>development</code></td><td><code>development</code> | <code>test</code> | <code>production</code>. Production switches logs to single-line JSON and disables the any-localhost CORS rule. The Docker image sets <code>production</code>.</td></tr>
+          <tr><td><code>LOG_LEVEL</code></td><td><code>INFO</code></td><td>Root log level.</td></tr>
+          <tr><td><code>DATABASE_URL</code></td><td class="wrap"><code>postgresql+asyncpg://atlas:atlas@localhost:5433/repoatlas</code></td><td>Async SQLAlchemy URL. <code>postgres://</code> / <code>postgresql://</code> are rewritten to <code>postgresql+asyncpg://</code>. On Supabase use the transaction pooler (port 6543).</td></tr>
+          <tr><td><code>CORS_ORIGINS</code></td><td><code>["http://localhost:3000"]</code></td><td>JSON list of allowed browser origins (exact scheme + host, no trailing slash).</td></tr>
+          <tr><td><code>GITHUB_TOKEN</code></td><td>—</td><td>Optional but recommended: any token with public read access raises the GitHub limit from 60 to 5,000 requests/hour.</td></tr>
+          <tr><td><code>GITHUB_API_URL</code></td><td><code>https://api.github.com</code></td><td>GitHub REST base URL.</td></tr>
+          <tr><td><code>SUPABASE_URL</code></td><td>—</td><td><code>https://&lt;ref&gt;.supabase.co</code>; used to fetch the JWKS that verifies RS256/ES256 access tokens.</td></tr>
+          <tr><td><code>SUPABASE_JWT_SECRET</code></td><td>—</td><td>Only for projects still on the legacy HS256 shared secret.</td></tr>
+          <tr><td><code>SUPABASE_JWT_AUDIENCE</code></td><td><code>authenticated</code></td><td>Expected <code>aud</code> claim.</td></tr>
+          <tr><td><code>MAX_FILES</code></td><td><code>1500</code></td><td>Source files analyzed per repository (prioritised, see <a href="workflows.html#ingestion-truncation">truncation</a>).</td></tr>
+          <tr><td><code>MAX_FILE_BYTES</code></td><td><code>300000</code></td><td>Larger files are skipped.</td></tr>
+          <tr><td><code>MAX_TARBALL_BYTES</code></td><td><code>80000000</code></td><td>Larger archives fail with <code>REPO_TOO_LARGE</code>.</td></tr>
+          <tr><td><code>WORKER_MODE</code></td><td><code>embedded</code></td><td><code>embedded</code> (job loop inside the API), <code>standalone</code> (separate process) or <code>off</code>.</td></tr>
+          <tr><td><code>WORKER_POLL_SECONDS</code></td><td><code>2.0</code></td><td>Idle poll interval of the worker.</td></tr>
+          <tr><td><code>WORKER_STALE_LOCK_SECONDS</code></td><td><code>600</code></td><td>After this long without a heartbeat a running job is reclaimed.</td></tr>
+          <tr><td><code>GEMINI_API_KEY</code></td><td>—</td><td>Enables AI step drafts; without it the endpoint returns <code>AI_DISABLED</code>.</td></tr>
+          <tr><td><code>GEMINI_MODEL</code></td><td><code>gemini-2.5-flash</code></td><td>Model used for drafts.</td></tr>
+          <tr><td><code>PORT</code></td><td><code>8000</code></td><td>Container only: port uvicorn binds (injected by Render).</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 id="env-frontend">Frontend</h3>
+      <p>Read in <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/frontend/src/lib/env.ts">src/lib/env.ts</a> (template: <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/frontend/.env.example">frontend/.env.example</a>). <code>NEXT_PUBLIC_*</code> values are inlined at <strong>build</strong> time — redeploy after changing them. Invalid or blank values fall back to the defaults, so the app always boots.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Variable</th><th>Default</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>NEXT_PUBLIC_API_URL</code></td><td><code>http://localhost:8000</code></td><td>API base URL without trailing slash (paths already include <code>/api/v1</code>).</td></tr>
+          <tr><td><code>NEXT_PUBLIC_SUPABASE_URL</code></td><td>—</td><td>Supabase project URL. Blank = auth disabled.</td></tr>
+          <tr><td><code>NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</code></td><td>—</td><td>Publishable key (<code>sb_publishable_…</code>).</td></tr>
+          <tr><td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td><td>—</td><td>Legacy anon key, used only if the publishable key is not set.</td></tr>
+          <tr><td><code>NEXT_PUBLIC_SITE_URL</code></td><td><code>http://localhost:3000</code></td><td>Public origin of the app (metadata, OAuth redirects outside the browser).</td></tr>
+          <tr><td><code>NEXT_PUBLIC_DOCS_URL</code></td><td><code>https://aadithyaale.github.io/Repoatlas/</code></td><td>Target of the app's “Docs” link.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 id="env-docs">Docs site</h3>
+      <p>Set <code>window.REPOATLAS_APP_URL</code> and <code>window.REPOATLAS_API_URL</code> in <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/docs/assets/config.js">docs/assets/config.js</a> once the services exist; they power the “Open the app” buttons and the base URL in the API reference. Empty values are safe.</p>
+
+      <h2 id="deploy">Deployment</h2>
+      <p>Order matters only for URLs: create Supabase first, then Render and Vercel, then go back and fill in each service's public URL where the others need it.</p>
+      <figure>
+        <div class="diagram">
+          <svg viewBox="0 0 860 170" role="img" aria-labelledby="dep-t dep-d">
+            <title id="dep-t">Deployment order and the values exchanged</title>
+            <desc id="dep-d">Supabase provides DATABASE_URL, SUPABASE_URL and the publishable key. Render runs the API and provides NEXT_PUBLIC_API_URL to Vercel. Vercel hosts the frontend, whose URL goes back into Render's CORS_ORIGINS and Supabase's Site URL and redirect URLs. GitHub Pages hosts these docs.</desc>
+            <defs><marker id="dep-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head"/></marker></defs>
+            <rect x="10" y="40" width="180" height="70" rx="10" class="box"/>
+            <text x="100" y="68" text-anchor="middle" class="t">1 · Supabase</text>
+            <text x="100" y="88" text-anchor="middle" class="t-xs">Postgres + Auth (GitHub OAuth)</text>
+            <rect x="300" y="40" width="200" height="70" rx="10" class="box"/>
+            <text x="400" y="68" text-anchor="middle" class="t">2 · Render</text>
+            <text x="400" y="88" text-anchor="middle" class="t-xs">Docker API + embedded worker</text>
+            <rect x="610" y="40" width="200" height="70" rx="10" class="box"/>
+            <text x="710" y="68" text-anchor="middle" class="t">3 · Vercel</text>
+            <text x="710" y="88" text-anchor="middle" class="t-xs">Next.js, root directory frontend</text>
+            <path class="edge" d="M190 75 H296" marker-end="url(#dep-arrow)"/>
+            <text x="243" y="66" text-anchor="middle" class="t-xs">DATABASE_URL</text>
+            <path class="edge" d="M500 75 H606" marker-end="url(#dep-arrow)"/>
+            <text x="553" y="66" text-anchor="middle" class="t-xs">API URL</text>
+            <path class="edge" d="M100 112 C100 150 700 160 700 112" marker-start="url(#dep-arrow)"/>
+            <text x="400" y="160" text-anchor="middle" class="t-xs">frontend URL → Supabase redirect URLs · Render CORS_ORIGINS</text>
+            <path class="edge-dash" d="M120 38 C140 6 680 6 700 38" marker-end="url(#dep-arrow)"/>
+            <text x="400" y="32" text-anchor="middle" class="t-xs">NEXT_PUBLIC_SUPABASE_URL + publishable key</text>
+          </svg>
+        </div>
+      </figure>
+
+      <h3 id="supabase">1 · Supabase</h3>
+      <ol class="steps">
+        <li><strong>Create a project.</strong> Note its reference (<code>https://&lt;ref&gt;.supabase.co</code>).</li>
+        <li><strong>Database URL.</strong> Open <em>Connect</em> and copy the <strong>Transaction pooler</strong> connection string (port <strong>6543</strong>), with your database password filled in (URL-encode special characters). This is the API's <code>DATABASE_URL</code>. The API disables prepared statements so it works through the pooler, and the container applies migrations itself at start-up.</li>
+        <li><strong>GitHub OAuth app.</strong> On GitHub: <em>Settings → Developer settings → OAuth Apps → New OAuth App</em>. Homepage URL: your frontend URL. <strong>Authorization callback URL:</strong> <code>https://&lt;ref&gt;.supabase.co/auth/v1/callback</code>. Copy the client ID and generate a client secret.</li>
+        <li><strong>Enable the provider.</strong> Supabase → <em>Authentication → Sign In / Providers → GitHub</em>: paste the client ID and secret and enable it.</li>
+        <li><strong>URL configuration.</strong> <em>Authentication → URL Configuration</em>: set <strong>Site URL</strong> to <code>https://&lt;frontend&gt;</code> and add <code>https://&lt;frontend&gt;/auth/callback</code> to the <strong>Redirect URLs</strong> (add <code>http://localhost:3000/auth/callback</code> too for local sign-in).</li>
+        <li><strong>Keys.</strong> From the API keys settings copy the project URL and the <strong>publishable key</strong> (<code>sb_publishable_…</code>) for the frontend. New projects sign tokens with asymmetric keys, verified through JWKS from <code>SUPABASE_URL</code> — no secret needed. Only if the project still uses the legacy HS256 secret, also set <code>SUPABASE_JWT_SECRET</code> on the API.</li>
+      </ol>
+
+      <h3 id="render">2 · Render (API)</h3>
+      <ol class="steps">
+        <li><strong>New → Blueprint</strong>, connect the repository. Render reads <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/render.yaml">render.yaml</a> at the repository root: one Docker web service <code>repoatlas-api</code> (free plan, region Singapore, <code>rootDir: backend</code>, health check <code>/api/v1/health</code>, auto-deploy) with <code>ENVIRONMENT=production</code>, <code>WORKER_MODE=embedded</code>, <code>LOG_LEVEL=INFO</code>, <code>MAX_FILES=1500</code>.</li>
+        <li><strong>Set the secret variables</strong> (declared with <code>sync: false</code>, so Render asks for them): <code>DATABASE_URL</code>, <code>CORS_ORIGINS</code> (e.g. <code>["https://&lt;frontend&gt;"]</code>), <code>SUPABASE_URL</code>, <code>SUPABASE_JWT_SECRET</code> (leave empty unless HS256), <code>GITHUB_TOKEN</code> (recommended) and <code>GEMINI_API_KEY</code> (optional).</li>
+        <li><strong>Deploy.</strong> The container runs <code>alembic upgrade head</code>, then uvicorn on <code>$PORT</code>. Check <code>https://&lt;service&gt;.onrender.com/api/v1/health</code> → <code>{"success": true, "data": {"status": "ok", "database": "ok"}}</code>.</li>
+      </ol>
+      <div class="callout warn"><span class="callout-title">Free plan cold starts</span><p>Free Render services sleep when idle; the first request afterwards can take about <strong>50 seconds</strong> while the container boots. Queued analyses are safe — they live in Postgres and the embedded worker picks them up as soon as the service is awake again.</p></div>
+
+      <h3 id="vercel">3 · Vercel (frontend)</h3>
+      <ol class="steps">
+        <li><strong>Import the repository</strong> and set the <strong>Root Directory</strong> to <code>frontend</code> (framework: Next.js).</li>
+        <li><strong>Environment variables:</strong> <code>NEXT_PUBLIC_API_URL</code> (the Render URL, no trailing slash), <code>NEXT_PUBLIC_SUPABASE_URL</code>, <code>NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</code>, <code>NEXT_PUBLIC_SITE_URL</code> (the Vercel URL) and optionally <code>NEXT_PUBLIC_DOCS_URL</code>.</li>
+        <li><strong>Close the loop:</strong> put the final frontend origin into the API's <code>CORS_ORIGINS</code> and into Supabase's Site URL / Redirect URLs, then redeploy the frontend if you changed any <code>NEXT_PUBLIC_*</code> value.</li>
+      </ol>
+
+      <h3 id="pages">4 · GitHub Pages (docs)</h3>
+      <ol class="steps">
+        <li>Repository <em>Settings → Pages → Build and deployment → Source: <strong>GitHub Actions</strong></em>.</li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/.github/workflows/docs.yml">.github/workflows/docs.yml</a> runs on pushes to <code>main</code> that touch <code>docs/**</code>, the READMEs, <code>CONTRIBUTING.md</code>, <code>SECURITY.md</code> or the backend API/schemas (and on demand):
+          <ul>
+            <li><strong>links</strong> — lychee checks the READMEs and every <code>docs/**/*.html</code> page, including <code>#fragment</code> anchors (also on pull requests);</li>
+            <li><strong>build</strong> — regenerates <code>docs/openapi.json</code> from the backend with <code>app.scripts.dump_openapi</code> and uploads <code>docs/</code> as the Pages artifact;</li>
+            <li><strong>deploy</strong> — publishes it to <code>https://aadithyaale.github.io/Repoatlas/</code>;</li>
+            <li><strong>verify-live</strong> — waits for the CDN and link-checks the live pages.</li>
+          </ul>
+        </li>
+        <li>The site is plain HTML/CSS/JS with no build step; <code>.nojekyll</code> disables Jekyll processing and <code>404.html</code> is served for unknown paths.</li>
+      </ol>
+
+      <h2 id="ci">CI overview</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Workflow</th><th>Runs when</th><th>Checks</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/.github/workflows/ci-backend.yml"><code>ci-backend.yml</code></a></td><td>Changes under <code>backend/**</code></td><td><strong>Lint · Types · Tests</strong> with a Postgres 16 service: <code>ruff format --check</code> + <code>ruff check</code>, <code>mypy app</code> (strict), <code>alembic upgrade head</code> → <code>alembic check</code> (models match migrations) → <code>alembic downgrade base</code>, <code>pytest</code> with coverage. <strong>Contract:</strong> dumps the OpenAPI document and diffs it against the committed <code>frontend/openapi.json</code>. <strong>Docker:</strong> builds the image.</td></tr>
+          <tr><td><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/.github/workflows/ci-frontend.yml"><code>ci-frontend.yml</code></a></td><td>Changes under <code>frontend/**</code></td><td><code>npm ci</code>, <code>lint</code>, <code>typecheck</code>, <code>test</code> (Vitest), <code>build</code>, then <code>npm audit --omit=dev --audit-level=high</code>.</td></tr>
+          <tr><td><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/.github/workflows/codeql.yml"><code>codeql.yml</code></a></td><td>Pushes and PRs to <code>main</code>, weekly</td><td>CodeQL <code>security-and-quality</code> queries for Python, JavaScript/TypeScript and GitHub Actions.</td></tr>
+          <tr><td><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/.github/workflows/docs.yml"><code>docs.yml</code></a></td><td>Docs, READMEs, API schema changes</td><td>Link check, OpenAPI embed, Pages deploy, live link check.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h2 id="troubleshooting">Troubleshooting</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Symptom</th><th>Cause and fix</th></tr></thead>
+        <tbody>
+          <tr><td><strong>GitHub rate limit reached</strong> (<code>GITHUB_RATE_LIMITED</code>)</td><td>Anonymous GitHub access allows 60 requests/hour per server IP. Set <code>GITHUB_TOKEN</code> on the API (5,000/hour). <code>GET /api/v1/github/rate-limit</code> shows the remaining quota and reset time.</td></tr>
+          <tr><td><strong>Repository not found</strong> (<code>GITHUB_REPO_NOT_FOUND</code>)</td><td>The repository is private, renamed or misspelled. Only public repositories can be analyzed.</td></tr>
+          <tr><td><strong>Repository too large</strong> (<code>REPO_TOO_LARGE</code>)</td><td>The source archive is over <code>MAX_TARBALL_BYTES</code> (80 MB). Raise it on your own instance if memory allows — archives are processed in memory.</td></tr>
+          <tr><td><strong>No supported source files</strong> (<code>NO_SOURCE_FILES</code>)</td><td>The repository is empty, or has no Python/JS/TS files outside skipped directories (<code>node_modules</code>, <code>dist</code>, <code>build</code>, <code>vendor</code>, …).</td></tr>
+          <tr><td>Analysis stays <strong>PENDING</strong></td><td>No worker is running: check <code>WORKER_MODE</code> (<code>off</code> disables it; <code>standalone</code> needs the separate process) and look for “Embedded analysis worker started” in the API logs. On Render's free plan the service may simply be waking up.</td></tr>
+          <tr><td>Analysis stuck in a running state after a restart</td><td>The job's lock goes stale after <code>WORKER_STALE_LOCK_SECONDS</code> (10 minutes) and it is reclaimed automatically; after 3 attempts it is marked <code>FAILED</code>. Re-submitting the repository resets a failed analysis.</td></tr>
+          <tr><td>Browser console: <strong>CORS error</strong></td><td>The frontend origin is missing from <code>CORS_ORIGINS</code>. It must be a JSON list with the exact origin, e.g. <code>["https://repoatlas.example.app"]</code> — no path, no trailing slash.</td></tr>
+          <tr><td><code>401</code> “Token signing key not recognized” / “Unsupported token algorithm”</td><td><code>SUPABASE_URL</code> points at a different project, or the project uses HS256 and <code>SUPABASE_JWT_SECRET</code> is not set.</td></tr>
+          <tr><td><code>503</code> “Authentication service unavailable”</td><td>The API could not fetch the JWKS from <code>SUPABASE_URL</code>; check the URL and outbound network access.</td></tr>
+          <tr><td>Sign-in redirects to <code>localhost</code> or fails at <code>/auth/callback</code></td><td>Supabase Site URL / Redirect URLs don't include <code>https://&lt;frontend&gt;/auth/callback</code>, or the GitHub OAuth app's callback is not <code>https://&lt;ref&gt;.supabase.co/auth/v1/callback</code>. Check <code>NEXT_PUBLIC_SITE_URL</code>.</td></tr>
+          <tr><td>“Sign-in not configured” in the app</td><td><code>NEXT_PUBLIC_SUPABASE_URL</code> or the publishable key was missing at build time. Set them on Vercel and redeploy.</td></tr>
+          <tr><td><code>/api/v1/health</code> returns <code>503</code></td><td>The database is unreachable. Verify <code>DATABASE_URL</code> (pooler host, port 6543, password) and that the Supabase project is not paused.</td></tr>
+          <tr><td>First request takes ~50 s</td><td>Render free-plan cold start; subsequent requests are fast.</td></tr>
+          <tr><td>API reference on this site is empty when opened from disk</td><td>Browsers block <code>fetch()</code> on <code>file://</code>. Serve the folder: <code>python3 -m http.server 8080 --directory docs</code>.</td></tr>
+          <tr><td>CI “API schema changed”</td><td>A backend schema changed without regenerating the client types. Run <code>npm run gen:api</code> in <code>frontend/</code> and commit <code>openapi.json</code> and <code>src/lib/api/schema.d.ts</code>.</td></tr>
+        </tbody>
+      </table></div>
+    </article>
+
+    <nav class="pager" aria-label="Pagination">
+      <a href="api.html"><small>Previous</small>← API reference</a>
+      <a class="next" href="faq.html"><small>Next</small>FAQ &amp; limitations →</a>
+    </nav>
+    <div class="page-meta">
+      <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/docs/self-hosting.html">Edit this page on GitHub</a>
+      <span class="muted">See also <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</span>
+    </div>
+  </main>
+
+  <aside class="toc" aria-label="On this page">
+    <div data-toc><h2>On this page</h2></div>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <div class="inner">
+    <span>© RepoAtlas contributors · MIT License</span>
+    <nav aria-label="Footer">
+      <a href="getting-started.html">Guide</a>
+      <a href="api.html">API</a>
+      <a href="self-hosting.html">Self-hosting</a>
+      <a href="https://github.com/AadithyaAle/Repoatlas">GitHub</a>
+      <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">Security</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

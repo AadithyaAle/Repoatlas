@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RepoAtlas Docs — interactive dependency graphs, blast radius and self-healing onboarding tours</title>
+  <meta name="description" content="RepoAtlas turns a public GitHub repository into an interactive dependency graph, simulates the blast radius of a change and keeps code-anchored onboarding tours in sync with every commit.">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://aadithyaale.github.io/Repoatlas/">
+  <link rel="stylesheet" href="assets/css/docs.css">
+  <script>(function(){try{var t=localStorage.getItem("repoatlas-docs-theme");if(!t){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script src="assets/config.js"></script>
+  <script src="assets/js/docs.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <a class="brand" href="index.html"><img src="assets/img/logo.svg" alt="" width="30" height="30"><span>RepoAtlas</span><span class="brand-sub">Docs</span></a>
+  <nav class="top-nav" aria-label="Primary">
+    <a href="getting-started.html">Guide</a>
+    <a href="architecture.html">Architecture</a>
+    <a href="workflows.html">Workflows</a>
+    <a href="algorithms.html">Algorithms</a>
+    <a href="api.html">API</a>
+    <a href="self-hosting.html">Self-hosting</a>
+    <a href="faq.html">FAQ</a>
+  </nav>
+  <div class="header-actions">
+    <a class="icon-btn" href="#" data-app-link data-app-optional hidden>Open app</a>
+    <a class="icon-btn" href="https://github.com/AadithyaAle/Repoatlas" aria-label="RepoAtlas on GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+    <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle colour theme" aria-pressed="false">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+</header>
+<div class="nav-overlay" aria-hidden="true"></div>
+<div class="layout">
+  <aside class="sidebar" id="sidebar" aria-label="Documentation navigation">
+    <button class="icon-btn sidebar-close" type="button" data-menu-close aria-label="Close navigation">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <nav aria-label="Documentation pages">
+      <h2>Introduction</h2>
+      <ul>
+        <li><a href="index.html" aria-current="page">Overview</a></li>
+        <li><a href="getting-started.html">Getting started</a></li>
+      </ul>
+      <h2>Concepts</h2>
+      <ul>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="workflows.html">Workflows</a></li>
+        <li><a href="algorithms.html">Algorithms</a></li>
+      </ul>
+      <h2>Reference</h2>
+      <ul>
+        <li><a href="api.html">API reference</a></li>
+        <li><a href="self-hosting.html">Self-hosting</a></li>
+        <li><a href="faq.html">FAQ &amp; limitations</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-ext">
+      <ul>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas">GitHub repository</a></li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/CONTRIBUTING.md">Contributing</a></li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">Security policy</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main" class="content" tabindex="-1">
+    <article class="prose">
+      <section class="hero" aria-labelledby="hero-title">
+        <span class="eyebrow">RepoAtlas documentation</span>
+        <h1 id="hero-title">See how a codebase fits together — with onboarding docs that <span class="grad">heal themselves</span>.</h1>
+        <p class="lead">RepoAtlas parses a public GitHub repository into an interactive file-dependency graph, simulates the <strong>blast radius</strong> of changing any file, and lets maintainers author <strong>onboarding tours</strong> pinned to exact lines of code that are automatically re-verified — and re-located — after every commit.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="#" id="app-link" data-app-link data-app-target="hosted-app">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7M10 14 21 3M21 14v7H3V3h7"/></svg>
+            Open the app
+          </a>
+          <a class="btn btn-secondary" href="getting-started.html">Read the guide</a>
+          <a class="btn btn-secondary" href="https://github.com/AadithyaAle/Repoatlas">View source</a>
+        </div>
+        <p class="app-note" data-app-note hidden tabindex="-1">The hosted app URL hasn't been published in this documentation yet. You can run your own instance in a few minutes — see <a href="self-hosting.html">Self-hosting</a>.</p>
+        <script>
+          (function () {
+            var a = document.getElementById("app-link");
+            if (!a) return;
+            var url = (window.REPOATLAS_APP_URL || "").trim();
+            a.setAttribute("data-app-ready", "1");
+            if (url) { a.href = url; return; }
+            a.classList.add("is-disabled");
+            a.setAttribute("aria-disabled", "true");
+            a.setAttribute("title", "The hosted app URL has not been configured yet");
+            a.addEventListener("click", function (e) {
+              e.preventDefault();
+              var note = document.querySelector("[data-app-note]");
+              if (note) { note.hidden = false; note.focus(); }
+            });
+          })();
+        </script>
+
+        <div class="hero-art">
+          <svg viewBox="0 0 860 300" role="img" aria-labelledby="hero-art-title hero-art-desc">
+            <title id="hero-art-title">RepoAtlas at a glance</title>
+            <desc id="hero-art-desc">A dependency graph of files coloured by role. One file is selected and concentric rings show its blast radius by depth. On the right a tour step card is pinned to lines 12 to 18 of a file and marked Healthy.</desc>
+            <defs>
+              <marker id="ha-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head"/></marker>
+            </defs>
+            <circle cx="300" cy="150" r="130" fill="none" stroke="var(--depth-3)" stroke-opacity=".35" stroke-dasharray="4 6"/>
+            <circle cx="300" cy="150" r="88" fill="none" stroke="var(--depth-2)" stroke-opacity=".45" stroke-dasharray="4 6"/>
+            <circle cx="300" cy="150" r="46" fill="none" stroke="var(--depth-1)" stroke-opacity=".6" stroke-dasharray="4 6"/>
+            <g>
+              <path class="edge" d="M240 112 L282 138" marker-end="url(#ha-arrow)"/>
+              <path class="edge" d="M352 118 L318 140" marker-end="url(#ha-arrow)"/>
+              <path class="edge" d="M196 66 L232 100" marker-end="url(#ha-arrow)"/>
+              <path class="edge" d="M408 74 L362 108" marker-end="url(#ha-arrow)"/>
+              <path class="edge" d="M222 226 L278 166" marker-end="url(#ha-arrow)"/>
+              <path class="edge" d="M110 150 L218 216" marker-end="url(#ha-arrow)"/>
+              <path class="edge" d="M318 162 L360 226" marker-end="url(#ha-arrow)"/>
+              <path class="edge-bad" d="M470 180 C 500 150, 500 120, 470 92" marker-end="url(#ha-arrow)"/>
+              <path class="edge-bad" d="M450 84 C 425 110, 425 150, 452 176" marker-end="url(#ha-arrow)"/>
+            </g>
+            <g>
+              <circle cx="300" cy="150" r="16" class="f-d0"/>
+              <text x="300" y="155" text-anchor="middle" class="t-xs t-mono t-dark">db</text>
+              <circle cx="236" cy="108" r="12" class="f-d1"/>
+              <circle cx="356" cy="114" r="12" class="f-d1"/>
+              <circle cx="190" cy="60" r="10" class="f-d2"/>
+              <circle cx="414" cy="70" r="10" class="f-d2"/>
+              <circle cx="218" cy="230" r="12" class="f-d1"/>
+              <circle cx="102" cy="146" r="10" class="f-d3"/>
+              <circle cx="364" cy="232" r="11" class="f-leaf"/>
+              <circle cx="462" cy="86" r="10" class="f-cycle"/>
+              <circle cx="462" cy="184" r="10" class="f-cycle"/>
+              <circle cx="560" cy="250" r="9" class="f-isolated"/>
+            </g>
+            <text x="300" y="292" text-anchor="middle" class="t-sm">blast radius of core/db.py — depth 1 · 2 · 3</text>
+            <text x="508" y="140" class="t-xs">cycle</text>
+            <g transform="translate(600 40)">
+              <rect width="240" height="200" rx="12" class="box"/>
+              <rect x="14" y="14" width="88" height="20" rx="6" fill="color-mix(in srgb, var(--drift-healthy) 18%, transparent)" stroke="var(--drift-healthy)"/>
+              <circle cx="26" cy="24" r="4" class="f-healthy"/>
+              <text x="36" y="28" class="t-xs" style="fill:var(--fg)">Healthy</text>
+              <text x="14" y="56" class="t">Step 2 · Opening a session</text>
+              <text x="14" y="76" class="t-xs t-mono">core/db.py · L12–18</text>
+              <rect x="14" y="88" width="212" height="76" rx="6" fill="var(--code-bg)" stroke="var(--border)"/>
+              <rect x="14" y="100" width="212" height="40" fill="var(--brand-soft)"/>
+              <rect x="14" y="100" width="3" height="40" class="f-brand"/>
+              <rect x="26" y="96" width="120" height="6" rx="3" fill="var(--fg-subtle)" opacity=".5"/>
+              <rect x="26" y="110" width="160" height="6" rx="3" fill="var(--tok-kw)" opacity=".8"/>
+              <rect x="26" y="124" width="140" height="6" rx="3" fill="var(--tok-fn)" opacity=".8"/>
+              <rect x="26" y="146" width="100" height="6" rx="3" fill="var(--fg-subtle)" opacity=".5"/>
+              <text x="14" y="186" class="t-xs">sha256 pinned · re-checked on sync</text>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <h2 id="why">Why RepoAtlas</h2>
+      <p>Onboarding onto an unfamiliar codebase is slow. Newcomers grep for entry points, guess which modules are load-bearing and read wiki pages that were accurate three refactors ago. Documentation lives <em>next to</em> code instead of <em>on</em> it, so it silently goes stale the moment someone moves a function.</p>
+      <p>RepoAtlas attacks both halves of the problem:</p>
+      <ul>
+        <li><strong>Structure you can see.</strong> Imports are extracted from real syntax trees (Python <code>ast</code>, tree-sitter for JavaScript/TypeScript), resolved to files and rendered as an explorable graph, with roles, cycles and centrality computed by deterministic graph algorithms.</li>
+        <li><strong>Docs that can't rot unnoticed.</strong> Every tour step stores the exact lines it explains plus a SHA-256 fingerprint. A one-click <em>Sync &amp; verify</em> re-checks every step against the latest commit, auto-fixes steps whose code merely moved and flags the ones that really changed.</li>
+      </ul>
+      <div class="cards two">
+        <div class="card"><h3>OSS maintainers</h3><p>Publish a guided tour of your architecture and keep it correct as contributors refactor — the sync report tells you exactly which steps need attention.</p></div>
+        <div class="card"><h3>Team leads</h3><p>Spot god modules, circular imports and risky files before a change ships; follow trainee progress and first-try checkpoint accuracy on the dashboard.</p></div>
+        <div class="card"><h3>New developers &amp; students</h3><p>Start from entry points and the most central files, walk an ordered tour with checkpoints, and see what breaks if you touch something.</p></div>
+      </div>
+
+      <h2 id="workflows">The four workflows</h2>
+      <p>Everything in RepoAtlas is one of four end-to-end workflows. Each card links to the detailed state machine.</p>
+      <div class="cards two">
+        <a class="card" href="workflows.html#ingestion">
+          <span class="card-num">01</span>
+          <div class="card-art">
+            <svg viewBox="0 0 300 110" role="img" aria-labelledby="wf1-t"><title id="wf1-t">Ingestion pipeline: GitHub tarball to parsed graph</title>
+              <rect x="6" y="38" width="62" height="34" rx="8" class="box"/><text x="37" y="59" text-anchor="middle" class="t-xs">GitHub</text>
+              <rect x="88" y="38" width="62" height="34" rx="8" class="box"/><text x="119" y="59" text-anchor="middle" class="t-xs">tarball</text>
+              <rect x="170" y="38" width="54" height="34" rx="8" class="box"/><text x="197" y="59" text-anchor="middle" class="t-xs">AST</text>
+              <rect x="244" y="38" width="50" height="34" rx="8" class="box-brand"/><text x="269" y="59" text-anchor="middle" class="t-xs" style="fill:var(--fg)">graph</text>
+              <path class="edge" d="M68 55h18M150 55h18M224 55h18"/>
+              <text x="150" y="96" text-anchor="middle" class="t-xs">PENDING → FETCHING_TREE → PARSING_AST → COMPUTING_GRAPH</text>
+            </svg>
+          </div>
+          <h3>Analyze a repository</h3>
+          <p>Paste a GitHub URL. The commit is pinned, the source archive downloaded in one request, every file parsed and the dependency graph computed by a background worker.</p>
+          <span class="more">Ingestion state machine →</span>
+        </a>
+        <a class="card" href="workflows.html#blast-radius">
+          <span class="card-num">02</span>
+          <div class="card-art">
+            <svg viewBox="0 0 300 110" role="img" aria-labelledby="wf2-t"><title id="wf2-t">Blast radius: dependents grouped by BFS depth</title>
+              <circle cx="80" cy="55" r="48" fill="none" stroke="var(--depth-2)" stroke-dasharray="3 4"/>
+              <circle cx="80" cy="55" r="28" fill="none" stroke="var(--depth-1)" stroke-dasharray="3 4"/>
+              <circle cx="80" cy="55" r="10" class="f-d0"/>
+              <circle cx="104" cy="44" r="6" class="f-d1"/><circle cx="62" cy="36" r="6" class="f-d1"/>
+              <circle cx="40" cy="80" r="5" class="f-d2"/><circle cx="124" cy="78" r="5" class="f-d2"/>
+              <rect x="158" y="22" width="132" height="10" rx="5" fill="var(--bg)" stroke="var(--border)"/>
+              <rect x="158" y="22" width="60" height="10" rx="5" fill="var(--risk-high)"/>
+              <text x="158" y="52" class="t-xs">risk 22.4 · HIGH</text>
+              <text x="158" y="72" class="t-xs">impacted 9 · depth 3</text>
+              <text x="158" y="92" class="t-xs">cycles: Tarjan SCC</text>
+            </svg>
+          </div>
+          <h3>Simulate blast radius &amp; find cycles</h3>
+          <p>Select any file to see every file that imports it directly or transitively, a depth-weighted risk score, and every circular dependency in the repo.</p>
+          <span class="more">Blast radius flow →</span>
+        </a>
+        <a class="card" href="workflows.html#tours">
+          <span class="card-num">03</span>
+          <div class="card-art">
+            <svg viewBox="0 0 300 110" role="img" aria-labelledby="wf3-t"><title id="wf3-t">Pin-to-code tours with checkpoints</title>
+              <rect x="10" y="10" width="150" height="90" rx="8" fill="var(--code-bg)" stroke="var(--border)"/>
+              <rect x="10" y="38" width="150" height="30" fill="var(--brand-soft)"/><rect x="10" y="38" width="3" height="30" class="f-brand"/>
+              <rect x="22" y="20" width="90" height="5" rx="2" fill="var(--fg-subtle)" opacity=".5"/>
+              <rect x="22" y="44" width="110" height="5" rx="2" fill="var(--tok-kw)"/>
+              <rect x="22" y="56" width="80" height="5" rx="2" fill="var(--tok-fn)"/>
+              <rect x="22" y="80" width="100" height="5" rx="2" fill="var(--fg-subtle)" opacity=".5"/>
+              <rect x="176" y="14" width="114" height="22" rx="6" class="box"/><text x="186" y="29" class="t-xs">① Entry point ✓</text>
+              <rect x="176" y="44" width="114" height="22" rx="6" class="box-brand"/><text x="186" y="59" class="t-xs" style="fill:var(--fg)">② Sessions · quiz</text>
+              <rect x="176" y="74" width="114" height="22" rx="6" class="box" opacity=".55"/><text x="186" y="89" class="t-xs">③ locked</text>
+            </svg>
+          </div>
+          <h3>Build &amp; take onboarding tours</h3>
+          <p>Owners pin line ranges, write Markdown explanations and add multiple-choice checkpoints. Trainees complete steps strictly in order.</p>
+          <span class="more">Tour lifecycle →</span>
+        </a>
+        <a class="card" href="workflows.html#drift">
+          <span class="card-num">04</span>
+          <div class="card-art">
+            <svg viewBox="0 0 300 110" role="img" aria-labelledby="wf4-t"><title id="wf4-t">Drift engine outcomes</title>
+              <rect x="110" y="6" width="80" height="24" rx="6" class="box-brand"/><text x="150" y="22" text-anchor="middle" class="t-xs" style="fill:var(--fg)">Sync &amp; verify</text>
+              <path class="edge" d="M150 30 V44 M38 44 H262 M38 44 V58 M112 44 V58 M188 44 V58 M262 44 V58"/>
+              <rect x="6" y="60" width="64" height="40" rx="6" fill="color-mix(in srgb, var(--drift-healthy) 16%, transparent)" stroke="var(--drift-healthy)"/><text x="38" y="84" text-anchor="middle" class="t-xs" style="fill:var(--fg)">Healthy</text>
+              <rect x="80" y="60" width="64" height="40" rx="6" fill="color-mix(in srgb, var(--drift-autofixed) 16%, transparent)" stroke="var(--drift-autofixed)"/><text x="112" y="84" text-anchor="middle" class="t-xs" style="fill:var(--fg)">Auto-fixed</text>
+              <rect x="156" y="60" width="64" height="40" rx="6" fill="color-mix(in srgb, var(--drift-review) 16%, transparent)" stroke="var(--drift-review)"/><text x="188" y="84" text-anchor="middle" class="t-xs" style="fill:var(--fg)">Review</text>
+              <rect x="230" y="60" width="64" height="40" rx="6" fill="color-mix(in srgb, var(--drift-broken) 16%, transparent)" stroke="var(--drift-broken)"/><text x="262" y="84" text-anchor="middle" class="t-xs" style="fill:var(--fg)">Deleted</text>
+            </svg>
+          </div>
+          <h3>Sync &amp; verify tour health</h3>
+          <p>Re-analyze the branch head, re-locate every pinned snippet with a sliding-window matcher and get a per-step health report with one-click resolutions.</p>
+          <span class="more">Drift decision tree →</span>
+        </a>
+      </div>
+
+      <h2 id="features">Feature highlights</h2>
+      <ul class="feature-list">
+        <li><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/></svg></span><div><strong>Real parsers, not regex</strong><span>Python via the standard-library <code>ast</code>; JS, JSX, TS and TSX via tree-sitter. Syntax errors never abort an analysis.</span></div></li>
+        <li><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h6M14 12h6M10 12a2 2 0 1 0 4 0 2 2 0 1 0-4 0"/></svg></span><div><strong>Import resolution that knows your setup</strong><span><code>tsconfig</code>/<code>jsconfig</code> <code>paths</code> and <code>baseUrl</code> (including <code>extends</code> and monorepos), <code>@/</code> aliases, index files, ESM <code>.js</code>→<code>.ts</code>, Python packages and <code>src/</code> layouts.</span></div></li>
+        <li><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/></svg></span><div><strong>Blast-radius simulation</strong><span>Reverse BFS gives direct and transitive dependents, impact percentage and a depth-weighted risk score with four risk levels.</span></div></li>
+        <li><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/></svg></span><div><strong>Complete cycle detection</strong><span>Iterative three-colour DFS reports concrete cycles; Tarjan's SCC marks every file and import that lies on any cycle.</span></div></li>
+        <li><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><div><strong>Roles &amp; centrality</strong><span>Every file is classified (entry point, god module, core utility, leaf, isolated, standard) and ranked with PageRank.</span></div></li>
+        <li><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v6M12 22v-6M5 12H2M22 12h-3"/><circle cx="12" cy="12" r="4"/></svg></span><div><strong>Pinned to a commit</strong><span>Each analysis is tied to one commit SHA, so graphs, file contents and tour anchors are reproducible and cacheable.</span></div></li>
+        <li><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4"/><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></span><div><strong>Self-healing tours</strong><span>Moved code is re-located automatically; changed code gets a proposed location, similarity score and side-by-side diff.</span></div></li>
+        <li><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg></span><div><strong>Checkpoints that can't be peeked</strong><span>Correct answers and explanations are never sent to trainees; progress is enforced in tour order on the server.</span></div></li>
+        <li><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></span><div><strong>Dashboard</strong><span>Riskiest files per repository, role and language breakdowns, tour health scores, sync history and trainee progress.</span></div></li>
+        <li><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h10M4 17h7"/></svg></span><div><strong>Documented REST API</strong><span>Contract-first OpenAPI 3.1 with a uniform <code>{success, data, error}</code> envelope and stable error codes.</span></div></li>
+        <li><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><div><strong>Free-tier friendly</strong><span>A durable job queue embedded in the API process means one free web service plus a free Postgres is enough.</span></div></li>
+        <li><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><div><strong>Safe by design</strong><span>Public repositories only; archives extracted in memory with traversal, symlink and size guards; analyzed code is never executed.</span></div></li>
+      </ul>
+
+      <h2 id="legend">Colour legend</h2>
+      <p>The same colours mean the same thing on every page of these docs and in the app.</p>
+      <h3 id="legend-roles">File roles</h3>
+      <div class="legend">
+        <span class="badge role-ENTRY_POINT">Entry point</span>
+        <span class="badge role-GOD_MODULE">God module</span>
+        <span class="badge role-CORE_UTILITY">Core utility</span>
+        <span class="badge role-STANDARD">Standard</span>
+        <span class="badge role-LEAF">Leaf</span>
+        <span class="badge role-ISOLATED">Isolated</span>
+      </div>
+      <h3 id="legend-drift">Tour step drift status</h3>
+      <div class="legend">
+        <span class="badge drift-HEALTHY">Healthy</span>
+        <span class="badge drift-DRIFTED_AUTO_FIXED">Auto-fixed</span>
+        <span class="badge drift-OUTDATED_NEEDS_REVIEW">Needs review</span>
+        <span class="badge drift-BROKEN_FILE_DELETED">File deleted</span>
+        <span class="badge drift-UNVERIFIED">Unverified</span>
+      </div>
+      <h3 id="legend-risk">Blast-radius risk &amp; depth</h3>
+      <div class="legend">
+        <span class="badge risk-LOW">Low &lt; 5</span>
+        <span class="badge risk-MEDIUM">Medium &lt; 15</span>
+        <span class="badge risk-HIGH">High &lt; 35</span>
+        <span class="badge risk-CRITICAL">Critical ≥ 35</span>
+        <span class="badge" style="--c: var(--depth-0)">Selected file</span>
+        <span class="badge" style="--c: var(--depth-1)">Depth 1</span>
+        <span class="badge" style="--c: var(--depth-2)">Depth 2</span>
+        <span class="badge" style="--c: var(--depth-3)">Depth 3+</span>
+        <span class="badge" style="--c: var(--cycle)">Circular</span>
+      </div>
+
+      <h2 id="quick-links">Quick links</h2>
+      <div class="cards">
+        <a class="card" href="getting-started.html"><h3>Getting started</h3><p>A step-by-step walkthrough of the app, from pasting a URL to reading the sync report.</p></a>
+        <a class="card" href="architecture.html"><h3>Architecture</h3><p>System diagram, data model, request lifecycle and the trade-offs behind them.</p></a>
+        <a class="card" href="algorithms.html"><h3>Algorithms</h3><p>Interactive, step-by-step illustrations of BFS, DFS, Tarjan, PageRank and the drift matcher.</p></a>
+        <a class="card" href="api.html"><h3>API reference</h3><p>Every endpoint, schema and error code, rendered from the live OpenAPI document.</p></a>
+        <a class="card" href="self-hosting.html"><h3>Self-hosting</h3><p>Local development, environment variables and deployment to Supabase, Render, Vercel and GitHub Pages.</p></a>
+        <a class="card" href="faq.html"><h3>FAQ &amp; limitations</h3><p>Supported languages, size limits and what does (and does not) count as a dependency.</p></a>
+      </div>
+    </article>
+
+    <nav class="pager" aria-label="Pagination">
+      <a class="next" href="getting-started.html"><small>Next</small>Getting started →</a>
+    </nav>
+    <div class="page-meta">
+      <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/docs/index.html">Edit this page on GitHub</a>
+      <span class="muted">RepoAtlas is MIT-licensed open source.</span>
+    </div>
+  </main>
+
+  <aside class="toc" aria-label="On this page">
+    <div data-toc><h2>On this page</h2></div>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <div class="inner">
+    <span>© RepoAtlas contributors · MIT License</span>
+    <nav aria-label="Footer">
+      <a href="getting-started.html">Guide</a>
+      <a href="api.html">API</a>
+      <a href="self-hosting.html">Self-hosting</a>
+      <a href="https://github.com/AadithyaAle/Repoatlas">GitHub</a>
+      <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">Security</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

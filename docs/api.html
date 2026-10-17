@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>API reference · RepoAtlas Docs</title>
+  <meta name="description" content="RepoAtlas REST API reference rendered from the OpenAPI 3.1 document: every endpoint grouped by tag with parameters, request and response schemas, authentication, the response envelope and the full error-code table.">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://aadithyaale.github.io/Repoatlas/api.html">
+  <link rel="stylesheet" href="assets/css/docs.css">
+  <script>(function(){try{var t=localStorage.getItem("repoatlas-docs-theme");if(!t){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script src="assets/config.js"></script>
+  <script src="assets/js/docs.js" defer></script>
+  <script src="assets/js/api.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <a class="brand" href="index.html"><img src="assets/img/logo.svg" alt="" width="30" height="30"><span>RepoAtlas</span><span class="brand-sub">Docs</span></a>
+  <nav class="top-nav" aria-label="Primary">
+    <a href="getting-started.html">Guide</a>
+    <a href="architecture.html">Architecture</a>
+    <a href="workflows.html">Workflows</a>
+    <a href="algorithms.html">Algorithms</a>
+    <a href="api.html" aria-current="page">API</a>
+    <a href="self-hosting.html">Self-hosting</a>
+    <a href="faq.html">FAQ</a>
+  </nav>
+  <div class="header-actions">
+    <a class="icon-btn" href="#" data-app-link data-app-optional hidden>Open app</a>
+    <a class="icon-btn" href="https://github.com/AadithyaAle/Repoatlas" aria-label="RepoAtlas on GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+    <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle colour theme" aria-pressed="false">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+</header>
+<div class="nav-overlay" aria-hidden="true"></div>
+<div class="layout">
+  <aside class="sidebar" id="sidebar" aria-label="Documentation navigation">
+    <button class="icon-btn sidebar-close" type="button" data-menu-close aria-label="Close navigation">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <nav aria-label="Documentation pages">
+      <h2>Introduction</h2>
+      <ul>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="getting-started.html">Getting started</a></li>
+      </ul>
+      <h2>Concepts</h2>
+      <ul>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="workflows.html">Workflows</a></li>
+        <li><a href="algorithms.html">Algorithms</a></li>
+      </ul>
+      <h2>Reference</h2>
+      <ul>
+        <li><a href="api.html" aria-current="page">API reference</a></li>
+        <li><a href="self-hosting.html">Self-hosting</a></li>
+        <li><a href="faq.html">FAQ &amp; limitations</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-ext">
+      <ul>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas">GitHub repository</a></li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/CONTRIBUTING.md">Contributing</a></li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">Security policy</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main" class="content" tabindex="-1">
+    <article class="prose">
+      <span class="eyebrow">Reference</span>
+      <h1>API reference</h1>
+      <p class="lead">Everything the RepoAtlas app does goes through a documented REST API. The endpoint reference below is rendered in your browser from <a href="openapi.json">openapi.json</a>, which CI regenerates from the backend on every docs deploy, so it always matches the code.</p>
+
+      <h2 id="basics">Basics</h2>
+      <div class="table-wrap"><table>
+        <tbody>
+          <tr><th scope="row">Base URL</th><td><code data-api-url data-api-url-fallback="https://&lt;your-api-host&gt;">https://&lt;your-api-host&gt;</code> — every path starts with <code>/api/v1</code>. Locally: <code>http://localhost:8000</code>.</td></tr>
+          <tr><th scope="row">Format</th><td>JSON request and response bodies (<code>Content-Type: application/json</code>); responses over 1 kB are gzip-compressed when the client accepts it.</td></tr>
+          <tr><th scope="row">Schema</th><td>OpenAPI 3.1. A running server also serves its own document at <code>/openapi.json</code> and FastAPI's interactive explorers at <code>/docs</code> and <code>/redoc</code>.</td></tr>
+          <tr><th scope="row">Tracing</th><td>Send <code>X-Request-ID</code> (1–128 chars of <code>A–Z a–z 0–9 . _ : -</code>) to correlate logs; otherwise one is generated. It is always echoed in the response headers.</td></tr>
+          <tr><th scope="row">CORS</th><td>Browser origins must be listed in the server's <code>CORS_ORIGINS</code>; any <code>localhost</code> port is allowed in development.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h2 id="auth">Authentication</h2>
+      <p>Authenticated calls send a Supabase access token: <code>Authorization: Bearer &lt;token&gt;</code> (the frontend gets it from the signed-in Supabase session). Each endpoint below shows one of three levels:</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Badge</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><span class="auth-pill">Public</span></td><td>No token needed.</td></tr>
+          <tr><td><span class="auth-pill">Auth optional</span></td><td>Works anonymously; with a token the caller is identified (e.g. own private tours are included). An <em>invalid or expired</em> token is still rejected with <code>401</code>.</td></tr>
+          <tr><td><span class="auth-pill req">Auth required</span></td><td><code>401 UNAUTHORIZED</code> without a valid token. Owner-only actions return <code>403 FORBIDDEN</code> for other users, and private tours of other users are <code>404 NOT_FOUND</code>.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h2 id="envelope">Response envelope</h2>
+      <p>Every response — success or error — has the same shape. Clients check <code>success</code> and read either <code>data</code> or <code>error</code>.</p>
+<pre><code class="language-json">{
+  "success": true,
+  "data": { "version": "0.1.0", "ai_enabled": false, "max_files": 1500, "github_authenticated": true },
+  "error": null
+}</code></pre>
+<pre><code class="language-json">{
+  "success": false,
+  "data": null,
+  "error": {
+    "code": "ANALYSIS_NOT_READY",
+    "message": "Analysis is PARSING_AST",
+    "details": { "status": "PARSING_AST" }
+  }
+}</code></pre>
+      <p>Request validation failures use the same envelope with <code>VALIDATION_ERROR</code> and <code>details.errors</code>, a list of <code>{loc, msg, type}</code> (the submitted input is never echoed). Unexpected server errors return <code>INTERNAL_ERROR</code> with <code>details.request_id</code>; stack traces are never exposed.</p>
+
+      <h2 id="errors">Error codes</h2>
+      <p>Domain errors come from <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/core/errors.py">core/errors.py</a>; the HTTP status is fixed per code unless noted.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Code</th><th>HTTP</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>VALIDATION_ERROR</code></td><td>422</td><td>Request body / query / path failed validation, or a semantic check (e.g. reorder list incomplete, checkpoint index out of range). Framework-level 400 responses also carry this code (with status 400).</td></tr>
+          <tr><td><code>INVALID_REPO_URL</code></td><td>422</td><td>The repository URL or <code>owner/repo</code> could not be parsed.</td></tr>
+          <tr><td><code>UNAUTHORIZED</code></td><td>401</td><td>Missing, malformed, expired or invalid bearer token where one is required (or any invalid token).</td></tr>
+          <tr><td><code>FORBIDDEN</code></td><td>403</td><td>Authenticated, but not the owner of the tour.</td></tr>
+          <tr><td><code>NOT_FOUND</code></td><td>404</td><td>Unknown analysis, repository, tour, step or branch — or another user's private tour.</td></tr>
+          <tr><td><code>CONFLICT</code></td><td>409</td><td>State conflict: answering out of order, resolving a step that does not need it, accepting a missing proposal, keeping lines of a deleted file.</td></tr>
+          <tr><td><code>ANALYSIS_NOT_READY</code></td><td>409</td><td>The analysis has not reached <code>COMPLETED</code> (<code>details.status</code>), or a sync is still waiting for the new commit.</td></tr>
+          <tr><td><code>GITHUB_REPO_NOT_FOUND</code></td><td>404</td><td>GitHub has no such public repository (or it is private).</td></tr>
+          <tr><td><code>GITHUB_RATE_LIMITED</code></td><td>429</td><td>GitHub API quota exhausted; <code>details.reset_at</code>, <code>details.authenticated</code>.</td></tr>
+          <tr><td><code>GITHUB_UNAVAILABLE</code></td><td>502</td><td>GitHub errors or timeouts after retries, or an unreadable archive.</td></tr>
+          <tr><td><code>REPO_TOO_LARGE</code></td><td>413</td><td>The source archive exceeds <code>MAX_TARBALL_BYTES</code> (<code>details.max_tarball_bytes</code>).</td></tr>
+          <tr><td><code>NO_SOURCE_FILES</code></td><td>422</td><td>No supported Python/JS/TS files, or an empty repository.</td></tr>
+          <tr><td><code>FILE_NOT_IN_SNAPSHOT</code></td><td>404</td><td>The path is not part of the analysis (<code>details.path</code>).</td></tr>
+          <tr><td><code>INVALID_LINE_RANGE</code></td><td>422</td><td>Lines outside the file (<code>details.loc</code>, <code>start_line</code>, <code>end_line</code>).</td></tr>
+          <tr><td><code>AI_DISABLED</code></td><td>503</td><td>AI drafting is not configured (no <code>GEMINI_API_KEY</code>).</td></tr>
+          <tr><td><code>AI_FAILED</code></td><td>502 · 429</td><td>The model call failed or returned unusable output; <code>429</code> with <code>details.retry_after</code> when the per-user limit (20 uncached drafts per 10 minutes) is hit.</td></tr>
+          <tr><td><code>SERVICE_UNAVAILABLE</code></td><td>503</td><td>Database unreachable (health check) or Supabase JWKS could not be fetched.</td></tr>
+          <tr><td><code>INTERNAL_ERROR</code></td><td>500</td><td>Unexpected error (<code>details.request_id</code>); also stored on analyses that crashed or exhausted their attempts.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="small muted">Framework-level responses use the same envelope: <code>METHOD_NOT_ALLOWED</code> (405), <code>NOT_IMPLEMENTED</code> (501) and <code>HTTP_ERROR</code> for any other 4xx; unknown routes return <code>NOT_FOUND</code> with “Route not found”.</p>
+
+      <h2 id="endpoints">Endpoints</h2>
+      <div class="api-toolbar">
+        <label class="sr-only" for="api-search">Filter endpoints</label>
+        <input id="api-search" class="api-search" type="search" placeholder="Filter by path, method, tag or summary…" autocomplete="off" disabled>
+        <span class="api-count" data-api-count aria-live="polite"></span>
+      </div>
+      <div id="api-root" data-api-root>
+        <div class="api-state" data-api-state>
+          <noscript>The endpoint list is rendered with JavaScript from <a href="openapi.json">openapi.json</a>. Enable JavaScript, or read the raw OpenAPI document.</noscript>
+          <span data-api-loading>Loading the OpenAPI document…</span>
+        </div>
+      </div>
+    </article>
+
+    <nav class="pager" aria-label="Pagination">
+      <a href="algorithms.html"><small>Previous</small>← Algorithms</a>
+      <a class="next" href="self-hosting.html"><small>Next</small>Self-hosting →</a>
+    </nav>
+    <div class="page-meta">
+      <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/docs/api.html">Edit this page on GitHub</a>
+      <span class="muted">Contract: <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/schemas/atlas.py">backend/app/schemas/atlas.py</a></span>
+    </div>
+  </main>
+
+  <aside class="toc" aria-label="On this page">
+    <div data-toc><h2>On this page</h2></div>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <div class="inner">
+    <span>© RepoAtlas contributors · MIT License</span>
+    <nav aria-label="Footer">
+      <a href="getting-started.html">Guide</a>
+      <a href="api.html">API</a>
+      <a href="self-hosting.html">Self-hosting</a>
+      <a href="https://github.com/AadithyaAle/Repoatlas">GitHub</a>
+      <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">Security</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

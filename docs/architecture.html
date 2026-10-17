@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Architecture · RepoAtlas Docs</title>
+  <meta name="description" content="How RepoAtlas is built: Next.js on Vercel, a FastAPI service on Render with an embedded database-backed worker, PostgreSQL and Auth on Supabase, the GitHub REST API and optional Gemini. Data model, request lifecycle, monorepo layout and design trade-offs.">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://aadithyaale.github.io/Repoatlas/architecture.html">
+  <link rel="stylesheet" href="assets/css/docs.css">
+  <script>(function(){try{var t=localStorage.getItem("repoatlas-docs-theme");if(!t){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script src="assets/config.js"></script>
+  <script src="assets/js/docs.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <a class="brand" href="index.html"><img src="assets/img/logo.svg" alt="" width="30" height="30"><span>RepoAtlas</span><span class="brand-sub">Docs</span></a>
+  <nav class="top-nav" aria-label="Primary">
+    <a href="getting-started.html">Guide</a>
+    <a href="architecture.html" aria-current="page">Architecture</a>
+    <a href="workflows.html">Workflows</a>
+    <a href="algorithms.html">Algorithms</a>
+    <a href="api.html">API</a>
+    <a href="self-hosting.html">Self-hosting</a>
+    <a href="faq.html">FAQ</a>
+  </nav>
+  <div class="header-actions">
+    <a class="icon-btn" href="#" data-app-link data-app-optional hidden>Open app</a>
+    <a class="icon-btn" href="https://github.com/AadithyaAle/Repoatlas" aria-label="RepoAtlas on GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+    <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle colour theme" aria-pressed="false">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+</header>
+<div class="nav-overlay" aria-hidden="true"></div>
+<div class="layout">
+  <aside class="sidebar" id="sidebar" aria-label="Documentation navigation">
+    <button class="icon-btn sidebar-close" type="button" data-menu-close aria-label="Close navigation">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <nav aria-label="Documentation pages">
+      <h2>Introduction</h2>
+      <ul>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="getting-started.html">Getting started</a></li>
+      </ul>
+      <h2>Concepts</h2>
+      <ul>
+        <li><a href="architecture.html" aria-current="page">Architecture</a></li>
+        <li><a href="workflows.html">Workflows</a></li>
+        <li><a href="algorithms.html">Algorithms</a></li>
+      </ul>
+      <h2>Reference</h2>
+      <ul>
+        <li><a href="api.html">API reference</a></li>
+        <li><a href="self-hosting.html">Self-hosting</a></li>
+        <li><a href="faq.html">FAQ &amp; limitations</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-ext">
+      <ul>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas">GitHub repository</a></li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/CONTRIBUTING.md">Contributing</a></li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">Security policy</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main" class="content" tabindex="-1">
+    <article class="prose">
+      <span class="eyebrow">Concepts</span>
+      <h1>Architecture</h1>
+      <p class="lead">RepoAtlas is a small monorepo: a Next.js frontend, a FastAPI service that owns all analysis and tour logic, and managed Postgres + Auth from Supabase. It is designed to run entirely on free tiers — one web service, one database — without giving up a durable job queue.</p>
+
+      <h2 id="system">System overview</h2>
+      <figure>
+        <div class="diagram">
+          <svg viewBox="0 0 920 480" role="img" aria-labelledby="sys-t sys-d">
+            <title id="sys-t">RepoAtlas system diagram</title>
+            <desc id="sys-d">The browser loads the Next.js app from Vercel and signs in through Supabase Auth with GitHub OAuth. It then calls the FastAPI service on Render directly with a Supabase JWT as Bearer token. The API verifies the token against Supabase's JWKS or an HS256 secret, stores everything in Supabase PostgreSQL through the transaction pooler, and runs an embedded analysis worker that claims jobs from the analyses table and downloads repositories from the GitHub REST API. Gemini is an optional dependency used only for AI step drafts.</desc>
+            <defs>
+              <marker id="sys-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head"/></marker>
+              <marker id="sys-arrow-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head-brand"/></marker>
+            </defs>
+            <!-- Browser + Vercel -->
+            <rect x="20" y="40" width="160" height="80" rx="10" class="box"/>
+            <text x="100" y="72" text-anchor="middle" class="t">Next.js app</text>
+            <text x="100" y="92" text-anchor="middle" class="t-sm">Vercel · App Router</text>
+            <text x="100" y="108" text-anchor="middle" class="t-xs">frontend/</text>
+            <rect x="20" y="220" width="160" height="70" rx="10" class="box"/>
+            <text x="100" y="250" text-anchor="middle" class="t">Browser</text>
+            <text x="100" y="270" text-anchor="middle" class="t-sm">TanStack Query client</text>
+            <path class="edge" d="M100 218 V124" marker-end="url(#sys-arrow)"/>
+            <text x="108" y="172" class="t-xs">pages + JS</text>
+
+            <!-- FastAPI -->
+            <rect x="250" y="150" width="310" height="300" rx="12" class="box-dashed"/>
+            <text x="266" y="174" class="t">FastAPI · Render (Docker)</text>
+            <rect x="270" y="188" width="270" height="52" rx="8" class="box"/>
+            <text x="405" y="210" text-anchor="middle" class="t-sm">Middleware · routes /api/v1</text>
+            <text x="405" y="228" text-anchor="middle" class="t-xs">X-Request-ID · CORS · GZip · error envelope</text>
+            <rect x="270" y="252" width="270" height="52" rx="8" class="box"/>
+            <text x="405" y="274" text-anchor="middle" class="t-sm">services/ + engine/</text>
+            <text x="405" y="292" text-anchor="middle" class="t-xs">pure, deterministic algorithms · LRU graph cache</text>
+            <rect x="270" y="316" width="270" height="62" rx="8" class="box-brand"/>
+            <text x="405" y="340" text-anchor="middle" class="t-sm" style="fill:var(--fg)">Embedded analysis worker</text>
+            <text x="405" y="358" text-anchor="middle" class="t-xs">asyncio task · polls every 2 s · 1 job at a time</text>
+            <text x="270" y="400" class="t-xs">WORKER_MODE = embedded | standalone | off</text>
+            <text x="270" y="418" class="t-xs">container runs `alembic upgrade head` on start</text>
+            <path class="edge-strong" d="M182 255 H266" marker-end="url(#sys-arrow-b)"/>
+            <text x="186" y="246" class="t-xs">REST + Bearer JWT</text>
+
+            <!-- Supabase -->
+            <rect x="640" y="20" width="260" height="225" rx="12" class="box-dashed"/>
+            <text x="656" y="42" class="t-sm">Supabase</text>
+            <rect x="660" y="54" width="220" height="70" rx="8" class="box"/>
+            <text x="770" y="80" text-anchor="middle" class="t">Supabase Auth</text>
+            <text x="770" y="100" text-anchor="middle" class="t-xs">GitHub OAuth provider · JWT issuer</text>
+            <rect x="660" y="140" width="220" height="90" rx="8" class="box"/>
+            <text x="770" y="166" text-anchor="middle" class="t">PostgreSQL</text>
+            <text x="770" y="186" text-anchor="middle" class="t-xs">transaction pooler :6543</text>
+            <text x="770" y="204" text-anchor="middle" class="t-xs">analyses table = job queue</text>
+            <path class="edge" d="M182 70 H656" marker-end="url(#sys-arrow)"/>
+            <text x="300" y="62" class="t-xs">sign in with GitHub · /auth/callback exchanges the code</text>
+            <path class="edge" d="M542 204 C600 204 600 104 656 104" marker-end="url(#sys-arrow)"/>
+            <text x="566" y="134" class="t-xs">JWKS / HS256</text>
+            <path class="edge" d="M542 278 C604 278 604 182 656 182" marker-end="url(#sys-arrow)"/>
+            <path class="edge" d="M542 336 C616 336 616 210 656 210" marker-end="url(#sys-arrow)"/>
+            <text x="578" y="262" class="t-xs">asyncpg</text>
+
+            <!-- GitHub -->
+            <rect x="640" y="272" width="260" height="86" rx="10" class="box"/>
+            <text x="770" y="298" text-anchor="middle" class="t">GitHub REST API</text>
+            <text x="770" y="318" text-anchor="middle" class="t-xs">repo metadata · commit SHA · tarball</text>
+            <text x="770" y="336" text-anchor="middle" class="t-xs">optional GITHUB_TOKEN: 60 → 5000 req/h</text>
+            <path class="edge" d="M542 356 C590 356 600 316 636 316" marker-end="url(#sys-arrow)"/>
+
+            <!-- Gemini -->
+            <rect x="640" y="378" width="260" height="70" rx="10" class="box-dashed"/>
+            <text x="770" y="406" text-anchor="middle" class="t-sm">Gemini (optional)</text>
+            <text x="770" y="426" text-anchor="middle" class="t-xs">AI step drafts · only with GEMINI_API_KEY</text>
+            <path class="edge-dash" d="M542 368 C592 368 600 412 636 412" marker-end="url(#sys-arrow)"/>
+          </svg>
+        </div>
+        <figcaption>Request paths between the browser, the two hosted services and the external APIs.</figcaption>
+      </figure>
+
+      <div class="table-wrap"><table>
+        <thead><tr><th>Component</th><th>Hosting</th><th>Responsibility</th></tr></thead>
+        <tbody>
+          <tr><td>Next.js (App Router, TypeScript strict)</td><td>Vercel, root directory <code>frontend</code></td><td>UI: graph workspace (React Flow + dagre), Monaco code viewer, tour builder / player, dashboard. Talks to the API with a typed <code>openapi-fetch</code> client and TanStack Query.</td></tr>
+          <tr><td>FastAPI</td><td>Render web service built from <code>backend/Dockerfile</code></td><td>All business logic: ingestion, graph queries, blast radius, tours, progress, drift sync, dashboard analytics, optional AI.</td></tr>
+          <tr><td>Embedded worker</td><td>Same process as the API</td><td>Runs the analysis pipeline for queued jobs (see <a href="#worker">below</a>).</td></tr>
+          <tr><td>PostgreSQL 16</td><td>Supabase (local: Docker Compose)</td><td>System of record and durable job queue. Schema managed by Alembic.</td></tr>
+          <tr><td>Supabase Auth</td><td>Supabase</td><td>GitHub OAuth sign-in; issues the JWT the API verifies. No GitHub repository scopes are ever requested.</td></tr>
+          <tr><td>GitHub REST API</td><td>api.github.com</td><td>Public repository metadata, commit resolution and source archives.</td></tr>
+          <tr><td>Gemini</td><td>Google AI (optional)</td><td>Drafts a tour step from engine facts when <code>GEMINI_API_KEY</code> is set; otherwise the endpoint returns <code>AI_DISABLED</code>.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h2 id="auth">Authentication</h2>
+      <p>The frontend uses <code>@supabase/ssr</code> with GitHub as the OAuth provider. After the PKCE redirect, <code>/auth/callback</code> exchanges the code for a session cookie. Every API call then carries <code>Authorization: Bearer &lt;Supabase access token&gt;</code>.</p>
+      <p>The API (<a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/core/security.py">core/security.py</a>) reads the token's <code>alg</code> header and verifies it with:</p>
+      <ul>
+        <li><strong>RS256 / ES256</strong> — the project's JWKS at <code>{SUPABASE_URL}/auth/v1/.well-known/jwks.json</code>, fetched off the event loop and cached for 10 minutes; or</li>
+        <li><strong>HS256</strong> — the legacy <code>SUPABASE_JWT_SECRET</code>, for projects that still use shared-secret signing.</li>
+      </ul>
+      <p><code>aud</code> (default <code>authenticated</code>), <code>exp</code> and <code>sub</code> are required, with 10 s leeway. The JWT <code>sub</code> becomes the user id stored in <code>*_user_id</code> columns, and the GitHub username comes from <code>user_metadata.user_name</code>. Tokens are never logged. Routes declare either <code>AuthUser</code> (401 without a valid token) or <code>OptionalUser</code> (anonymous allowed, but an <em>invalid</em> token is still a 401). Authorization lives in the services: non-owners get <code>FORBIDDEN</code>, other users' private tours are <code>NOT_FOUND</code>.</p>
+
+      <h2 id="github">GitHub integration</h2>
+      <p>Every analysis touches GitHub a fixed number of times, independent of repository size (<a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/services/github_service.py">services/github_service.py</a>):</p>
+      <ol>
+        <li><strong>Resolve the ref</strong> — <code>GET /repos/{owner}/{repo}</code> (default branch, description, stars; private repositories are rejected) and <code>GET /repos/{owner}/{repo}/commits/{ref}</code> to pin the exact <strong>commit SHA</strong>.</li>
+        <li><strong>Download the snapshot</strong> — <code>GET /repos/{owner}/{repo}/tarball/{sha}</code>, following the redirect to codeload, streamed and aborted above <code>MAX_TARBALL_BYTES</code> (80 MB). The archive is extracted <em>in memory</em>: only regular files, no symlinks/hardlinks, absolute or <code>..</code> paths rejected, vendor/build directories skipped, files over <code>MAX_FILE_BYTES</code> and non-UTF-8/binary files skipped.</li>
+      </ol>
+      <p>Rate-limit headers are recorded on every response and exposed at <code>GET /api/v1/github/rate-limit</code>. Errors map to stable codes: 404/451 → <code>GITHUB_REPO_NOT_FOUND</code>, 403/429 with an exhausted quota → <code>GITHUB_RATE_LIMITED</code> (with <code>details.reset_at</code>), 5xx and timeouts → <code>GITHUB_UNAVAILABLE</code> after three attempts with exponential back-off (0.5 s, 1 s).</p>
+
+      <h2 id="worker">Embedded DB-backed worker</h2>
+      <p>There is no Redis or separate queue service. The <code>analyses</code> table <em>is</em> the queue (<a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/workers/analysis_worker.py">workers/analysis_worker.py</a>):</p>
+      <figure>
+        <div class="diagram">
+          <svg viewBox="0 0 860 280" role="img" aria-labelledby="wk-t wk-d">
+            <title id="wk-t">Worker claim loop</title>
+            <desc id="wk-d">The worker polls every two seconds. It selects the oldest analysis whose status is active and whose lock is empty or stale using SELECT FOR UPDATE SKIP LOCKED, increments attempts, and either runs the pipeline or, after three attempts, marks the job FAILED. Each status change refreshes locked_at as a heartbeat.</desc>
+            <defs><marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head"/></marker></defs>
+            <rect x="10" y="90" width="140" height="64" rx="10" class="box"/>
+            <text x="80" y="116" text-anchor="middle" class="t-sm">poll</text>
+            <text x="80" y="136" text-anchor="middle" class="t-xs">every WORKER_POLL_SECONDS</text>
+            <rect x="190" y="70" width="250" height="104" rx="10" class="box-brand"/>
+            <text x="315" y="94" text-anchor="middle" class="t-sm" style="fill:var(--fg)">claim_next()</text>
+            <text x="315" y="114" text-anchor="middle" class="t-xs t-mono">status IN (PENDING, FETCHING_TREE,</text>
+            <text x="315" y="128" text-anchor="middle" class="t-xs t-mono">PARSING_AST, COMPUTING_GRAPH)</text>
+            <text x="315" y="142" text-anchor="middle" class="t-xs t-mono">AND (locked_at IS NULL OR stale)</text>
+            <text x="315" y="160" text-anchor="middle" class="t-xs t-mono">ORDER BY created_at FOR UPDATE SKIP LOCKED</text>
+            <rect x="490" y="20" width="170" height="60" rx="10" class="box"/>
+            <text x="575" y="46" text-anchor="middle" class="t-sm">attempts ≤ 3</text>
+            <text x="575" y="64" text-anchor="middle" class="t-xs">locked_at = now → run_analysis</text>
+            <rect x="490" y="164" width="170" height="60" rx="10" class="box"/>
+            <text x="575" y="190" text-anchor="middle" class="t-sm">attempts &gt; 3</text>
+            <text x="575" y="208" text-anchor="middle" class="t-xs">FAILED · INTERNAL_ERROR</text>
+            <rect x="700" y="20" width="150" height="60" rx="10" class="box"/>
+            <text x="775" y="46" text-anchor="middle" class="t-sm">COMPLETED / FAILED</text>
+            <text x="775" y="64" text-anchor="middle" class="t-xs">locked_at = NULL</text>
+            <path class="edge" d="M150 122 H186" marker-end="url(#wk-arrow)"/>
+            <path class="edge" d="M440 100 C465 100 465 50 486 50" marker-end="url(#wk-arrow)"/>
+            <path class="edge" d="M440 150 C465 150 465 194 486 194" marker-end="url(#wk-arrow)"/>
+            <path class="edge" d="M660 50 H696" marker-end="url(#wk-arrow)"/>
+            <path class="edge-dash" d="M775 82 V250 H80 V158" marker-end="url(#wk-arrow)"/>
+            <text x="430" y="270" text-anchor="middle" class="t-xs">drain until no job is claimable, then sleep</text>
+          </svg>
+        </div>
+        <figcaption>Any number of workers can run safely: <code>SKIP LOCKED</code> guarantees one claimant per row.</figcaption>
+      </figure>
+      <ul>
+        <li><strong>Heartbeat &amp; stale-lock recovery.</strong> Each status transition stamps <code>locked_at</code>. A job whose lock is older than <code>WORKER_STALE_LOCK_SECONDS</code> (600 s) belongs to a dead worker and is reclaimed by the next poll.</li>
+        <li><strong>Attempt cap.</strong> <code>attempts</code> is incremented on every claim; a job claimed a fourth time is marked <code>FAILED</code> with “Gave up after 3 attempts” instead of crashing the worker forever.</li>
+        <li><strong>Graceful shutdown.</strong> On shutdown the running job is allowed to finish (30 s grace) before the task is cancelled.</li>
+        <li><strong>Inline runs.</strong> <em>Sync &amp; verify</em> needs a completed analysis of the newest commit immediately, so it claims the row itself (fresh lock) and runs the pipeline inline, or waits up to 120 s if a live worker already owns it.</li>
+        <li><strong>Modes.</strong> <code>WORKER_MODE=embedded</code> (default) starts the loop in the API's lifespan; <code>standalone</code> expects <code>python -m app.workers.analysis_worker</code> as a separate process; <code>off</code> disables it (tests).</li>
+      </ul>
+
+      <h2 id="data-model">Data model</h2>
+      <p>Eight tables, defined in <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/db/models.py">db/models.py</a> and created by Alembic migrations. User identity is not stored in a users table: <code>*_user_id</code> columns hold the Supabase JWT <code>sub</code>.</p>
+      <figure>
+        <div class="diagram">
+          <svg viewBox="0 0 840 800" role="img" aria-labelledby="er-t er-d">
+            <title id="er-t">Entity-relationship diagram</title>
+            <desc id="er-d">repositories has many analyses and many tours. analyses has many file_nodes and many edges. tours reference one analysis (the snapshot they currently point at) and have many tour_steps and many tour_sync_runs. tour_steps have many user_step_progress rows, which also reference tours.</desc>
+            <defs><marker id="er-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head-brand"/></marker></defs>
+
+            <!-- repositories -->
+            <g transform="translate(10 10)">
+              <rect width="240" height="150" rx="8" class="box"/>
+              <rect width="240" height="26" rx="8" class="box-brand"/>
+              <text x="10" y="18" class="t" style="font-size:13px">repositories</text>
+              <g class="t-xs t-mono">
+                <text x="10" y="42">id <tspan class="t-xs">· uuid PK</tspan></text>
+                <text x="10" y="56">owner · varchar(100)</text>
+                <text x="10" y="70">name · varchar(100)</text>
+                <text x="10" y="84">default_branch · varchar</text>
+                <text x="10" y="98">description · text</text>
+                <text x="10" y="112">stars · int</text>
+                <text x="10" y="126">created_at, updated_at</text>
+                <text x="10" y="142">UNIQUE (owner, name)</text>
+              </g>
+            </g>
+
+            <!-- tours -->
+            <g transform="translate(10 250)">
+              <rect width="240" height="210" rx="8" class="box"/>
+              <rect width="240" height="26" rx="8" class="box-brand"/>
+              <text x="10" y="18" class="t" style="font-size:13px">tours</text>
+              <g class="t-xs t-mono">
+                <text x="10" y="42">id · uuid PK</text>
+                <text x="10" y="56">repository_id · FK CASCADE</text>
+                <text x="10" y="70">analysis_id · FK RESTRICT</text>
+                <text x="10" y="84">owner_user_id · uuid</text>
+                <text x="10" y="98">owner_login · varchar</text>
+                <text x="10" y="112">title · varchar(200)</text>
+                <text x="10" y="126">description · text</text>
+                <text x="10" y="140">visibility · PUBLIC|PRIVATE</text>
+                <text x="10" y="154">base_commit_sha · varchar(40)</text>
+                <text x="10" y="168">last_synced_at</text>
+                <text x="10" y="182">created_at, updated_at</text>
+              </g>
+            </g>
+
+            <!-- tour_sync_runs -->
+            <g transform="translate(10 560)">
+              <rect width="240" height="128" rx="8" class="box"/>
+              <rect width="240" height="26" rx="8" class="box-brand"/>
+              <text x="10" y="18" class="t" style="font-size:13px">tour_sync_runs</text>
+              <g class="t-xs t-mono">
+                <text x="10" y="42">id · uuid PK</text>
+                <text x="10" y="56">tour_id · FK CASCADE</text>
+                <text x="10" y="70">triggered_by_user_id · uuid</text>
+                <text x="10" y="84">from_commit_sha · varchar(40)</text>
+                <text x="10" y="98">to_commit_sha · varchar(40)</text>
+                <text x="10" y="112">counts · jsonb · created_at</text>
+              </g>
+            </g>
+
+            <!-- analyses -->
+            <g transform="translate(300 10)">
+              <rect width="240" height="376" rx="8" class="box"/>
+              <rect width="240" height="26" rx="8" class="box-brand"/>
+              <text x="10" y="18" class="t" style="font-size:13px">analyses <tspan class="t-xs">(also the job queue)</tspan></text>
+              <g class="t-xs t-mono">
+                <text x="10" y="42">id · uuid PK</text>
+                <text x="10" y="56">repository_id · FK CASCADE</text>
+                <text x="10" y="70">branch · varchar(255)</text>
+                <text x="10" y="84">commit_sha · varchar(40)</text>
+                <text x="10" y="98">status · analysis_status</text>
+                <text x="10" y="112">error_code, error_message</text>
+                <text x="10" y="126">requested_by_user_id · uuid</text>
+                <text x="10" y="140">attempts · int</text>
+                <text x="10" y="154">locked_at, started_at, finished_at</text>
+                <text x="10" y="168">total_source_files · int</text>
+                <text x="10" y="182">analyzed_files · int</text>
+                <text x="10" y="196">truncated · bool</text>
+                <text x="10" y="210">edge_count, cycle_count</text>
+                <text x="10" y="224">parse_warning_count</text>
+                <text x="10" y="238">unresolved_imports</text>
+                <text x="10" y="252">external_imports</text>
+                <text x="10" y="266">language_breakdown · jsonb</text>
+                <text x="10" y="280">cycles · jsonb (≤ 100)</text>
+                <text x="10" y="294">created_at, updated_at</text>
+                <text x="10" y="316">UNIQUE (repository_id, commit_sha)</text>
+                <text x="10" y="330">INDEX (status, created_at)</text>
+              </g>
+            </g>
+
+            <!-- tour_steps -->
+            <g transform="translate(300 420)">
+              <rect width="240" height="370" rx="8" class="box"/>
+              <rect width="240" height="26" rx="8" class="box-brand"/>
+              <text x="10" y="18" class="t" style="font-size:13px">tour_steps</text>
+              <g class="t-xs t-mono">
+                <text x="10" y="42">id · uuid PK</text>
+                <text x="10" y="56">tour_id · FK CASCADE</text>
+                <text x="10" y="70">position · int (0-based)</text>
+                <text x="10" y="84">title · varchar(200)</text>
+                <text x="10" y="98">body_markdown · text</text>
+                <text x="10" y="112">file_path · varchar(1024)</text>
+                <text x="10" y="126">start_line, end_line · int</text>
+                <text x="10" y="140">snippet_hash · varchar(64)</text>
+                <text x="10" y="154">snippet_snapshot · text</text>
+                <text x="10" y="168">checkpoint · jsonb</text>
+                <text x="10" y="182">drift_status · drift_status</text>
+                <text x="10" y="196">drift_similarity · float</text>
+                <text x="10" y="210">proposed_start_line</text>
+                <text x="10" y="224">proposed_end_line</text>
+                <text x="10" y="238">proposed_snippet · text</text>
+                <text x="10" y="252">drift_diff · text</text>
+                <text x="10" y="266">last_checked_at</text>
+                <text x="10" y="280">last_checked_commit_sha</text>
+                <text x="10" y="294">created_at, updated_at</text>
+                <text x="10" y="316">UNIQUE (tour_id, position)</text>
+                <text x="10" y="330">  DEFERRABLE INITIALLY DEFERRED</text>
+                <text x="10" y="344">CHECK start ≥ 1 AND end ≥ start</text>
+              </g>
+            </g>
+
+            <!-- file_nodes -->
+            <g transform="translate(590 10)">
+              <rect width="240" height="290" rx="8" class="box"/>
+              <rect width="240" height="26" rx="8" class="box-brand"/>
+              <text x="10" y="18" class="t" style="font-size:13px">file_nodes</text>
+              <g class="t-xs t-mono">
+                <text x="10" y="42">id · uuid PK</text>
+                <text x="10" y="56">analysis_id · FK CASCADE</text>
+                <text x="10" y="70">path · varchar(1024)</text>
+                <text x="10" y="84">language · language</text>
+                <text x="10" y="98">loc · int</text>
+                <text x="10" y="112">in_degree, out_degree · int</text>
+                <text x="10" y="126">role · file_role</text>
+                <text x="10" y="140">pagerank · float</text>
+                <text x="10" y="154">is_circular · bool</text>
+                <text x="10" y="168">scc_id · int</text>
+                <text x="10" y="182">parse_warning · text</text>
+                <text x="10" y="196">exports, functions, classes</text>
+                <text x="10" y="210">  · jsonb</text>
+                <text x="10" y="224">content_sha256 · varchar(64)</text>
+                <text x="10" y="238">content · text (deferred)</text>
+                <text x="10" y="260">UNIQUE (analysis_id, path)</text>
+              </g>
+            </g>
+
+            <!-- edges -->
+            <g transform="translate(590 330)">
+              <rect width="240" height="150" rx="8" class="box"/>
+              <rect width="240" height="26" rx="8" class="box-brand"/>
+              <text x="10" y="18" class="t" style="font-size:13px">edges</text>
+              <g class="t-xs t-mono">
+                <text x="10" y="42">id · uuid PK</text>
+                <text x="10" y="56">analysis_id · FK CASCADE</text>
+                <text x="10" y="70">source_path, target_path</text>
+                <text x="10" y="84">kind · import_kind</text>
+                <text x="10" y="98">line · int</text>
+                <text x="10" y="112">is_circular · bool</text>
+                <text x="10" y="134">UNIQUE (analysis, source, target)</text>
+              </g>
+            </g>
+
+            <!-- user_step_progress -->
+            <g transform="translate(590 520)">
+              <rect width="240" height="196" rx="8" class="box"/>
+              <rect width="240" height="26" rx="8" class="box-brand"/>
+              <text x="10" y="18" class="t" style="font-size:13px">user_step_progress</text>
+              <g class="t-xs t-mono">
+                <text x="10" y="42">id · uuid PK</text>
+                <text x="10" y="56">user_id · uuid</text>
+                <text x="10" y="70">user_login · varchar</text>
+                <text x="10" y="84">tour_id · FK CASCADE</text>
+                <text x="10" y="98">step_id · FK CASCADE</text>
+                <text x="10" y="112">attempts · int</text>
+                <text x="10" y="126">completed · bool</text>
+                <text x="10" y="140">first_try_correct · bool</text>
+                <text x="10" y="154">completed_at, updated_at</text>
+                <text x="10" y="176">UNIQUE (user_id, step_id)</text>
+              </g>
+            </g>
+
+            <!-- relations -->
+            <path class="edge-strong" d="M252 40 H296" marker-end="url(#er-arrow)"/>
+            <text x="256" y="34" class="t-xs">1 · *</text>
+            <path class="edge-strong" d="M130 162 V246" marker-end="url(#er-arrow)"/>
+            <text x="138" y="206" class="t-xs">1 · *</text>
+            <path class="edge-strong" d="M542 40 H586" marker-end="url(#er-arrow)"/>
+            <text x="546" y="34" class="t-xs">1 · *</text>
+            <path class="edge-strong" d="M542 360 C566 360 566 360 586 360" marker-end="url(#er-arrow)"/>
+            <text x="546" y="354" class="t-xs">1 · *</text>
+            <path class="edge-strong" d="M252 320 H296" marker-start="url(#er-arrow)"/>
+            <text x="256" y="314" class="t-xs">* · 1</text>
+            <path class="edge-strong" d="M252 440 C276 440 276 450 296 450" marker-end="url(#er-arrow)"/>
+            <text x="256" y="434" class="t-xs">1 · *</text>
+            <path class="edge-strong" d="M130 462 V556" marker-end="url(#er-arrow)"/>
+            <text x="138" y="512" class="t-xs">1 · *</text>
+            <path class="edge-strong" d="M542 610 H586" marker-end="url(#er-arrow)"/>
+            <text x="546" y="604" class="t-xs">1 · *</text>
+          </svg>
+        </div>
+        <figcaption>Arrows point from the “one” side to the “many” side. <code>tours.analysis_id</code> points at the snapshot the tour currently uses (it moves forward on every sync); <code>user_step_progress.tour_id</code> also references <code>tours</code>.</figcaption>
+      </figure>
+      <ul>
+        <li><strong>One analysis per commit.</strong> <code>UNIQUE (repository_id, commit_sha)</code> is what makes re-analysis of an unchanged commit free and race-safe (<code>INSERT … ON CONFLICT DO NOTHING</code>).</li>
+        <li><strong>File contents live with the analysis.</strong> <code>file_nodes.content</code> is the exact source at the pinned commit (deferred-loaded), so the code viewer, tour pinning and drift detection never call GitHub again.</li>
+        <li><strong>Steps keep their own snapshot.</strong> <code>snippet_snapshot</code> + <code>snippet_hash</code> are what drift detection compares against; <code>proposed_*</code> and <code>drift_diff</code> hold the latest review proposal.</li>
+        <li><strong>Sync history.</strong> Each <em>Sync &amp; verify</em> appends a <code>tour_sync_runs</code> row with the from/to commits and per-status counts; the dashboard shows the last 10.</li>
+      </ul>
+
+      <h2 id="request-lifecycle">Request lifecycle</h2>
+      <figure>
+        <div class="diagram">
+          <svg viewBox="0 0 900 170" role="img" aria-labelledby="rl-t rl-d">
+            <title id="rl-t">Request lifecycle</title>
+            <desc id="rl-d">A request passes through the request-context middleware, which assigns or propagates X-Request-ID and writes one access log line, then CORS, GZip, the router, dependencies for the database session and authentication, a thin route and a service. Success returns ok(data); an AppError or validation error is rendered by the global exception handlers into the same envelope.</desc>
+            <defs><marker id="rl-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head"/></marker></defs>
+            <rect x="10" y="40" width="130" height="64" rx="10" class="box-brand"/>
+            <text x="75" y="66" text-anchor="middle" class="t-sm" style="fill:var(--fg)">RequestContext</text>
+            <text x="75" y="84" text-anchor="middle" class="t-xs">X-Request-ID · access log</text>
+            <rect x="160" y="40" width="90" height="64" rx="10" class="box"/>
+            <text x="205" y="76" text-anchor="middle" class="t-sm">CORS</text>
+            <rect x="270" y="40" width="90" height="64" rx="10" class="box"/>
+            <text x="315" y="76" text-anchor="middle" class="t-sm">GZip</text>
+            <rect x="380" y="40" width="150" height="64" rx="10" class="box"/>
+            <text x="455" y="66" text-anchor="middle" class="t-sm">Depends()</text>
+            <text x="455" y="84" text-anchor="middle" class="t-xs">DbSession · AuthUser/OptionalUser</text>
+            <rect x="550" y="40" width="150" height="64" rx="10" class="box"/>
+            <text x="625" y="66" text-anchor="middle" class="t-sm">route → service</text>
+            <text x="625" y="84" text-anchor="middle" class="t-xs">return ok(data)</text>
+            <rect x="720" y="10" width="170" height="54" rx="10" class="box"/>
+            <text x="805" y="34" text-anchor="middle" class="t-sm">200/201/202</text>
+            <text x="805" y="52" text-anchor="middle" class="t-xs t-mono">{success:true, data}</text>
+            <rect x="720" y="84" width="170" height="70" rx="10" class="box"/>
+            <text x="805" y="106" text-anchor="middle" class="t-sm">exception handlers</text>
+            <text x="805" y="124" text-anchor="middle" class="t-xs t-mono">{success:false,</text>
+            <text x="805" y="140" text-anchor="middle" class="t-xs t-mono">error:{code,message,details}}</text>
+            <path class="edge" d="M140 72 H156" marker-end="url(#rl-arrow)"/>
+            <path class="edge" d="M250 72 H266" marker-end="url(#rl-arrow)"/>
+            <path class="edge" d="M360 72 H376" marker-end="url(#rl-arrow)"/>
+            <path class="edge" d="M530 72 H546" marker-end="url(#rl-arrow)"/>
+            <path class="edge" d="M700 62 C710 62 710 37 716 37" marker-end="url(#rl-arrow)"/>
+            <path class="edge-bad" d="M700 84 C710 84 710 118 716 118" marker-end="url(#rl-arrow)"/>
+            <text x="20" y="140" class="t-xs">Middleware order: last added = outermost, so every response — including CORS preflights and errors — carries X-Request-ID.</text>
+          </svg>
+        </div>
+      </figure>
+      <ul>
+        <li><strong>Request ids.</strong> A valid incoming <code>X-Request-ID</code> (<code>[A-Za-z0-9._:-]{1,128}</code>) is propagated, otherwise a UUID is generated. It is echoed on the response (and exposed via CORS), attached to every log record and included in <code>details.request_id</code> of unexpected 500s.</li>
+        <li><strong>Structured logs.</strong> In production (<code>ENVIRONMENT=production</code>) logs are single-line JSON on stderr; in development they are readable text. One access line per request with method, path, status and duration.</li>
+        <li><strong>Error envelope.</strong> Routes stay thin and return <code>ok(data)</code>; services raise <code>AppError(ErrorCode.X, message, details=…)</code>. Validation errors return only <code>loc</code>/<code>msg</code>/<code>type</code> (input is never echoed); stack traces are logged, never returned. See the <a href="api.html#errors">error code table</a>.</li>
+      </ul>
+<pre><code class="language-json">{
+  "success": false,
+  "data": null,
+  "error": {
+    "code": "GITHUB_RATE_LIMITED",
+    "message": "GitHub API rate limit exceeded, try again later",
+    "details": { "reset_at": "2025-01-01T12:00:00+00:00", "authenticated": false }
+  }
+}</code></pre>
+<pre><code class="language-json">{"ts": "2025-01-01T12:00:00.123+00:00", "level": "INFO", "logger": "app.access", "msg": "GET /api/v1/meta 200 2.4ms", "request_id": "6f1c…", "method": "GET", "path": "/api/v1/meta", "status": 200, "duration_ms": 2.4}</code></pre>
+
+      <h2 id="layout">Monorepo layout</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Folder</th><th>What lives there</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://github.com/AadithyaAle/Repoatlas/tree/main/backend/app/engine"><code>backend/app/engine</code></a></td><td>The pure analysis library: <code>ast_parser</code> (Python <code>ast</code>, tree-sitter), <code>resolver</code> (import → file), <code>graph_algorithms</code>, <code>drift_detector</code>, <code>pipeline</code>. No FastAPI, SQLAlchemy, httpx or I/O.</td></tr>
+          <tr><td><a href="https://github.com/AadithyaAle/Repoatlas/tree/main/backend/app/services"><code>backend/app/services</code></a></td><td>I/O and orchestration: GitHub client, analysis enqueue/run/persist, graph loading + LRU cache, tours, progress, drift sync, dashboard, AI.</td></tr>
+          <tr><td><a href="https://github.com/AadithyaAle/Repoatlas/tree/main/backend/app/api/v1/routes"><code>backend/app/api/v1/routes</code></a></td><td>Thin FastAPI routers per tag: <code>meta</code>, <code>repos</code>, <code>analyses</code>, <code>tours</code>, <code>dashboard</code>, <code>ai</code>.</td></tr>
+          <tr><td><a href="https://github.com/AadithyaAle/Repoatlas/tree/main/backend/app/workers"><code>backend/app/workers</code></a></td><td>The DB-backed analysis worker (embedded or standalone).</td></tr>
+          <tr><td><a href="https://github.com/AadithyaAle/Repoatlas/tree/main/backend/migrations"><code>backend/migrations</code></a></td><td>Alembic environment and versioned schema migrations.</td></tr>
+          <tr><td><a href="https://github.com/AadithyaAle/Repoatlas/tree/main/frontend/src/components"><code>frontend/src/components</code></a></td><td>UI by feature: <code>graph</code>, <code>tours</code>, <code>analysis</code>, <code>dashboard</code>, <code>code</code> (Monaco viewer / diff), <code>explore</code>, <code>auth</code>, shared <code>ui</code>.</td></tr>
+          <tr><td><a href="https://github.com/AadithyaAle/Repoatlas/tree/main/docs"><code>docs</code></a></td><td>This static documentation site (GitHub Pages).</td></tr>
+          <tr><td><a href="https://github.com/AadithyaAle/Repoatlas/tree/main/.github/workflows"><code>.github/workflows</code></a></td><td>CI for backend and frontend, CodeQL, docs build + link check + Pages deploy.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h2 id="decisions">Key decisions &amp; trade-offs</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Decision</th><th>Why</th><th>Trade-off</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Contract-first OpenAPI</strong></td><td><code>app/schemas/atlas.py</code> is the contract. <code>npm run gen:api</code> dumps the OpenAPI document to <code>frontend/openapi.json</code> and generates <code>src/lib/api/schema.d.ts</code>; the frontend never hand-writes API types. CI fails if the committed document differs from the generated one.</td><td>Any schema change requires regenerating and committing the types.</td></tr>
+          <tr><td><strong>One tarball instead of per-file fetches</strong></td><td>A fixed, small number of GitHub requests per analysis regardless of size keeps anonymous use inside the 60 req/h limit.</td><td>The whole archive is downloaded even if only some files are analyzed; capped at 80 MB.</td></tr>
+          <tr><td><strong>Commit SHA pinning</strong></td><td>Every analysis, file content and tour anchor refers to one immutable commit, so results are reproducible, deduplicated per commit and safely cacheable.</td><td>Viewing “latest” requires a new analysis (or a tour sync).</td></tr>
+          <tr><td><strong>Deterministic, iterative algorithms</strong></td><td>No recursion (real repositories exceed Python's stack), sorted outputs everywhere: identical input gives identical graphs, cycles and ranks; everything is unit-testable.</td><td>Slightly more verbose code (explicit stacks).</td></tr>
+          <tr><td><strong>Embedded worker</strong></td><td>One free web service + one free Postgres run the whole product; <code>SKIP LOCKED</code> + heartbeats give durability without Redis.</td><td>Analysis competes with requests for the same CPU; concurrency is 1 per process. <code>WORKER_MODE=standalone</code> splits it out.</td></tr>
+          <tr><td><strong><code>tree-sitter &gt;=0.25,&lt;0.26</code></strong></td><td>0.26.0 segfaults when walking <code>named_children</code> after field lookups on trees with MISSING nodes — a native crash that would take down the worker.</td><td>Pinned until fixed upstream.</td></tr>
+          <tr><td><strong>LRU graph cache</strong></td><td>Completed analyses are immutable, so the in-memory graph is cached (32 entries) per analysis id; blast-radius queries cost one BFS, not a DB round trip.</td><td>Per-process memory; invalidated when an analysis is forced to re-run.</td></tr>
+          <tr><td><strong>Checkpoint answers never leave the server</strong></td><td>Trainees receive only <code>question</code> and <code>options</code>; <code>correct_index</code>/<code>explanation</code> are projected out in one serializer. The explanation is returned only after a correct answer.</td><td>Owners and trainees see different step payloads.</td></tr>
+          <tr><td><strong>Transaction pooler</strong></td><td>Supabase's pgbouncer pooler (port 6543) survives many short-lived connections from a sleeping free instance.</td><td>Prepared statements are disabled (<code>statement_cache_size=0</code>).</td></tr>
+        </tbody>
+      </table></div>
+    </article>
+
+    <nav class="pager" aria-label="Pagination">
+      <a href="getting-started.html"><small>Previous</small>← Getting started</a>
+      <a class="next" href="workflows.html"><small>Next</small>Workflows →</a>
+    </nav>
+    <div class="page-meta">
+      <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/docs/architecture.html">Edit this page on GitHub</a>
+      <span class="muted">Described from <a href="https://github.com/AadithyaAle/Repoatlas/tree/main/backend/app">backend/app</a>.</span>
+    </div>
+  </main>
+
+  <aside class="toc" aria-label="On this page">
+    <div data-toc><h2>On this page</h2></div>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <div class="inner">
+    <span>© RepoAtlas contributors · MIT License</span>
+    <nav aria-label="Footer">
+      <a href="getting-started.html">Guide</a>
+      <a href="api.html">API</a>
+      <a href="self-hosting.html">Self-hosting</a>
+      <a href="https://github.com/AadithyaAle/Repoatlas">GitHub</a>
+      <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">Security</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

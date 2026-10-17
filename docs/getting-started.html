@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Getting started · RepoAtlas Docs</title>
+  <meta name="description" content="A step-by-step guide to the RepoAtlas app: analyze a repository, read the dependency graph, simulate blast radius, find cycles, build and play onboarding tours, sync drift and use the dashboard.">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://aadithyaale.github.io/Repoatlas/getting-started.html">
+  <link rel="stylesheet" href="assets/css/docs.css">
+  <script>(function(){try{var t=localStorage.getItem("repoatlas-docs-theme");if(!t){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script src="assets/config.js"></script>
+  <script src="assets/js/docs.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <a class="brand" href="index.html"><img src="assets/img/logo.svg" alt="" width="30" height="30"><span>RepoAtlas</span><span class="brand-sub">Docs</span></a>
+  <nav class="top-nav" aria-label="Primary">
+    <a href="getting-started.html" aria-current="page">Guide</a>
+    <a href="architecture.html">Architecture</a>
+    <a href="workflows.html">Workflows</a>
+    <a href="algorithms.html">Algorithms</a>
+    <a href="api.html">API</a>
+    <a href="self-hosting.html">Self-hosting</a>
+    <a href="faq.html">FAQ</a>
+  </nav>
+  <div class="header-actions">
+    <a class="icon-btn" href="#" data-app-link data-app-optional hidden>Open app</a>
+    <a class="icon-btn" href="https://github.com/AadithyaAle/Repoatlas" aria-label="RepoAtlas on GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+    <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle colour theme" aria-pressed="false">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+</header>
+<div class="nav-overlay" aria-hidden="true"></div>
+<div class="layout">
+  <aside class="sidebar" id="sidebar" aria-label="Documentation navigation">
+    <button class="icon-btn sidebar-close" type="button" data-menu-close aria-label="Close navigation">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <nav aria-label="Documentation pages">
+      <h2>Introduction</h2>
+      <ul>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="getting-started.html" aria-current="page">Getting started</a></li>
+      </ul>
+      <h2>Concepts</h2>
+      <ul>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="workflows.html">Workflows</a></li>
+        <li><a href="algorithms.html">Algorithms</a></li>
+      </ul>
+      <h2>Reference</h2>
+      <ul>
+        <li><a href="api.html">API reference</a></li>
+        <li><a href="self-hosting.html">Self-hosting</a></li>
+        <li><a href="faq.html">FAQ &amp; limitations</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-ext">
+      <ul>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas">GitHub repository</a></li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/CONTRIBUTING.md">Contributing</a></li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">Security policy</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main" class="content" tabindex="-1">
+    <article class="prose">
+      <span class="eyebrow">Guide</span>
+      <h1>Getting started</h1>
+      <p class="lead">This walkthrough follows the hosted app from pasting a repository URL to reading a tour's health report. The figures are illustrations of the real screen layouts; where screenshots have been added they replace the illustrations automatically.</p>
+
+      <div class="btn-row">
+        <a class="btn btn-primary" href="#" data-app-link>Open the app</a>
+        <a class="btn btn-secondary" href="self-hosting.html">Run it locally instead</a>
+      </div>
+      <p class="app-note" data-app-note hidden tabindex="-1">The hosted app URL hasn't been published in this documentation yet — see <a href="self-hosting.html">Self-hosting</a> to run your own instance.</p>
+
+      <h2 id="before-you-start">Before you start</h2>
+      <ul>
+        <li><strong>Public repositories only.</strong> Private repositories are rejected with <code>GITHUB_REPO_NOT_FOUND</code>; RepoAtlas never asks for repository access.</li>
+        <li><strong>Python, JavaScript and TypeScript</strong> files are analyzed (<code>.py</code>, <code>.js</code>, <code>.jsx</code>, <code>.mjs</code>, <code>.cjs</code>, <code>.ts</code>, <code>.tsx</code>, <code>.mts</code>, <code>.cts</code>).</li>
+        <li><strong>No account needed to explore.</strong> Analyzing repositories, browsing graphs, blast radius and reading public tours work anonymously. Creating tours, tracking progress and the dashboard require signing in with GitHub (Supabase Auth).</li>
+      </ul>
+
+      <h2 id="analyze">1 · Analyze a repository</h2>
+      <ol class="steps">
+        <li>On the home page paste a repository as <code>https://github.com/owner/repo</code>, <code>github.com/owner/repo/tree/branch</code> or simply <code>owner/repo</code>, then press <strong>Analyze</strong>. Or click one of the demo repositories.</li>
+        <li>Optionally open <strong>Choose a branch</strong>; leave it empty to use the repository's default branch.</li>
+        <li>RepoAtlas resolves the branch to a <strong>commit SHA</strong> and queues an analysis. If that exact commit was analyzed before, you are taken straight to the cached result.</li>
+      </ol>
+      <figure class="shot missing">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="assets/screenshots/explore.png" alt="The RepoAtlas home page with a repository URL field, Analyze button, optional branch field and demo repositories" loading="lazy" onerror="this.closest('figure').classList.add('missing')" onload="if(this.src.indexOf('data:')!==0)this.closest('figure').classList.remove('missing')">
+        <div class="shot-fallback" role="img" aria-label="Illustration of the home page: a URL input with an Analyze button, a 'Choose a branch (optional)' link, demo repository chips and a list of recently analyzed repositories.">
+          <div class="mock">
+            <div class="mock-bar"><span class="mock-dots"><i></i><i></i><i></i></span><span class="mock-url">/</span></div>
+            <div class="mock-body mock-col">
+              <strong style="font-size:15px">Analyze a public GitHub repository</strong>
+              <div class="mock-row"><span class="mock-input">https://github.com/owner/repo  or  owner/repo</span><span class="mock-btn primary">Analyze</span></div>
+              <span class="muted">⎇ Choose a branch (optional)</span>
+              <div class="mock-row"><span class="muted">✦ Try a demo:</span>
+                <span class="mock-chip"><span class="dot" style="--c:#3178c6"></span>vercel/swr</span>
+                <span class="mock-chip"><span class="dot" style="--c:#3178c6"></span>pmndrs/zustand</span>
+                <span class="mock-chip"><span class="dot" style="--c:#3178c6"></span>sindresorhus/ky</span>
+                <span class="mock-chip"><span class="dot" style="--c:#e5b52a"></span>pallets/flask</span>
+                <span class="mock-chip"><span class="dot" style="--c:#e5b52a"></span>fastapi/typer</span>
+              </div>
+              <div class="mock-pane"><div class="mock-pane-h">Recently analyzed</div><ul class="mock-pane-b mock-list"><li>owner/api-server · main · 2 tours</li><li>owner/web-client · main</li></ul></div>
+            </div>
+          </div>
+        </div>
+        <figcaption>Home page: paste a URL or <code>owner/repo</code>, optionally pick a branch, or try a demo.</figcaption>
+        <p class="shot-note">Illustrated layout · screenshot slot <code>explore.png</code></p>
+      </figure>
+
+      <h2 id="progress">2 · Follow the analysis progress</h2>
+      <p>The analysis page polls the job and shows a five-step progress indicator that mirrors the server-side state machine: <span class="badge status-PENDING">Queued</span> → <span class="badge status-FETCHING_TREE">Fetching tree</span> → <span class="badge status-PARSING_AST">Parsing ASTs</span> → <span class="badge status-COMPUTING_GRAPH">Computing graph</span> → <span class="badge status-COMPLETED">Ready</span>.</p>
+      <figure class="shot missing">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="assets/screenshots/analysis-progress.png" alt="Analysis progress page showing the five pipeline steps with the third one in progress" loading="lazy" onerror="this.closest('figure').classList.add('missing')" onload="if(this.src.indexOf('data:')!==0)this.closest('figure').classList.remove('missing')">
+        <div class="shot-fallback" role="img" aria-label="Illustration of the analysis progress stepper: Queued and Fetching tree are complete, Parsing ASTs is in progress, Computing graph and Ready are upcoming.">
+          <div class="mock">
+            <div class="mock-bar"><span class="mock-dots"><i></i><i></i><i></i></span><span class="mock-url">/analyses/3f2c…</span></div>
+            <div class="mock-body mock-col" style="max-width:480px">
+              <div class="mock-row"><strong>owner/repo</strong><span class="mock-chip">main @ 9c1e4b2</span></div>
+              <div class="mock-progress"><i style="width:50%"></i></div>
+              <div class="mock-step done"><span class="n">✓</span><div><div class="lbl">Queued</div><div class="desc">Waiting for a worker to pick up the job</div></div></div>
+              <div class="mock-step done"><span class="n">✓</span><div><div class="lbl">Fetching tree</div><div class="desc">Resolving the commit and listing source files via the GitHub API</div></div></div>
+              <div class="mock-step cur"><span class="n">⟳</span><div><div class="lbl">Parsing ASTs</div><div class="desc">Extracting imports, exports, functions and classes</div></div></div>
+              <div class="mock-step"><span class="n">4</span><div><div class="lbl">Computing graph</div><div class="desc">Resolving imports, detecting cycles, ranking files</div></div></div>
+              <div class="mock-step"><span class="n">5</span><div><div class="lbl">Ready</div><div class="desc">Dependency graph is ready to explore</div></div></div>
+            </div>
+          </div>
+        </div>
+        <figcaption>Each status change is committed to the database, so the page can show exactly where the job is.</figcaption>
+        <p class="shot-note">Illustrated layout · screenshot slot <code>analysis-progress.png</code></p>
+      </figure>
+      <p>When a job fails the step it failed in turns red and a specific explanation is shown — for example <em>GitHub rate limit reached</em> (retry later or sign in), <em>Repository not found</em> (private or misspelled), <em>Repository too large</em> or <em>No supported source files</em>. See <a href="self-hosting.html#troubleshooting">Troubleshooting</a> for causes and fixes.</p>
+      <div class="callout">
+        <span class="callout-title">Large repositories</span>
+        <p>At most <code>MAX_FILES</code> source files (1,500 by default) are analyzed. Files under <code>src/</code>, <code>app/</code>, <code>lib/</code> and <code>packages/*/src/</code> are preferred, then shallower paths. A <strong>truncated</strong> badge tells you when the cap was hit.</p>
+      </div>
+
+      <h2 id="graph">3 · Read the dependency graph</h2>
+      <p>When the analysis completes, the summary stats and the graph workspace appear. Each node is a file; an arrow <code>A → B</code> means <em>A imports B</em>. Nodes are coloured by <a href="algorithms.html#roles">role</a> and laid out automatically (left-to-right by default).</p>
+      <figure class="shot missing">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="assets/screenshots/graph.png" alt="Graph workspace with a filter toolbar, the dependency graph canvas and an overview panel" loading="lazy" onerror="this.closest('figure').classList.add('missing')" onload="if(this.src.indexOf('data:')!==0)this.closest('figure').classList.remove('missing')">
+        <div class="shot-fallback" role="img" aria-label="Illustration of the graph workspace. A toolbar holds a file search field, Cycles, Hide tests and Hide isolated toggles, a List cycles button and a layout direction toggle. A second row shows role filter chips with counts and graph statistics. Below, the canvas shows file nodes coloured by role, and a right-hand overview panel lists the most central files by PageRank, entry points and role counts.">
+          <div class="mock">
+            <div class="mock-bar" style="flex-direction:column;align-items:stretch;gap:6px">
+              <div class="mock-row">
+                <span class="mock-input" style="max-width:220px">Search files…  /</span>
+                <span class="mock-chip cyc">⟳ Cycles 6</span><span class="mock-chip">Hide tests</span><span class="mock-chip">Hide isolated 4</span>
+                <span style="margin-left:auto" class="mock-row"><span class="mock-btn">List cycles</span><span class="mock-btn">⇄ LR</span><span class="mock-btn">▤</span></span>
+              </div>
+              <div class="mock-row">
+                <small class="muted">ROLES</small>
+                <span class="mock-chip"><span class="dot" style="--c:var(--role-entry)"></span>Entry point 9</span>
+                <span class="mock-chip"><span class="dot" style="--c:var(--role-god)"></span>God module 2</span>
+                <span class="mock-chip"><span class="dot" style="--c:var(--role-core)"></span>Core utility 5</span>
+                <span class="mock-chip"><span class="dot" style="--c:var(--role-standard)"></span>Standard 61</span>
+                <span class="mock-chip"><span class="dot" style="--c:var(--role-leaf)"></span>Leaf 51</span>
+                <span class="mock-chip"><span class="dot" style="--c:var(--role-isolated)"></span>Isolated 4</span>
+                <span class="muted" style="margin-left:auto">Files <b>132</b> · Imports <b>347</b> · Cycles <b>2</b></span>
+              </div>
+            </div>
+            <div class="mock-split">
+              <div class="mock-canvas">
+                <svg viewBox="0 0 420 230" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                  <g class="edge"><path d="M86 52 H140"/><path d="M86 120 H140"/><path d="M226 52 H280"/><path d="M226 120 C 250 120, 250 60, 280 60"/><path d="M226 120 H280"/><path d="M226 186 C 250 186, 250 130, 280 128"/><path d="M86 186 H140"/></g>
+                  <g>
+                    <rect x="14" y="38" width="72" height="28" rx="6" class="box"/><rect x="14" y="38" width="4" height="28" class="f-entry"/><text x="24" y="56" class="t-xs t-mono" style="fill:var(--fg)">main.py</text>
+                    <rect x="14" y="106" width="72" height="28" rx="6" class="box"/><rect x="14" y="106" width="4" height="28" class="f-entry"/><text x="24" y="124" class="t-xs t-mono" style="fill:var(--fg)">cli.py</text>
+                    <rect x="14" y="172" width="72" height="28" rx="6" class="box"/><rect x="14" y="172" width="4" height="28" class="f-entry"/><text x="24" y="190" class="t-xs t-mono" style="fill:var(--fg)">worker.py</text>
+                    <rect x="140" y="38" width="86" height="28" rx="6" class="box"/><rect x="140" y="38" width="4" height="28" class="f-standard"/><text x="150" y="56" class="t-xs t-mono" style="fill:var(--fg)">routes.py</text>
+                    <rect x="140" y="106" width="86" height="28" rx="6" class="box"/><rect x="140" y="106" width="4" height="28" class="f-god"/><text x="150" y="124" class="t-xs t-mono" style="fill:var(--fg)">service.py</text>
+                    <rect x="140" y="172" width="86" height="28" rx="6" class="box"/><rect x="140" y="172" width="4" height="28" class="f-standard"/><text x="150" y="190" class="t-xs t-mono" style="fill:var(--fg)">jobs.py</text>
+                    <rect x="280" y="40" width="86" height="28" rx="6" class="box"/><rect x="280" y="40" width="4" height="28" class="f-core"/><text x="290" y="58" class="t-xs t-mono" style="fill:var(--fg)">db.py</text>
+                    <rect x="280" y="108" width="86" height="28" rx="6" class="box"/><rect x="280" y="108" width="4" height="28" class="f-leaf"/><text x="290" y="126" class="t-xs t-mono" style="fill:var(--fg)">config.py</text>
+                  </g>
+                </svg>
+                <span class="mock-chip" style="position:absolute;top:8px;left:8px;background:var(--bg-elev)">ⓘ Legend ›</span>
+              </div>
+              <div class="mock-side">
+                <div class="mock-pane" style="border-style:dashed;padding:6px"><b>Select a file to see its blast radius</b><div class="muted" style="font-size:11px">Click a node or press <kbd>Enter</kbd> on a focused one. <kbd>/</kbd> search · <kbd>Esc</kbd> clear.</div></div>
+                <small class="muted">MOST CENTRAL FILES (PAGERANK)</small>
+                <ul class="mock-list"><li>1 <b>config.py</b> <span class="dot" style="--c:var(--role-leaf)"></span></li><li>2 <b>db.py</b> <span class="dot" style="--c:var(--role-core)"></span></li><li>3 <b>service.py</b> <span class="dot" style="--c:var(--role-god)"></span></li></ul>
+                <small class="muted">ENTRY POINTS</small>
+                <ul class="mock-list"><li>app/main.py</li><li>app/cli.py</li></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption>Graph workspace: toolbar filters, React Flow canvas and the overview panel shown before a file is selected.</figcaption>
+        <p class="shot-note">Illustrated layout · screenshot slot <code>graph.png</code></p>
+      </figure>
+      <h3 id="graph-toolbar">Toolbar and filters</h3>
+      <ul>
+        <li><strong>Search</strong> (<kbd>/</kbd>) jumps to a file, or applies a <em>path contains</em> filter.</li>
+        <li><strong>Cycles</strong> isolates files and imports that are part of a circular dependency (disabled when there are none).</li>
+        <li><strong>Hide tests</strong> hides test files and fixtures; <strong>Hide isolated</strong> hides files with no project imports in either direction.</li>
+        <li><strong>Role</strong> and <strong>language</strong> chips filter by classification; counts are shown on each chip. <strong>Clear filters</strong> resets everything.</li>
+        <li>The <strong>LR / TB</strong> button switches the layout direction; the panel button collapses the inspector on desktop.</li>
+        <li>The statistics show visible / total <strong>Files</strong> and <strong>Imports</strong> and the number of reported <strong>Cycles</strong> (shown as <code>100+</code> when the report cap is reached).</li>
+      </ul>
+      <h3 id="graph-overview">Overview panel</h3>
+      <p>With nothing selected, the right-hand panel lists the <strong>most central files by PageRank</strong> (great first files to read), the repository's <strong>entry points</strong> (files nothing imports) and a count per role. The <strong>Legend</strong> in the top-left corner of the canvas explains role colours, edge styles (solid = static import, dashed = dynamic or type-only, red = circular) and, once a file is selected, blast-radius depth colours.</p>
+      <div class="callout tip"><span class="callout-title">Shareable links</span><p>Selecting a file writes it to the URL as <code>?file=path/to/file.py</code>, so you can send a colleague a link that opens the graph focused on that file.</p></div>
+
+      <h2 id="blast-radius">4 · Simulate the blast radius of a change</h2>
+      <p>Click any node (or press <kbd>Enter</kbd> on a focused node). The inspector opens on the <strong>Impact</strong> tab and the graph is recoloured by distance from the selected file.</p>
+      <figure class="shot missing">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="assets/screenshots/blast-radius.png" alt="File inspector on the Impact tab showing a risk meter, impact statistics and dependents grouped by depth" loading="lazy" onerror="this.closest('figure').classList.add('missing')" onload="if(this.src.indexOf('data:')!==0)this.closest('figure').classList.remove('missing')">
+        <div class="shot-fallback" role="img" aria-label="Illustration of the file inspector for app/core/db.py, role Core utility. The Impact tab shows a risk meter at 18.6 (High), statistics Impacted 23 (17.6% of 131), Direct 7 and Max depth 3, a Hide on graph toggle and dependents grouped into depth 1 and depth 2 lists. The canvas colours dependents orange, yellow and blue by depth.">
+          <div class="mock">
+            <div class="mock-split">
+              <div class="mock-canvas">
+                <svg viewBox="0 0 420 230" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                  <g class="edge"><path d="M90 52 H150"/><path d="M90 120 H150"/><path d="M236 52 H296"/><path d="M236 120 C 260 120, 262 70, 296 62"/><path d="M90 186 C 120 186, 130 130, 150 124"/></g>
+                  <rect x="18" y="38" width="72" height="28" rx="6" class="f-d2"/><text x="26" y="56" class="t-xs t-mono t-dark">main.py</text>
+                  <rect x="18" y="106" width="72" height="28" rx="6" class="f-d2"/><text x="26" y="124" class="t-xs t-mono t-dark">cli.py</text>
+                  <rect x="18" y="172" width="72" height="28" rx="6" class="f-d3"/><text x="26" y="190" class="t-xs t-mono t-dark">app.py</text>
+                  <rect x="150" y="38" width="86" height="28" rx="6" class="f-d1"/><text x="158" y="56" class="t-xs t-mono t-dark">routes.py</text>
+                  <rect x="150" y="106" width="86" height="28" rx="6" class="f-d1"/><text x="158" y="124" class="t-xs t-mono t-dark">service.py</text>
+                  <rect x="296" y="40" width="86" height="34" rx="6" class="f-d0"/><text x="304" y="61" class="t-xs t-mono t-dark">db.py ◎</text>
+                  <rect x="296" y="120" width="86" height="28" rx="6" class="box"/><text x="304" y="138" class="t-xs t-mono" style="fill:var(--fg-muted)">config.py</text>
+                </svg>
+              </div>
+              <div class="mock-side">
+                <div><b class="t-mono" style="font-family:var(--font-mono)">db.py</b><div class="muted" style="font-family:var(--font-mono);font-size:11px">app/core</div><span class="badge role-CORE_UTILITY" style="margin-top:4px">Core utility</span></div>
+                <div class="mock-tabs"><span class="on">Impact</span><span>Code</span><span>Details</span></div>
+                <div class="mock-row" style="justify-content:space-between"><span>Risk <b>18.6</b></span><span class="badge risk-HIGH">High</span></div>
+                <div class="mock-meter"><i style="left:18.6%"></i></div>
+                <div class="mock-stats"><div><small>Impacted</small><b>23</b><small>17.6% of 131</small></div><div><small>Direct</small><b>7</b><small>import it</small></div><div><small>Max depth</small><b>3</b><small>hops away</small></div></div>
+                <span class="mock-btn" style="align-self:flex-end">◌ Hide on graph</span>
+                <ul class="mock-list">
+                  <li><span class="mock-d" style="--c:var(--depth-1)">d1</span> Direct dependents (7)</li>
+                  <li>· routes.py app/api</li><li>· service.py app/services</li>
+                  <li><span class="mock-d" style="--c:var(--depth-2)">d2</span> Depth 2 (12)</li>
+                  <li>· main.py app</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption>Impact tab: risk meter, impact statistics and the list of dependents grouped by depth.</figcaption>
+        <p class="shot-note">Illustrated layout · screenshot slot <code>blast-radius.png</code></p>
+      </figure>
+      <ul>
+        <li><strong>Risk score</strong> = Σ (1 / depth) over impacted files ÷ (total files − 1) × 100, bucketed as <span class="badge risk-LOW">Low &lt; 5</span> <span class="badge risk-MEDIUM">Medium &lt; 15</span> <span class="badge risk-HIGH">High &lt; 35</span> <span class="badge risk-CRITICAL">Critical ≥ 35</span>. The panel's “How is the risk score computed?” disclosure explains it in place; the <a href="algorithms.html#bfs">algorithms page</a> animates it.</li>
+        <li><strong>Impacted</strong> is the number of files that import the selected file directly or transitively, with the percentage of all other files; <strong>Direct</strong> counts depth-1 importers; <strong>Max depth</strong> is the longest import chain.</li>
+        <li>Click any dependent to jump to it. <strong>Hide on graph</strong> turns the depth colouring off without closing the inspector.</li>
+        <li>The <strong>Code</strong> tab shows the file's source at the analyzed commit with an <em>Open on GitHub</em> permalink. The <strong>Details</strong> tab shows in/out-degree, PageRank and rank, lines of code, language, circular membership (with its SCC group), exports, functions, classes, each import with its line number and kind, and any parse warning.</li>
+      </ul>
+      <p class="small muted">Press <kbd>Esc</kbd> to clear the selection. On small screens the inspector opens as a sheet from the right.</p>
+
+      <h2 id="cycles">5 · Find circular dependencies</h2>
+      <p>Toggle <strong>Cycles</strong> in the toolbar to show only files and imports that lie on a cycle (they are drawn in red), or open <strong>List cycles</strong> for the concrete cycles.</p>
+      <figure class="shot missing">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="assets/screenshots/cycles.png" alt="Circular dependencies dialog listing cycles and an Isolate cycles on graph button" loading="lazy" onerror="this.closest('figure').classList.add('missing')" onload="if(this.src.indexOf('data:')!==0)this.closest('figure').classList.remove('missing')">
+        <div class="shot-fallback" role="img" aria-label="Illustration of the Circular dependencies dialog listing two cycles as file paths joined by arrows, with an Isolate cycles on graph button.">
+          <div class="mock" style="max-width:520px;margin:0 auto">
+            <div class="mock-body mock-col">
+              <strong>Circular dependencies</strong>
+              <span class="muted" style="font-size:11.5px">2 cycles across 5 files. Each arrow means “imports”. Cycles make modules impossible to load or test in isolation — break one edge to untangle the loop.</span>
+              <div class="mock-pane"><ol class="mock-pane-b mock-list">
+                <li><span class="muted">#1 · 3 files</span>&nbsp; a.ts <span style="color:var(--cycle)">→</span> b.ts <span style="color:var(--cycle)">→</span> c.ts <span style="color:var(--cycle)">→</span> a.ts</li>
+                <li><span class="muted">#2 · 2 files</span>&nbsp; index.ts <span style="color:var(--cycle)">→</span> slice.ts <span style="color:var(--cycle)">→</span> index.ts</li>
+              </ol></div>
+              <span class="mock-btn primary" style="align-self:flex-end">Isolate cycles on graph</span>
+            </div>
+          </div>
+        </div>
+        <figcaption>The cycle list is capped at 100 concrete cycles; cycle <em>membership</em> highlighting is always complete.</figcaption>
+        <p class="shot-note">Illustrated layout · screenshot slot <code>cycles.png</code></p>
+      </figure>
+      <p>Cycles come from an iterative three-colour DFS (concrete cycles) combined with Tarjan's strongly connected components (complete membership). See <a href="algorithms.html#cycles">Algorithms → cycle detection</a>.</p>
+
+      <h2 id="create-tour">6 · Create a tour</h2>
+      <p>Tours are created from a repository page (<code>/repos/owner/name</code>) once the repository has a completed analysis. Sign in with GitHub first.</p>
+      <ol class="steps">
+        <li>Click <strong>Create tour</strong>.</li>
+        <li>Enter a <strong>title</strong> (3–200 characters) such as “How a request flows through the API”, an optional <strong>description</strong> (what will trainees learn?) and choose the <strong>visibility</strong>: <em>Public</em> tours are listed for everyone; <em>Private</em> tours are invisible to anyone but you.</li>
+        <li>The tour is created against the analysis you are looking at — its commit becomes the tour's <strong>base commit</strong> — and the tour builder opens.</li>
+      </ol>
+
+      <h2 id="pin">7 · Pin lines of code</h2>
+      <p>The builder has three panes: the ordered <strong>step list</strong>, the <strong>dependency graph</strong> (files already used by steps are highlighted) and the <strong>code / step editor</strong>.</p>
+      <figure class="shot missing">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="assets/screenshots/tour-builder.png" alt="Tour builder with the step list, graph and code editor with a selected line range and a Pin lines button" loading="lazy" onerror="this.closest('figure').classList.add('missing')" onload="if(this.src.indexOf('data:')!==0)this.closest('figure').classList.remove('missing')">
+        <div class="shot-fallback" role="img" aria-label="Illustration of the tour builder. The header shows the repository and base commit, the tour title, a Public badge, step count, a health bar and Sync and verify, settings and Preview buttons. Left: a numbered step list with drift badges and move up and down controls. Middle: a Jump to file search and the graph. Right: the selected file's code with lines 12 to 18 highlighted and a Pin lines L12–18 button.">
+          <div class="mock">
+            <div class="mock-bar" style="justify-content:space-between">
+              <div class="mock-col" style="gap:2px"><small class="muted">TOUR BUILDER · owner/repo @ 9c1e4b2</small><b>How a request flows through the API</b>
+                <span class="mock-row"><span class="mock-chip">Public</span><span class="muted">4 steps</span><span class="badge drift-OUTDATED_NEEDS_REVIEW">1 need attention</span></span></div>
+              <div class="mock-row"><span class="mock-healthbar"><i style="width:50%;background:var(--drift-healthy)"></i><i style="width:25%;background:var(--drift-autofixed)"></i><i style="width:25%;background:var(--drift-review)"></i></span><span class="mock-btn primary">⟳ Sync &amp; verify</span><span class="mock-btn">⚙</span><span class="mock-btn">👁 Preview</span></div>
+            </div>
+            <div class="mock-split3">
+              <div class="mock-pane"><div class="mock-pane-h">Steps</div><div class="mock-pane-b mock-col" style="gap:5px">
+                <div class="mock-row" style="flex-wrap:nowrap"><b>1</b><span style="flex:1">Entry point</span><span class="dot" style="--c:var(--drift-healthy)"></span></div>
+                <div class="mock-row" style="flex-wrap:nowrap"><b>2</b><span style="flex:1">Routing</span><span class="dot" style="--c:var(--drift-autofixed)"></span></div>
+                <div class="mock-row" style="flex-wrap:nowrap"><b>3</b><span style="flex:1">Sessions</span><span class="dot" style="--c:var(--drift-review)"></span></div>
+                <div class="mock-row" style="flex-wrap:nowrap"><b>4</b><span style="flex:1">Models</span><span class="dot" style="--c:var(--drift-healthy)"></span></div>
+                <small class="muted">drag, or ↑ ↓ to reorder</small>
+              </div></div>
+              <div class="mock-pane"><div class="mock-pane-h"><span class="mock-input" style="height:22px">Jump to file… (or click a node)</span><span class="mock-btn" style="height:22px">Open</span></div>
+                <div class="mock-canvas" style="min-height:150px"><svg viewBox="0 0 200 150" aria-hidden="true"><g class="edge"><path d="M60 40 L120 70"/><path d="M60 110 L120 80"/></g><rect x="10" y="28" width="56" height="22" rx="5" class="box"/><rect x="10" y="98" width="56" height="22" rx="5" class="box"/><rect x="118" y="62" width="70" height="26" rx="5" class="box-brand"/><text x="124" y="79" class="t-xs t-mono" style="fill:var(--fg)">db.py</text></svg></div></div>
+              <div class="mock-pane"><div class="mock-pane-h"><span style="font-family:var(--font-mono)">app/core/db.py</span><span class="badge role-CORE_UTILITY">Core utility</span></div>
+                <div class="mock-pane-b mock-col">
+                  <div class="mock-code">
+                    <div><span class="ln">11</span></div>
+                    <div class="sel"><span class="ln">12</span>async def get_session():</div>
+                    <div class="sel"><span class="ln">13</span>    async with SessionLocal() as s:</div>
+                    <div class="sel"><span class="ln">14</span>        yield s</div>
+                    <div><span class="ln">15</span></div>
+                  </div>
+                  <div class="mock-row" style="justify-content:space-between;border:1px dashed var(--border-strong);border-radius:7px;padding:6px"><b>Selected L12–14</b><span class="mock-btn primary">📌 Pin lines L12–14</span></div>
+                </div></div>
+            </div>
+          </div>
+        </div>
+        <figcaption>Tour builder: select lines in the code pane, then pin them as a new step.</figcaption>
+        <p class="shot-note">Illustrated layout · screenshot slot <code>tour-builder.png</code></p>
+      </figure>
+      <ol class="steps">
+        <li>Click a node in the graph or use <strong>Jump to file</strong> to open a file.</li>
+        <li>Select a range of lines in the code viewer (a step may pin at most 400 lines beyond its first line) and click <strong>Pin lines</strong>.</li>
+        <li>Give the step a <strong>title</strong> and a <strong>Markdown explanation</strong>, optionally add a <a href="#checkpoints">checkpoint</a> and choose its position, then save. The server extracts the snippet from the stored file content and records a SHA-256 hash of its whitespace-normalized text — this anchor is what the drift engine checks later.</li>
+        <li>Reorder steps by drag and drop or with the move up/down buttons; click a step to edit its text or checkpoint; delete steps you no longer need.</li>
+      </ol>
+
+      <h2 id="checkpoints">8 · Add checkpoints</h2>
+      <p>A checkpoint is a multiple-choice question attached to a step: a question (3–500 characters), <strong>2 to 6 options</strong>, exactly one correct option and an optional explanation (up to 1,000 characters).</p>
+      <ul>
+        <li>Trainees never receive <code>correct_index</code> or the explanation — the API only sends them to the tour owner. The explanation is revealed after a correct answer.</li>
+        <li>Steps without a checkpoint are completed with <strong>Mark as done</strong>.</li>
+        <li>The first attempt at each checkpoint is recorded, which powers <em>first-try accuracy</em> on the owner's dashboard.</li>
+      </ul>
+
+      <h2 id="play">9 · Play a tour</h2>
+      <p>Open a tour's public page (<code>/tours/&lt;id&gt;</code>) to take it. Anyone can read a public tour; signing in lets RepoAtlas track your progress.</p>
+      <figure class="shot missing">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="assets/screenshots/tour-player.png" alt="Tour player showing the current step's explanation, pinned code, a checkpoint question and step navigation" loading="lazy" onerror="this.closest('figure').classList.add('missing')" onload="if(this.src.indexOf('data:')!==0)this.closest('figure').classList.remove('missing')">
+        <div class="shot-fallback" role="img" aria-label="Illustration of the tour player: a progress bar, the step title and Markdown explanation, a small dependency graph, the pinned code with highlighted lines, a checkpoint with four options where the correct one is marked, and step navigation with completed, current and locked step dots.">
+          <div class="mock">
+            <div class="mock-body mock-col">
+              <div class="mock-row" style="justify-content:space-between"><b>How a request flows through the API</b><span class="muted">2 of 4 complete</span></div>
+              <div class="mock-progress"><i style="width:50%"></i></div>
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px">
+                <div class="mock-pane"><div class="mock-pane-b mock-col">
+                  <small class="muted">STEP 3</small><b>Opening a database session</b>
+                  <span class="muted" style="font-size:11.5px">Every request handler receives a session from this dependency…</span>
+                  <div class="mock-option"><span class="radio"></span>A new engine per request</div>
+                  <div class="mock-option ok"><span class="radio"></span>A pooled session, closed after the request ✓</div>
+                  <div class="mock-option"><span class="radio"></span>A global session shared by all requests</div>
+                  <span class="mock-btn primary" style="align-self:flex-start">Check answer</span>
+                </div></div>
+                <div class="mock-col">
+                  <div class="mock-pane"><div class="mock-pane-h"><span style="font-family:var(--font-mono)">app/core/db.py</span><span class="muted">L12–14</span></div>
+                    <div class="mock-code"><div class="sel"><span class="ln">12</span>async def get_session():</div><div class="sel"><span class="ln">13</span>    async with SessionLocal() as s:</div><div class="sel"><span class="ln">14</span>        yield s</div></div></div>
+                  <div class="mock-pane mock-pane-b mock-col" style="gap:6px"><div class="mock-row" style="justify-content:space-between"><span class="mock-btn">← Previous</span><span class="mock-btn" style="opacity:.5">Next →</span></div>
+                    <div class="mock-steps-nav"><i class="done">1</i><i class="done">2</i><i class="cur">3</i><i class="lock">4</i></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption>Tour player: explanation and checkpoint beside the pinned code; later steps stay locked until earlier ones are complete.</figcaption>
+        <p class="shot-note">Illustrated layout · screenshot slot <code>tour-player.png</code></p>
+      </figure>
+      <p>Steps must be completed <strong>in order</strong>: the server rejects an answer with <code>CONFLICT</code> (“Complete the previous steps first”) if any earlier step is incomplete, so the <strong>Next</strong> button only unlocks once the current step is done. A wrong answer can be retried; finishing the last step shows a completion screen.</p>
+
+      <h2 id="sync">10 · Sync &amp; verify drift</h2>
+      <p>Code changes after a tour is written. In the builder, click <strong>Sync &amp; verify</strong>. RepoAtlas resolves the newest commit on the tour's branch, makes sure it is analyzed (reusing the cached analysis when nothing changed), re-evaluates every step and shows a <strong>sync report</strong> with each step's previous and new status.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Status</th><th>Meaning</th><th>What happens</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge drift-HEALTHY">Healthy</span></td><td>The pinned lines are unchanged.</td><td>Nothing to do.</td></tr>
+          <tr><td><span class="badge drift-DRIFTED_AUTO_FIXED">Auto-fixed</span></td><td>The same code moved to other lines.</td><td>Line numbers are updated automatically.</td></tr>
+          <tr><td><span class="badge drift-OUTDATED_NEEDS_REVIEW">Needs review</span></td><td>The pinned code itself changed.</td><td>A proposed location, similarity score and diff are stored for you to review.</td></tr>
+          <tr><td><span class="badge drift-BROKEN_FILE_DELETED">File deleted</span></td><td>The file no longer exists in the new snapshot.</td><td>Re-pin the step to another file or delete it.</td></tr>
+          <tr><td><span class="badge drift-UNVERIFIED">Unverified</span></td><td>Not yet checked against a newer commit.</td><td>Run Sync &amp; verify.</td></tr>
+        </tbody>
+      </table></div>
+      <figure class="shot missing">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="assets/screenshots/drift-review.png" alt="Drift review sheet comparing the pinned snapshot with the proposed location and offering resolution buttons" loading="lazy" onerror="this.closest('figure').classList.add('missing')" onload="if(this.src.indexOf('data:')!==0)this.closest('figure').classList.remove('missing')">
+        <div class="shot-fallback" role="img" aria-label="Illustration of the drift review sheet: a Needs review badge with similarity 82 percent, the step title, file and pinned versus proposed line ranges, a side-by-side diff of the original snippet and the proposed location, and buttons Accept proposed location, Keep original lines and Re-pin manually.">
+          <div class="mock" style="max-width:640px;margin-left:auto">
+            <div class="mock-body mock-col">
+              <div class="mock-row"><span class="badge drift-OUTDATED_NEEDS_REVIEW">Needs review</span><span class="muted">Similarity 82%</span></div>
+              <b>Step 3: Opening a database session</b>
+              <dl class="mock-kv"><dt>File</dt><dd>app/core/db.py</dd><dt>Pinned lines</dt><dd>L12–14</dd><dt>Proposed lines</dt><dd>L19–22</dd></dl>
+              <small class="muted">Original snippet vs. proposed location — Left: pinned snapshot · Right: proposed</small>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                <div class="mock-code"><div>async def get_session():</div><div class="del">    async with SessionLocal() as s:</div><div>        yield s</div></div>
+                <div class="mock-code"><div>async def get_session():</div><div class="add">    async with sessionmaker()() as s:</div><div>        yield s</div><div class="add">        await s.close()</div></div>
+              </div>
+              <div class="mock-row"><span class="mock-btn primary">Accept proposed location</span><span class="mock-btn">Keep original lines</span><span class="mock-btn">⌖ Re-pin manually</span></div>
+            </div>
+          </div>
+        </div>
+        <figcaption>Drift review: compare the pinned snapshot with the best match in the new commit and settle the step in one click.</figcaption>
+        <p class="shot-note">Illustrated layout · screenshot slot <code>drift-review.png</code></p>
+      </figure>
+      <p>Open a step that needs attention to review it:</p>
+      <ul>
+        <li><strong>Accept proposed location</strong> re-pins the step to the proposed lines (available when a confident match was found).</li>
+        <li><strong>Keep original lines</strong> re-pins the same line numbers against the new code.</li>
+        <li><strong>Re-pin manually</strong> lets you select a new range in the same file.</li>
+        <li>For a deleted file, <strong>Re-pin to another file</strong> picks a new file and range; title, explanation and checkpoint are kept.</li>
+      </ul>
+      <p>Each resolution recomputes the snippet and hash, and marks the step <span class="badge drift-HEALTHY">Healthy</span>. Every sync is stored, so the dashboard can show the tour's sync history. The details of the matcher are on the <a href="algorithms.html#drift">algorithms page</a>.</p>
+
+      <h2 id="dashboard">11 · Use the dashboard</h2>
+      <p>The signed-in dashboard (<code>/dashboard</code>) has three tabs:</p>
+      <figure class="shot missing">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="assets/screenshots/dashboard.png" alt="Dashboard with Repositories, Tour health and My learning tabs" loading="lazy" onerror="this.closest('figure').classList.add('missing')" onload="if(this.src.indexOf('data:')!==0)this.closest('figure').classList.remove('missing')">
+        <div class="shot-fallback" role="img" aria-label="Illustration of the dashboard: tabs Repositories, Tour health and My learning. A repository card shows files, imports, cycles, god modules and entry points, a file role breakdown and the riskiest files with risk badges. A tour health card shows a health score, drift counts and a trainee progress table.">
+          <div class="mock">
+            <div class="mock-body mock-col">
+              <div class="mock-tabs" style="max-width:420px"><span class="on">Repositories 2</span><span>Tour health 1</span><span>My learning 1</span></div>
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px">
+                <div class="mock-pane"><div class="mock-pane-h"><span style="font-family:var(--font-mono)">owner/repo</span><span class="muted">@ 9c1e4b2</span></div>
+                  <div class="mock-pane-b mock-col">
+                    <div class="mock-stats" style="grid-template-columns:repeat(5,1fr)"><div><b>132</b><small>files</small></div><div><b>347</b><small>imports</small></div><div><b>2</b><small>cycles</small></div><div><b>2</b><small>god</small></div><div><b>9</b><small>entry</small></div></div>
+                    <small class="muted">FILE ROLES</small>
+                    <div class="mock-bars"><div>Standard<i style="width:90%;--c:var(--role-standard)"></i>61</div><div>Leaf<i style="width:75%;--c:var(--role-leaf)"></i>51</div><div>Entry point<i style="width:14%;--c:var(--role-entry)"></i>9</div></div>
+                    <small class="muted">RISKIEST FILES</small>
+                    <ul class="mock-list"><li><span class="badge risk-CRITICAL">Critical</span> config.py</li><li><span class="badge risk-HIGH">High</span> core/db.py</li></ul>
+                  </div></div>
+                <div class="mock-pane"><div class="mock-pane-h"><span>How a request flows…</span><span class="badge drift-HEALTHY">75%</span></div>
+                  <div class="mock-pane-b mock-col">
+                    <div class="mock-row"><span class="badge drift-HEALTHY">2</span><span class="badge drift-DRIFTED_AUTO_FIXED">1</span><span class="badge drift-OUTDATED_NEEDS_REVIEW">1</span></div>
+                    <table class="mock-table"><thead><tr><th>Trainee</th><th>Done</th><th>1st-try</th></tr></thead><tbody><tr><td>@alice</td><td>4/4</td><td>75%</td></tr><tr><td>@bob</td><td>2/4</td><td>50%</td></tr></tbody></table>
+                    <small class="muted">Last sync: 9c1e4b2 → 4d7a0f1</small>
+                  </div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption>Dashboard: repository analytics, tour health with trainee progress, and your own learning.</figcaption>
+        <p class="shot-note">Illustrated layout · screenshot slot <code>dashboard.png</code></p>
+      </figure>
+      <ul>
+        <li><strong>Repositories</strong> — up to 10 repositories you analyzed or own tours for, each with its latest completed analysis: file, import and cycle counts, god modules, entry points, role and language breakdowns and the <strong>five riskiest files</strong> by blast-radius risk score.</li>
+        <li><strong>Tour health</strong> — every tour you own with its <strong>health score</strong> (share of steps that are Healthy or Auto-fixed), drift counts, the last 10 sync runs and per-trainee progress: completed steps, first-try accuracy and last activity.</li>
+        <li><strong>My learning</strong> — public tours by other people that you are taking, with your completion percentage.</li>
+      </ul>
+
+      <h2 id="next">Where next?</h2>
+      <ul>
+        <li><a href="workflows.html">Workflows</a> — the state machines behind each of these screens.</li>
+        <li><a href="algorithms.html">Algorithms</a> — interactive explanations of blast radius, cycles, PageRank and drift matching.</li>
+        <li><a href="api.html">API reference</a> — automate all of the above over HTTP.</li>
+      </ul>
+    </article>
+
+    <nav class="pager" aria-label="Pagination">
+      <a href="index.html"><small>Previous</small>← Overview</a>
+      <a class="next" href="architecture.html"><small>Next</small>Architecture →</a>
+    </nav>
+    <div class="page-meta">
+      <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/docs/getting-started.html">Edit this page on GitHub</a>
+      <span class="muted">Screens described from <a href="https://github.com/AadithyaAle/Repoatlas/tree/main/frontend/src/components/graph">components/graph</a> and <a href="https://github.com/AadithyaAle/Repoatlas/tree/main/frontend/src/components/tours">components/tours</a>.</span>
+    </div>
+  </main>
+
+  <aside class="toc" aria-label="On this page">
+    <div data-toc><h2>On this page</h2></div>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <div class="inner">
+    <span>© RepoAtlas contributors · MIT License</span>
+    <nav aria-label="Footer">
+      <a href="getting-started.html">Guide</a>
+      <a href="api.html">API</a>
+      <a href="self-hosting.html">Self-hosting</a>
+      <a href="https://github.com/AadithyaAle/Repoatlas">GitHub</a>
+      <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">Security</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

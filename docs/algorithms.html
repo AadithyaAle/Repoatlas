@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Algorithms · RepoAtlas Docs</title>
+  <meta name="description" content="Interactive, step-by-step illustrations of the algorithms behind RepoAtlas: reverse BFS blast radius and risk score, three-colour DFS and Tarjan cycle detection, role classification, PageRank and the sliding-window drift matcher.">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://aadithyaale.github.io/Repoatlas/algorithms.html">
+  <link rel="stylesheet" href="assets/css/docs.css">
+  <script>(function(){try{var t=localStorage.getItem("repoatlas-docs-theme");if(!t){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script src="assets/config.js"></script>
+  <script src="assets/js/docs.js" defer></script>
+  <script src="assets/js/algorithms.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <a class="brand" href="index.html"><img src="assets/img/logo.svg" alt="" width="30" height="30"><span>RepoAtlas</span><span class="brand-sub">Docs</span></a>
+  <nav class="top-nav" aria-label="Primary">
+    <a href="getting-started.html">Guide</a>
+    <a href="architecture.html">Architecture</a>
+    <a href="workflows.html">Workflows</a>
+    <a href="algorithms.html" aria-current="page">Algorithms</a>
+    <a href="api.html">API</a>
+    <a href="self-hosting.html">Self-hosting</a>
+    <a href="faq.html">FAQ</a>
+  </nav>
+  <div class="header-actions">
+    <a class="icon-btn" href="#" data-app-link data-app-optional hidden>Open app</a>
+    <a class="icon-btn" href="https://github.com/AadithyaAle/Repoatlas" aria-label="RepoAtlas on GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+    <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle colour theme" aria-pressed="false">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+</header>
+<div class="nav-overlay" aria-hidden="true"></div>
+<div class="layout">
+  <aside class="sidebar" id="sidebar" aria-label="Documentation navigation">
+    <button class="icon-btn sidebar-close" type="button" data-menu-close aria-label="Close navigation">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <nav aria-label="Documentation pages">
+      <h2>Introduction</h2>
+      <ul>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="getting-started.html">Getting started</a></li>
+      </ul>
+      <h2>Concepts</h2>
+      <ul>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="workflows.html">Workflows</a></li>
+        <li><a href="algorithms.html" aria-current="page">Algorithms</a></li>
+      </ul>
+      <h2>Reference</h2>
+      <ul>
+        <li><a href="api.html">API reference</a></li>
+        <li><a href="self-hosting.html">Self-hosting</a></li>
+        <li><a href="faq.html">FAQ &amp; limitations</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-ext">
+      <ul>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas">GitHub repository</a></li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/CONTRIBUTING.md">Contributing</a></li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">Security policy</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main" class="content" tabindex="-1">
+    <article class="prose">
+      <span class="eyebrow">Concepts</span>
+      <h1>Algorithms</h1>
+      <p class="lead">Every number RepoAtlas shows comes from a small set of deterministic, iterative graph algorithms in a pure library with no I/O. Use <strong>Prev</strong>, <strong>Next</strong> and <strong>Play</strong> to step through each one on a tiny example; without JavaScript each illustration shows its final state.</p>
+      <div class="callout tip"><span class="callout-title">Determinism</span><p>Nodes are processed in sorted path order, adjacency lists are sorted and nothing is recursive (real repositories exceed Python's recursion limit). The same commit always yields the same graph, cycles, roles and ranks — which is what makes analyses cacheable per commit.</p></div>
+
+      <h2 id="pipeline">From source files to a graph</h2>
+      <ol class="steps">
+        <li><strong>Parse</strong> (<a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/engine/ast_parser.py">ast_parser.py</a>) — Python with the standard-library <code>ast</code> (imports inside <code>if TYPE_CHECKING:</code> are marked type-only; a line-based fallback recovers imports from files with syntax errors); JS/JSX/TS/TSX with tree-sitter: <code>import</code>, <code>export … from</code>, <code>import x = require()</code>, and <code>import("…")</code> / <code>require("…")</code> calls whose argument is a string literal (or a template literal without substitutions). Exports, top-level functions and classes are collected too.</li>
+        <li><strong>Resolve</strong> (<a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/engine/resolver.py">resolver.py</a>) — relative specifiers, <code>tsconfig</code>/<code>jsconfig</code> <code>baseUrl</code> + <code>paths</code> (nearest config per directory for monorepos, <code>@/</code> and <code>~/</code> fallbacks), extension and <code>index.*</code> probing, ESM <code>.js</code> → <code>.ts</code> rewriting; Python relative/absolute imports against detected source roots. Bare packages are <em>external</em> (counted, not edges); asset imports (<code>.css</code>, <code>.svg</code>, <code>.json</code>, …) are ignored; anything else that points nowhere is <em>unresolved</em>.</li>
+        <li><strong>Build</strong> (<a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/engine/graph_algorithms.py">graph_algorithms.py</a>) — deduplicate edges per (source, target), drop edges to unknown files, keep self-loops, build sorted forward and reverse adjacency.</li>
+        <li><strong>Analyze</strong> (<a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/engine/pipeline.py">pipeline.py</a>) — detect cycles, then compute per-file degrees, role and PageRank. One pathological file never aborts the run: it gets a parse warning instead.</li>
+      </ol>
+      <p>An edge <code>A → B</code> always means <em>A imports B</em>.</p>
+
+      <h2 id="bfs">Blast radius: reverse BFS</h2>
+      <p>To answer “what could break if I change this file?”, RepoAtlas walks the graph <em>backwards</em> — from a file to every file that imports it, then to their importers, and so on — with a breadth-first search over the reverse adjacency. BFS visits files in order of distance, so each impacted file gets its shortest <strong>depth</strong> (1 = imports the file directly).</p>
+      <div class="algo" id="algo-bfs" data-algo="bfs">
+        <div class="algo-head">
+          <h4>Reverse BFS from <code data-target-label>db.py</code></h4>
+          <div class="algo-controls" data-controls hidden>
+            <button type="button" data-act="reset" aria-label="Restart from the first step">⏮</button>
+            <button type="button" data-act="prev">◀ Prev</button>
+            <button type="button" data-act="play" aria-pressed="false">▶ Play</button>
+            <button type="button" data-act="next">Next ▶</button>
+            <span class="algo-progress" data-progress></span>
+          </div>
+        </div>
+        <div class="algo-body">
+          <div class="algo-stage">
+            <svg viewBox="0 0 550 310" role="img" aria-labelledby="bfs-t bfs-d" data-marker-prefix="bfs">
+              <title id="bfs-t">Example dependency graph for blast radius</title>
+              <desc id="bfs-d">Eight files. cli.py imports app.py, app.py imports routes.py, routes.py imports models.py, auth.py and utils.py, models.py and auth.py import db.py, and db.py imports config.py. Changing db.py impacts auth.py and models.py at depth 1, routes.py at depth 2, app.py at depth 3 and cli.py at depth 4; config.py and utils.py are not impacted.</desc>
+              <defs>
+                <marker id="bfs-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head"/></marker>
+                <marker id="bfs-arrow-hot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head-hot"/></marker>
+                <marker id="bfs-arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head-bad"/></marker>
+              </defs>
+              <path class="g-edge hot" data-edge="cli.py>app.py" d="M99 165 L119 165" marker-end="url(#bfs-arrow-hot)"/>
+              <path class="g-edge hot" data-edge="app.py>routes.py" d="M209 165 L229 165" marker-end="url(#bfs-arrow-hot)"/>
+              <path class="g-edge" data-edge="routes.py>models.py" d="M319 157 L339 103" marker-end="url(#bfs-arrow)"/>
+              <path class="g-edge hot" data-edge="routes.py>auth.py" d="M319 173 L339 227" marker-end="url(#bfs-arrow-hot)"/>
+              <path class="g-edge" data-edge="routes.py>utils.py" d="M275 180 L275 268" marker-end="url(#bfs-arrow)"/>
+              <path class="g-edge hot" data-edge="models.py>db.py" d="M429 103 L449 157" marker-end="url(#bfs-arrow-hot)"/>
+              <path class="g-edge hot" data-edge="auth.py>db.py" d="M429 227 L449 173" marker-end="url(#bfs-arrow-hot)"/>
+              <path class="g-edge" data-edge="db.py>config.py" d="M495 180 L495 268" marker-end="url(#bfs-arrow)"/>
+              <g class="g-node st-d3" data-node="cli.py"><rect x="11" y="150" width="88" height="30" rx="7"/><text x="55" y="169" text-anchor="middle">cli.py</text></g>
+              <g class="g-node st-d3" data-node="app.py"><rect x="121" y="150" width="88" height="30" rx="7"/><text x="165" y="169" text-anchor="middle">app.py</text></g>
+              <g class="g-node st-d2" data-node="routes.py"><rect x="231" y="150" width="88" height="30" rx="7"/><text x="275" y="169" text-anchor="middle">routes.py</text></g>
+              <g class="g-node st-d1" data-node="models.py"><rect x="341" y="80" width="88" height="30" rx="7"/><text x="385" y="99" text-anchor="middle">models.py</text></g>
+              <g class="g-node st-d1" data-node="auth.py"><rect x="341" y="220" width="88" height="30" rx="7"/><text x="385" y="239" text-anchor="middle">auth.py</text></g>
+              <g class="g-node" data-node="utils.py"><rect x="231" y="270" width="88" height="30" rx="7"/><text x="275" y="289" text-anchor="middle">utils.py</text></g>
+              <g class="g-node st-d0" data-node="db.py"><rect x="451" y="150" width="88" height="30" rx="7"/><text x="495" y="169" text-anchor="middle">db.py</text></g>
+              <g class="g-node" data-node="config.py"><rect x="451" y="270" width="88" height="30" rx="7"/><text x="495" y="289" text-anchor="middle">config.py</text></g>
+            </svg>
+            <div class="legend" aria-hidden="true">
+              <span class="badge" style="--c: var(--depth-0)">Changed file</span>
+              <span class="badge" style="--c: var(--depth-1)">Depth 1</span>
+              <span class="badge" style="--c: var(--depth-2)">Depth 2</span>
+              <span class="badge" style="--c: var(--depth-3)">Depth 3+</span>
+            </div>
+            <p class="stage-note" data-js-note hidden>Click a file (or focus it and press Enter) to simulate changing it. Try <code>cli.py</code>, <code>app.py</code> and <code>routes.py</code> to see every risk level.</p>
+          </div>
+          <div class="algo-info">
+            <h5>Step</h5>
+            <p class="narration" data-narration aria-live="polite">Done: 5 of the 7 other files are impacted, up to depth 4. config.py and utils.py are dependencies of the changed code, not dependents, so they are safe.</p>
+            <h5>Queue</h5>
+            <div class="chips" data-chips><span class="chip">empty</span></div>
+            <h5>Result</h5>
+            <div class="formula" data-formula>impacted = 5 · N − 1 = 7<br>impact% = 5 / 7 × 100 = 71.43<br>risk = (1/1 + 1/1 + 1/2 + 1/3 + 1/4) / 7 × 100 = 44.05<br>level: <span class="badge risk-CRITICAL">CRITICAL</span></div>
+          </div>
+        </div>
+      </div>
+      <p>With <em>N</em> files in the analysis and depth <em>d(f)</em> for each impacted file <em>f</em>:</p>
+<pre><code class="language-text">impact%  = impacted / (N − 1) × 100
+risk     = Σ (1 / d(f)) / (N − 1) × 100        (both rounded to 2 decimals, 0 when N ≤ 1)
+level    = LOW if risk &lt; 5 · MEDIUM if &lt; 15 · HIGH if &lt; 35 · otherwise CRITICAL</code></pre>
+      <div class="legend">
+        <span class="badge risk-LOW">LOW &lt; 5</span>
+        <span class="badge risk-MEDIUM">5 ≤ MEDIUM &lt; 15</span>
+        <span class="badge risk-HIGH">15 ≤ HIGH &lt; 35</span>
+        <span class="badge risk-CRITICAL">CRITICAL ≥ 35</span>
+      </div>
+      <p>The risk score weights direct dependents fully and distant ones less (½ at depth 2, ⅓ at depth 3…), so a file imported directly by half the repository scores higher than one reached through a long chain. Running the BFS from every file gives the dashboard's “riskiest files”.</p>
+
+      <h2 id="cycles">Cycle detection: three-colour DFS + Tarjan</h2>
+      <p>Circular imports are found in two passes over the forward graph:</p>
+      <ul>
+        <li>An <strong>iterative three-colour DFS</strong> — <span class="badge" style="--c: var(--dfs-white)">white</span> unvisited, <span class="badge" style="--c: var(--dfs-grey)">grey</span> on the current path, <span class="badge" style="--c: var(--dfs-black)">black</span> finished — records a concrete cycle whenever it meets a grey file (a <em>back edge</em>). Each cycle is rotated so its smallest path comes first; at most 100 are reported.</li>
+        <li><strong>Tarjan's strongly connected components</strong> then marks <em>every</em> file and import that lies on any cycle (components with more than one file, or a self-import), even when the DFS reported only one of several overlapping cycles. These become <code>is_circular</code> and <code>scc_id</code>.</li>
+      </ul>
+      <div class="algo" id="algo-dfs" data-algo="dfs">
+        <div class="algo-head">
+          <h4>DFS, then Tarjan SCC</h4>
+          <div class="algo-controls" data-controls hidden>
+            <button type="button" data-act="reset" aria-label="Restart from the first step">⏮</button>
+            <button type="button" data-act="prev">◀ Prev</button>
+            <button type="button" data-act="play" aria-pressed="false">▶ Play</button>
+            <button type="button" data-act="next">Next ▶</button>
+            <span class="algo-progress" data-progress></span>
+          </div>
+        </div>
+        <div class="algo-body">
+          <div class="algo-stage">
+            <svg viewBox="0 0 560 300" role="img" aria-labelledby="dfs-t dfs-d" data-marker-prefix="dfs">
+              <title id="dfs-t">Example graph with one import cycle</title>
+              <desc id="dfs-d">main.py imports api.py; api.py imports service.py and utils.py; service.py imports repo.py; repo.py imports models.py and utils.py; models.py imports service.py, closing the cycle service.py, repo.py, models.py. The DFS discovers the back edge models.py to service.py, and Tarjan marks all three files and their three imports as circular.</desc>
+              <defs>
+                <marker id="dfs-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head"/></marker>
+                <marker id="dfs-arrow-hot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head-hot"/></marker>
+                <marker id="dfs-arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head-bad"/></marker>
+              </defs>
+              <path class="g-edge" data-edge="main.py>api.py" d="M94 150 L119 150" marker-end="url(#dfs-arrow)"/>
+              <path class="g-edge" data-edge="api.py>service.py" d="M209 142 L254 66" marker-end="url(#dfs-arrow)"/>
+              <path class="g-edge" data-edge="api.py>utils.py" d="M209 158 L459 250" marker-end="url(#dfs-arrow)"/>
+              <path class="g-edge scc" data-edge="service.py>repo.py" d="M344 63 L404 133" marker-end="url(#dfs-arrow-bad)"/>
+              <path class="g-edge scc" data-edge="repo.py>models.py" d="M410 165 L342 228" marker-end="url(#dfs-arrow-bad)"/>
+              <path class="g-edge back" data-edge="models.py>service.py" d="M300 228 L300 72" marker-end="url(#dfs-arrow-bad)"/>
+              <path class="g-edge" data-edge="repo.py>utils.py" d="M458 165 L488 238" marker-end="url(#dfs-arrow)"/>
+              <g class="g-node st-black" data-node="main.py"><rect x="6" y="135" width="88" height="30" rx="7"/><text x="50" y="154" text-anchor="middle">main.py</text></g>
+              <g class="g-node st-black" data-node="api.py"><rect x="121" y="135" width="88" height="30" rx="7"/><text x="165" y="154" text-anchor="middle">api.py</text></g>
+              <g class="g-node st-cycle" data-node="service.py"><rect x="256" y="40" width="88" height="30" rx="7"/><text x="300" y="59" text-anchor="middle">service.py</text></g>
+              <g class="g-node st-cycle" data-node="repo.py"><rect x="396" y="135" width="88" height="30" rx="7"/><text x="440" y="154" text-anchor="middle">repo.py</text></g>
+              <g class="g-node st-cycle" data-node="models.py"><rect x="256" y="230" width="88" height="30" rx="7"/><text x="300" y="249" text-anchor="middle">models.py</text></g>
+              <g class="g-node st-black" data-node="utils.py"><rect x="461" y="240" width="88" height="30" rx="7"/><text x="505" y="259" text-anchor="middle">utils.py</text></g>
+            </svg>
+            <div class="legend" aria-hidden="true">
+              <span class="badge" style="--c: var(--dfs-white)">White</span>
+              <span class="badge" style="--c: var(--dfs-grey)">Grey</span>
+              <span class="badge" style="--c: var(--dfs-black)">Black</span>
+              <span class="badge" style="--c: var(--cycle)">Circular (SCC)</span>
+            </div>
+          </div>
+          <div class="algo-info">
+            <h5>Step</h5>
+            <p class="narration" data-narration aria-live="polite">Result: the DFS reported one cycle, models.py → service.py → repo.py → models.py, and Tarjan marked models.py, repo.py and service.py (scc_id 0) and their three imports as circular. main.py, api.py and utils.py are not on any cycle.</p>
+            <h5>DFS path / components</h5>
+            <div class="chips" data-chips><span class="chip">SCC 0: models.py, repo.py, service.py</span></div>
+            <h5>Cycles reported</h5>
+            <div class="formula" data-formula>[models.py, service.py, repo.py]</div>
+          </div>
+        </div>
+      </div>
+      <p>The DFS keeps an explicit stack of <code>(file, iterator over its imports)</code> plus the current path, so the cycle for a back edge <code>u → v</code> is simply the path from <code>v</code> to <code>u</code>. Tarjan uses the same explicit-stack technique with <code>index</code>/<code>lowlink</code> values; SCC ids are numbered by each component's smallest path.</p>
+
+      <h2 id="roles">Role classification</h2>
+      <p>Each file gets exactly one role from its <strong>in-degree</strong> (number of distinct files importing it) and <strong>out-degree</strong> (number of distinct files it imports). Self-imports count in neither. Rules are checked top to bottom; the first match wins:</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>#</th><th>Role</th><th>Condition</th><th>Typical file</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><span class="badge role-ISOLATED">Isolated</span></td><td><code>in = 0</code> and <code>out = 0</code></td><td>Stand-alone script, unused module</td></tr>
+          <tr><td>2</td><td><span class="badge role-ENTRY_POINT">Entry point</span></td><td><code>in = 0</code> and <code>out &gt; 0</code></td><td><code>main.py</code>, CLI, page, test</td></tr>
+          <tr><td>3</td><td><span class="badge role-GOD_MODULE">God module</span></td><td><code>in ≥ 5</code> and <code>out ≥ 5</code></td><td>Heavily used <em>and</em> heavily coupled hub</td></tr>
+          <tr><td>4</td><td><span class="badge role-CORE_UTILITY">Core utility</span></td><td><code>in ≥ 5</code> and <code>out ≤ 2</code></td><td>Config, helpers, shared types</td></tr>
+          <tr><td>5</td><td><span class="badge role-LEAF">Leaf</span></td><td><code>out = 0</code> (and <code>in &gt; 0</code>)</td><td>Constants, small models</td></tr>
+          <tr><td>6</td><td><span class="badge role-STANDARD">Standard</span></td><td>everything else</td><td>Ordinary module</td></tr>
+        </tbody>
+      </table></div>
+      <div class="algo" id="algo-roles" data-algo="roles" hidden>
+        <div class="algo-head"><h4>Try it</h4></div>
+        <div class="role-try">
+          <label for="role-in">in-degree<input id="role-in" type="number" min="0" max="999" value="6" inputmode="numeric"></label>
+          <label for="role-out">out-degree<input id="role-out" type="number" min="0" max="999" value="1" inputmode="numeric"></label>
+          <div><span class="muted small">Role</span><br><output for="role-in role-out" data-role-out aria-live="polite"><span class="badge role-CORE_UTILITY">Core utility</span></output></div>
+        </div>
+      </div>
+      <p>Thresholds are constants in <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/engine/graph_algorithms.py">graph_algorithms.py</a>: <code>HIGH_IN_DEGREE = 5</code>, <code>HIGH_OUT_DEGREE = 5</code>, <code>LOW_OUT_DEGREE = 2</code>. A file with <code>in ≥ 5</code> and <code>out</code> of 3 or 4 is neither god module nor core utility and falls through to <em>standard</em>.</p>
+
+      <h2 id="pagerank">Centrality: PageRank</h2>
+      <p>PageRank ranks files by how much of the codebase ultimately depends on them. Importance flows along import edges, <strong>from importer to imported file</strong>: a file imported by important files becomes important. RepoAtlas runs the classic power iteration with damping <strong>0.85</strong> for exactly <strong>50 iterations</strong> (deterministic, no convergence test), starting from 1/N everywhere. Files that import nothing (<em>dangling</em> nodes) spread their rank evenly over all files, so the ranks always sum to 1.</p>
+<pre><code class="language-text">rank'(v) = (1 − 0.85) / N
+         + 0.85 × Σ rank(dangling) / N
+         + 0.85 × Σ over importers u of v:  rank(u) / out_degree(u)</code></pre>
+      <div class="algo" id="algo-pagerank" data-algo="pagerank">
+        <div class="algo-head">
+          <h4>PageRank on the blast-radius example graph</h4>
+          <div class="algo-controls" data-controls hidden>
+            <button type="button" data-act="reset" aria-label="Restart from iteration 0">⏮</button>
+            <button type="button" data-act="prev">◀ Prev</button>
+            <button type="button" data-act="play" aria-pressed="false">▶ Play</button>
+            <button type="button" data-act="next">Next ▶</button>
+            <span class="algo-progress" data-progress></span>
+          </div>
+        </div>
+        <div class="algo-body">
+          <div class="algo-stage">
+            <div class="pr-bars" role="list" aria-label="PageRank per file">
+              <div class="row" role="listitem" data-pr-node="config.py"><code>config.py</code><div class="bar" style="width:92.04%"></div><span class="t-mono small" data-pr-val>0.230</span></div>
+              <div class="row" role="listitem" data-pr-node="db.py"><code>db.py</code><div class="bar" style="width:83.38%"></div><span class="t-mono small" data-pr-val>0.208</span></div>
+              <div class="row" role="listitem" data-pr-node="routes.py"><code>routes.py</code><div class="bar" style="width:54.45%"></div><span class="t-mono small" data-pr-val>0.136</span></div>
+              <div class="row" role="listitem" data-pr-node="app.py"><code>app.py</code><div class="bar" style="width:39.16%"></div><span class="t-mono small" data-pr-val>0.098</span></div>
+              <div class="row" role="listitem" data-pr-node="auth.py"><code>auth.py</code><div class="bar" style="width:36.6%"></div><span class="t-mono small" data-pr-val>0.091</span></div>
+              <div class="row" role="listitem" data-pr-node="models.py"><code>models.py</code><div class="bar" style="width:36.6%"></div><span class="t-mono small" data-pr-val>0.091</span></div>
+              <div class="row" role="listitem" data-pr-node="utils.py"><code>utils.py</code><div class="bar" style="width:36.6%"></div><span class="t-mono small" data-pr-val>0.091</span></div>
+              <div class="row" role="listitem" data-pr-node="cli.py"><code>cli.py</code><div class="bar" style="width:21.17%"></div><span class="t-mono small" data-pr-val>0.053</span></div>
+            </div>
+            <p class="stage-note">Same eight files as the blast-radius example: cli → app → routes → {models, auth, utils}; models, auth → db → config.</p>
+          </div>
+          <div class="algo-info">
+            <h5>Iteration</h5>
+            <p class="narration" data-narration aria-live="polite">After 50 iterations: config.py ranks highest — everything eventually flows into it through db.py — even though only one file imports it directly. cli.py, which nothing imports, keeps only the base share.</p>
+            <h5>Dangling files</h5>
+            <div class="chips" data-chips><span class="chip">config.py</span><span class="chip">utils.py</span></div>
+            <h5>Check</h5>
+            <div class="formula" data-formula>Σ rank = 1.000</div>
+          </div>
+        </div>
+      </div>
+      <p>The stored value is rounded to 6 decimals. In the UI PageRank sizes and orders “most central files”, complementing in-degree: a file can have few direct importers but sit underneath everything.</p>
+
+      <h2 id="drift">Drift matching: sliding windows</h2>
+      <p>When a tour is synced, each step's pinned snippet is looked for in the new version of its file (<a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/engine/drift_detector.py">drift_detector.py</a>). All comparisons use <strong>normalised lines</strong>: each line is stripped and runs of whitespace collapse to one space, so re-indentation alone never counts as a change.</p>
+      <ol>
+        <li><strong>Healthy?</strong> Hash the same line range in the new file; equal to <code>snippet_hash</code> → <span class="badge drift-HEALTHY">Healthy</span>.</li>
+        <li><strong>Moved?</strong> Slide a window of the snippet's length over the whole file; every exact normalised match is a candidate and the one <em>nearest the original start line</em> wins (ties: earliest) → <span class="badge drift-DRIFTED_AUTO_FIXED">Auto-fixed</span>.</li>
+        <li><strong>Changed.</strong> Otherwise the step <span class="badge drift-OUTDATED_NEEDS_REVIEW">Needs review</span>. The best fuzzy window (<code>difflib.SequenceMatcher</code> ratio over the normalised text, window lengths <em>n−2 … n+2</em>) is proposed if its similarity is at least <strong>0.75</strong>; otherwise the original range, clamped to the file, is shown for review.</li>
+      </ol>
+      <div class="algo" id="algo-drift" data-algo="drift">
+        <div class="algo-head">
+          <h4>Re-locating a pinned snippet</h4>
+          <div class="algo-controls" data-controls hidden>
+            <label for="drift-scenario">Scenario</label>
+            <select id="drift-scenario" data-scenario>
+              <option value="moved">Code moved</option>
+              <option value="edited">Code moved and edited</option>
+            </select>
+            <button type="button" data-act="reset" aria-label="Restart from the first step">⏮</button>
+            <button type="button" data-act="prev">◀ Prev</button>
+            <button type="button" data-act="play" aria-pressed="false">▶ Play</button>
+            <button type="button" data-act="next">Next ▶</button>
+            <span class="algo-progress" data-progress></span>
+          </div>
+        </div>
+        <div class="algo-body">
+          <div class="algo-stage">
+            <div class="algo-split">
+              <div>
+                <h5>Pinned snapshot · L3–5 at the base commit</h5>
+                <div class="code-lines" aria-label="Pinned snapshot"><div class="cl"><span class="ln">3</span>def get_session():</div><div class="cl"><span class="ln">4</span>    with SessionLocal() as s:</div><div class="cl"><span class="ln">5</span>        yield s</div></div>
+              </div>
+              <div>
+                <h5>File at the new commit</h5>
+                <div class="code-lines" data-code aria-label="File at the new commit"><div class="cl"><span class="ln">1</span>import contextlib</div><div class="cl"><span class="ln">2</span></div><div class="cl orig"><span class="ln">3</span>from app.core.config import settings</div><div class="cl orig"><span class="ln">4</span></div><div class="cl orig"><span class="ln">5</span>engine = create_engine(settings.url)</div><div class="cl"><span class="ln">6</span></div><div class="cl match"><span class="ln">7</span>def get_session():</div><div class="cl match"><span class="ln">8</span>    with SessionLocal() as s:</div><div class="cl match"><span class="ln">9</span>        yield s</div><div class="cl"><span class="ln">10</span></div><div class="cl"><span class="ln">11</span>def ping():</div><div class="cl"><span class="ln">12</span>    return True</div><div class="window" style="top:calc(6px + 21.875px * 6);height:calc(21.875px * 3)" aria-hidden="true"></div></div>
+              </div>
+            </div>
+            <p class="stage-note">Grey bar: the original position (L3–5). Box: the window being compared.</p>
+          </div>
+          <div class="algo-info">
+            <h5>Step</h5>
+            <p class="narration" data-narration aria-live="polite">Exact normalised match at L7–9, the match nearest the original L3–5 → <span class="badge drift-DRIFTED_AUTO_FIXED">Auto-fixed</span>: the step is re-pinned to L7–9 automatically, no review needed.</p>
+            <h5>Window</h5>
+            <div class="chips" data-chips><span class="chip">L7–9</span><span class="chip">exact</span></div>
+            <h5>Outcome</h5>
+            <div class="formula" data-formula>status = DRIFTED_AUTO_FIXED · lines L3–5 → L7–9 · similarity 1.0</div>
+          </div>
+        </div>
+      </div>
+      <p>The fuzzy search is bounded so cost does not grow with file length: window starts within ±25 lines of the original position plus the 8 alignments best supported by unchanged lines anywhere in the file, cheap <code>real_quick_ratio</code>/<code>quick_ratio</code> upper bounds to discard hopeless windows, and at most 64 full ratio computations per step. (The illustration above scores same-length windows only, for clarity.)</p>
+
+      <h2 id="complexity">Complexity</h2>
+      <p>For a graph with <em>N</em> files and <em>E</em> unique import edges:</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Operation</th><th>Time</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Build graph</td><td><code>O(E log E + N log N)</code></td><td>Dedup + sorted adjacency lists</td></tr>
+          <tr><td>Blast radius (one file)</td><td><code>O(N + E)</code></td><td>Reverse BFS on the cached graph</td></tr>
+          <tr><td>Riskiest files (dashboard)</td><td><code>O(N · (N + E))</code></td><td>One BFS per file</td></tr>
+          <tr><td>Cycle detection</td><td><code>O(N + E)</code> + <code>O(C · L)</code></td><td>DFS + Tarjan; canonicalising <em>C</em> reported cycles of length <em>L</em> (C ≤ 100)</td></tr>
+          <tr><td>Role classification</td><td><code>O(N + E)</code></td><td>Degrees, then O(1) per file</td></tr>
+          <tr><td>PageRank</td><td><code>O(50 · (N + E))</code></td><td>Fixed 50 iterations</td></tr>
+          <tr><td>Drift: healthy check</td><td><code>O(n)</code></td><td><em>n</em> = snippet lines</td></tr>
+          <tr><td>Drift: exact match</td><td><code>O(L · n)</code> worst case</td><td><em>L</em> = file lines; first-line pre-filter</td></tr>
+          <tr><td>Drift: fuzzy proposal</td><td>bounded</td><td>≤ 51 + 8 × 5 starts × 5 lengths, ≤ 64 full ratios</td></tr>
+        </tbody>
+      </table></div>
+      <p>Source: <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/engine/graph_algorithms.py">graph_algorithms.py</a> · <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/engine/drift_detector.py">drift_detector.py</a> · <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/engine/ast_parser.py">ast_parser.py</a> · <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/engine/resolver.py">resolver.py</a> · <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/engine/pipeline.py">pipeline.py</a></p>
+    </article>
+
+    <nav class="pager" aria-label="Pagination">
+      <a href="workflows.html"><small>Previous</small>← Workflows</a>
+      <a class="next" href="api.html"><small>Next</small>API reference →</a>
+    </nav>
+    <div class="page-meta">
+      <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/docs/algorithms.html">Edit this page on GitHub</a>
+      <span class="muted">Illustrations: <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/docs/assets/js/algorithms.js">assets/js/algorithms.js</a></span>
+    </div>
+  </main>
+
+  <aside class="toc" aria-label="On this page">
+    <div data-toc><h2>On this page</h2></div>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <div class="inner">
+    <span>© RepoAtlas contributors · MIT License</span>
+    <nav aria-label="Footer">
+      <a href="getting-started.html">Guide</a>
+      <a href="api.html">API</a>
+      <a href="self-hosting.html">Self-hosting</a>
+      <a href="https://github.com/AadithyaAle/Repoatlas">GitHub</a>
+      <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">Security</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

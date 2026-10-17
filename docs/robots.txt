@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aadithyaale.github.io/Repoatlas/sitemap.xml

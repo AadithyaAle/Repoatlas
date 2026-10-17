@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workflows · RepoAtlas Docs</title>
+  <meta name="description" content="The four RepoAtlas workflows end to end: the ingestion state machine, blast radius and cycle detection, pin-to-code onboarding tours with checkpoints, and the drift engine that keeps tours in sync with every commit.">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://aadithyaale.github.io/Repoatlas/workflows.html">
+  <link rel="stylesheet" href="assets/css/docs.css">
+  <script>(function(){try{var t=localStorage.getItem("repoatlas-docs-theme");if(!t){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+  <script src="assets/config.js"></script>
+  <script src="assets/js/docs.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <a class="brand" href="index.html"><img src="assets/img/logo.svg" alt="" width="30" height="30"><span>RepoAtlas</span><span class="brand-sub">Docs</span></a>
+  <nav class="top-nav" aria-label="Primary">
+    <a href="getting-started.html">Guide</a>
+    <a href="architecture.html">Architecture</a>
+    <a href="workflows.html" aria-current="page">Workflows</a>
+    <a href="algorithms.html">Algorithms</a>
+    <a href="api.html">API</a>
+    <a href="self-hosting.html">Self-hosting</a>
+    <a href="faq.html">FAQ</a>
+  </nav>
+  <div class="header-actions">
+    <a class="icon-btn" href="#" data-app-link data-app-optional hidden>Open app</a>
+    <a class="icon-btn" href="https://github.com/AadithyaAle/Repoatlas" aria-label="RepoAtlas on GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+    <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle colour theme" aria-pressed="false">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+</header>
+<div class="nav-overlay" aria-hidden="true"></div>
+<div class="layout">
+  <aside class="sidebar" id="sidebar" aria-label="Documentation navigation">
+    <button class="icon-btn sidebar-close" type="button" data-menu-close aria-label="Close navigation">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <nav aria-label="Documentation pages">
+      <h2>Introduction</h2>
+      <ul>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="getting-started.html">Getting started</a></li>
+      </ul>
+      <h2>Concepts</h2>
+      <ul>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="workflows.html" aria-current="page">Workflows</a></li>
+        <li><a href="algorithms.html">Algorithms</a></li>
+      </ul>
+      <h2>Reference</h2>
+      <ul>
+        <li><a href="api.html">API reference</a></li>
+        <li><a href="self-hosting.html">Self-hosting</a></li>
+        <li><a href="faq.html">FAQ &amp; limitations</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-ext">
+      <ul>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas">GitHub repository</a></li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/CONTRIBUTING.md">Contributing</a></li>
+        <li><a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">Security policy</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main" class="content" tabindex="-1">
+    <article class="prose">
+      <span class="eyebrow">Concepts</span>
+      <h1>Workflows</h1>
+      <p class="lead">Everything RepoAtlas does is one of four end-to-end workflows. This page follows each one through the API and the database, with the exact states, error codes and rules enforced by the server.</p>
+
+      <h2 id="ingestion">1 · Ingestion: analyze a repository</h2>
+      <p><code>POST /api/v1/repos/analyze</code> with <code>{"repo_url": "owner/repo", "branch": null, "force": false}</code>. Accepted URL forms include <code>https://github.com/owner/repo</code>, <code>github.com/owner/repo/tree/branch</code> and <code>owner/repo</code>; anything else is <code>INVALID_REPO_URL</code>.</p>
+      <h3 id="ingestion-enqueue">Enqueue &amp; dedupe per commit</h3>
+      <ol class="steps">
+        <li><strong>Resolve the ref synchronously.</strong> Repository metadata + the branch's current commit SHA come from GitHub inside the request, so “not found”, “private”, “empty repository” and “branch not found” fail fast with an HTTP error instead of a queued job.</li>
+        <li><strong>Upsert the repository</strong> (<code>owner</code>/<code>name</code> are unique) with the latest description, stars and default branch.</li>
+        <li><strong>Insert-or-reuse the analysis.</strong> <code>INSERT … ON CONFLICT (repository_id, commit_sha) DO NOTHING</code>, then lock the row. A <span class="badge status-COMPLETED">COMPLETED</span> or in-flight analysis of the same commit is returned as-is — so analyzing an unchanged repo is instant. A <span class="badge status-FAILED">FAILED</span> one is reset to <span class="badge status-PENDING">PENDING</span>; <code>force: true</code> also resets a completed one (never an in-flight one, which a worker owns).</li>
+        <li><strong>Respond <code>202 Accepted</code></strong> with the <code>AnalysisOut</code>. The frontend polls <code>GET /api/v1/analyses/{id}</code> until a terminal status.</li>
+      </ol>
+
+      <h3 id="ingestion-states">State machine</h3>
+      <figure>
+        <div class="diagram">
+          <svg viewBox="0 0 900 270" role="img" aria-labelledby="sm-t sm-d">
+            <title id="sm-t">Analysis status state machine</title>
+            <desc id="sm-d">PENDING moves to FETCHING_TREE when a worker claims the job, then to PARSING_AST, COMPUTING_GRAPH and COMPLETED. Any running state can move to FAILED. FAILED returns to PENDING when the same commit is submitted again; COMPLETED returns to PENDING only with force.</desc>
+            <defs>
+              <marker id="sm-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head"/></marker>
+              <marker id="sm-arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head-bad"/></marker>
+            </defs>
+            <rect x="10" y="80" width="140" height="56" rx="28" fill="color-mix(in srgb, var(--fg-subtle) 16%, transparent)" stroke="var(--fg-subtle)" stroke-width="1.5"/>
+            <text x="80" y="104" text-anchor="middle" class="t-sm t-mono" style="fill:var(--fg)">PENDING</text>
+            <text x="80" y="122" text-anchor="middle" class="t-xs">queued</text>
+            <rect x="190" y="80" width="150" height="56" rx="10" class="box-brand"/>
+            <text x="265" y="104" text-anchor="middle" class="t-sm t-mono" style="fill:var(--fg)">FETCHING_TREE</text>
+            <text x="265" y="122" text-anchor="middle" class="t-xs">tarball download</text>
+            <rect x="380" y="80" width="140" height="56" rx="10" class="box-brand"/>
+            <text x="450" y="104" text-anchor="middle" class="t-sm t-mono" style="fill:var(--fg)">PARSING_AST</text>
+            <text x="450" y="122" text-anchor="middle" class="t-xs">parse + resolve</text>
+            <rect x="560" y="80" width="160" height="56" rx="10" class="box-brand"/>
+            <text x="640" y="104" text-anchor="middle" class="t-sm t-mono" style="fill:var(--fg)">COMPUTING_GRAPH</text>
+            <text x="640" y="122" text-anchor="middle" class="t-xs">persist nodes + edges</text>
+            <rect x="760" y="80" width="130" height="56" rx="28" fill="color-mix(in srgb, var(--drift-healthy) 16%, transparent)" stroke="var(--drift-healthy)" stroke-width="1.5"/>
+            <text x="825" y="104" text-anchor="middle" class="t-sm t-mono" style="fill:var(--fg)">COMPLETED</text>
+            <text x="825" y="122" text-anchor="middle" class="t-xs">immutable</text>
+            <rect x="380" y="200" width="140" height="56" rx="28" fill="color-mix(in srgb, var(--drift-broken) 16%, transparent)" stroke="var(--drift-broken)" stroke-width="1.5"/>
+            <text x="450" y="224" text-anchor="middle" class="t-sm t-mono" style="fill:var(--fg)">FAILED</text>
+            <text x="450" y="242" text-anchor="middle" class="t-xs">error_code + message</text>
+            <path class="edge" d="M150 108 H186" marker-end="url(#sm-arrow)"/>
+            <path class="edge" d="M340 108 H376" marker-end="url(#sm-arrow)"/>
+            <path class="edge" d="M520 108 H556" marker-end="url(#sm-arrow)"/>
+            <path class="edge" d="M720 108 H756" marker-end="url(#sm-arrow)"/>
+            <text x="168" y="98" text-anchor="middle" class="t-xs">claim</text>
+            <path class="edge-bad" d="M265 138 C265 190 330 228 376 228" marker-end="url(#sm-arrow-bad)"/>
+            <path class="edge-bad" d="M450 138 V196" marker-end="url(#sm-arrow-bad)"/>
+            <path class="edge-bad" d="M640 138 C640 190 570 228 524 228" marker-end="url(#sm-arrow-bad)"/>
+            <path class="edge-dash" d="M380 240 C200 262 80 240 80 140" marker-end="url(#sm-arrow)"/>
+            <text x="150" y="246" class="t-xs">re-submit same commit</text>
+            <path class="edge-dash" d="M825 78 C825 20 80 20 80 76" marker-end="url(#sm-arrow)"/>
+            <text x="452" y="52" text-anchor="middle" class="t-xs">force: true re-runs a completed analysis</text>
+          </svg>
+        </div>
+        <figcaption>Every transition is committed (and refreshes <code>locked_at</code>), so a polling client always sees exactly where the job is.</figcaption>
+      </figure>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Status</th><th>What happens</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge status-PENDING">PENDING</span></td><td>Waiting in the <code>analyses</code> queue for a worker (<a href="architecture.html#worker">claim loop</a>).</td></tr>
+          <tr><td><span class="badge status-FETCHING_TREE">FETCHING_TREE</span></td><td>Downloads <code>/tarball/{sha}</code>, extracts supported sources and <code>tsconfig*.json</code>/<code>jsconfig.json</code> in memory and applies the file cap.</td></tr>
+          <tr><td><span class="badge status-PARSING_AST">PARSING_AST</span></td><td>In a worker thread: parse every file (Python <code>ast</code>; tree-sitter for JS/TS), resolve imports into edges, build the graph, detect cycles, compute degrees, roles and PageRank. A file that fails to parse gets a <code>parse_warning</code> and never aborts the analysis.</td></tr>
+          <tr><td><span class="badge status-COMPUTING_GRAPH">COMPUTING_GRAPH</span></td><td>Persists <code>file_nodes</code> (with content) and <code>edges</code> in chunks of 1,000 rows and the summary counters (files, edges, cycles, warnings, unresolved/external imports, language breakdown, up to 100 cycles).</td></tr>
+          <tr><td><span class="badge status-COMPLETED">COMPLETED</span></td><td>Graph, files and blast radius are queryable. Before this, <code>GET …/graph</code> returns <code>409 ANALYSIS_NOT_READY</code>.</td></tr>
+          <tr><td><span class="badge status-FAILED">FAILED</span></td><td><code>error_code</code>/<code>error_message</code> are stored on the row; unexpected exceptions are logged and stored as <code>INTERNAL_ERROR</code> with a generic message.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 id="ingestion-errors">Ingestion error codes</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Code</th><th>HTTP</th><th>When</th></tr></thead>
+        <tbody>
+          <tr><td><code>INVALID_REPO_URL</code></td><td>422</td><td>The URL / <code>owner/repo</code> could not be parsed.</td></tr>
+          <tr><td><code>GITHUB_REPO_NOT_FOUND</code></td><td>404</td><td>GitHub returned 404/451, or the repository is private.</td></tr>
+          <tr><td><code>NOT_FOUND</code></td><td>404</td><td>The requested branch does not exist.</td></tr>
+          <tr><td><code>GITHUB_RATE_LIMITED</code></td><td>429</td><td>GitHub quota exhausted (403/429). <code>details.reset_at</code> says when to retry; set <code>GITHUB_TOKEN</code> on the server to raise the limit from 60 to 5,000 requests/hour.</td></tr>
+          <tr><td><code>GITHUB_UNAVAILABLE</code></td><td>502</td><td>GitHub 5xx / timeouts after 3 attempts, or an unreadable archive.</td></tr>
+          <tr><td><code>REPO_TOO_LARGE</code></td><td>413</td><td>The archive exceeds <code>MAX_TARBALL_BYTES</code> (80 MB), by <code>Content-Length</code> or while streaming.</td></tr>
+          <tr><td><code>NO_SOURCE_FILES</code></td><td>422</td><td>No <code>.py</code>/<code>.js</code>/<code>.jsx</code>/<code>.mjs</code>/<code>.cjs</code>/<code>.ts</code>/<code>.tsx</code>/<code>.mts</code>/<code>.cts</code> files survived filtering, or the repository is empty.</td></tr>
+          <tr><td><code>INTERNAL_ERROR</code></td><td>500</td><td>Unexpected crash, or the job was claimed more than 3 times (“Gave up after 3 attempts”).</td></tr>
+        </tbody>
+      </table></div>
+      <p>Errors raised while resolving the ref are returned directly by <code>POST /repos/analyze</code>; errors raised inside the worker are stored on the analysis and surfaced by the progress page.</p>
+
+      <h3 id="ingestion-truncation">Filtering, prioritisation &amp; truncation</h3>
+      <ul>
+        <li><strong>Skipped directories:</strong> <code>node_modules</code>, <code>.git</code>, <code>dist</code>, <code>build</code>, <code>.next</code>, <code>out</code>, <code>coverage</code>, <code>__pycache__</code>, <code>.venv</code>, <code>venv</code>, <code>vendor</code>, <code>site-packages</code>, <code>.tox</code>, <code>.mypy_cache</code>.</li>
+        <li><strong>Skipped files:</strong> minified bundles (<code>*.min.js</code>, <code>*.min.mjs</code>, <code>*.min.cjs</code>), declaration files (<code>*.d.ts</code>, <code>*.d.mts</code>, <code>*.d.cts</code>), files larger than <code>MAX_FILE_BYTES</code> (300 kB), non-UTF-8 or binary files.</li>
+        <li><strong>Priority order</strong> when there are more than <code>MAX_FILES</code> (default 1,500) candidates: files under a top-level <code>src/</code>, <code>app/</code> or <code>lib/</code>, or under <code>packages/*/src/</code>, come first; then shallower paths; then alphabetical. The first <code>MAX_FILES</code> are analyzed.</li>
+        <li><strong>Reporting:</strong> <code>total_source_files</code> is the count before the cap, <code>analyzed_files</code> after it, and <code>truncated</code> is true when the cap was hit (the UI shows a “truncated” badge). Imports into files that were cut off cannot become edges (they are usually counted as unresolved).</li>
+      </ul>
+
+      <h2 id="blast-radius">2 · Blast radius &amp; cycles</h2>
+      <p>Both features are pure graph algorithms over the immutable graph of a completed analysis. Cycles are computed once during ingestion; blast radius is computed on demand.</p>
+      <figure>
+        <div class="diagram">
+          <svg viewBox="0 0 900 210" role="img" aria-labelledby="br-t br-d">
+            <title id="br-t">Blast radius request flow</title>
+            <desc id="br-d">Selecting a file calls GET blast-radius with the analysis id and path. The service checks the analysis is completed, loads the graph from an in-memory LRU cache or from Postgres, runs a reverse breadth-first search from the file, and returns direct and transitive dependents, depth per path, impact percentage, risk score and risk level.</desc>
+            <defs><marker id="br-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head"/></marker></defs>
+            <rect x="10" y="60" width="140" height="64" rx="10" class="box"/>
+            <text x="80" y="86" text-anchor="middle" class="t-sm">select a file</text>
+            <text x="80" y="104" text-anchor="middle" class="t-xs">?file=… in the URL</text>
+            <rect x="180" y="60" width="200" height="64" rx="10" class="box"/>
+            <text x="280" y="86" text-anchor="middle" class="t-xs t-mono">GET /analyses/{id}/</text>
+            <text x="280" y="102" text-anchor="middle" class="t-xs t-mono">blast-radius?path=…</text>
+            <rect x="410" y="20" width="170" height="56" rx="10" class="box-brand"/>
+            <text x="495" y="44" text-anchor="middle" class="t-sm" style="fill:var(--fg)">LRU cache hit</text>
+            <text x="495" y="62" text-anchor="middle" class="t-xs">32 graphs per process</text>
+            <rect x="410" y="108" width="170" height="56" rx="10" class="box"/>
+            <text x="495" y="132" text-anchor="middle" class="t-sm">miss: load paths + edges</text>
+            <text x="495" y="150" text-anchor="middle" class="t-xs">build_graph() → cache</text>
+            <rect x="610" y="60" width="120" height="64" rx="10" class="box"/>
+            <text x="670" y="86" text-anchor="middle" class="t-sm">reverse BFS</text>
+            <text x="670" y="104" text-anchor="middle" class="t-xs">O(N + E)</text>
+            <rect x="760" y="30" width="130" height="124" rx="10" class="box"/>
+            <text x="772" y="52" class="t-xs t-mono">direct_dependents</text>
+            <text x="772" y="68" class="t-xs t-mono">transitive_…</text>
+            <text x="772" y="84" class="t-xs t-mono">depth_by_path</text>
+            <text x="772" y="100" class="t-xs t-mono">impact_percentage</text>
+            <text x="772" y="116" class="t-xs t-mono">risk_score</text>
+            <text x="772" y="132" class="t-xs t-mono">risk_level</text>
+            <path class="edge" d="M150 92 H176" marker-end="url(#br-arrow)"/>
+            <path class="edge" d="M380 92 C395 92 395 48 406 48" marker-end="url(#br-arrow)"/>
+            <path class="edge" d="M380 92 C395 92 395 136 406 136" marker-end="url(#br-arrow)"/>
+            <path class="edge" d="M580 48 C598 48 598 92 606 92" marker-end="url(#br-arrow)"/>
+            <path class="edge" d="M580 136 C598 136 598 92 606 92" marker-end="url(#br-arrow)"/>
+            <path class="edge" d="M730 92 H756" marker-end="url(#br-arrow)"/>
+            <text x="450" y="196" text-anchor="middle" class="t-xs">404 FILE_NOT_IN_SNAPSHOT for an unknown path · 409 ANALYSIS_NOT_READY before COMPLETED</text>
+          </svg>
+        </div>
+      </figure>
+      <ul>
+        <li><strong>Reverse BFS</strong> walks <em>importers</em> of the selected file level by level; every impacted file gets its depth (1 = imports it directly).</li>
+        <li><strong>Impact</strong> = impacted ÷ (N − 1) × 100. <strong>Risk</strong> = Σ (1 / depth) ÷ (N − 1) × 100, bucketed <span class="badge risk-LOW">Low &lt; 5</span> <span class="badge risk-MEDIUM">Medium &lt; 15</span> <span class="badge risk-HIGH">High &lt; 35</span> <span class="badge risk-CRITICAL">Critical ≥ 35</span>. Step through it on the <a href="algorithms.html#bfs">algorithms page</a>.</li>
+        <li><strong>Cycles</strong> come from an iterative three-colour DFS (concrete cycles, canonicalised so the smallest path comes first, at most 100) and Tarjan's SCC, which marks <em>every</em> file (<code>is_circular</code>, <code>scc_id</code>) and import (<code>is_circular</code>) on any cycle. They are returned with the graph by <code>GET /analyses/{id}/graph</code>. See <a href="algorithms.html#cycles">cycle detection</a>.</li>
+        <li>The dashboard reuses the same function to list each repository's <strong>five riskiest files</strong>.</li>
+      </ul>
+
+      <h2 id="tours">3 · Pin-to-code tours</h2>
+      <figure>
+        <div class="diagram">
+          <svg viewBox="0 0 900 230" role="img" aria-labelledby="tr-t tr-d">
+            <title id="tr-t">Tour lifecycle</title>
+            <desc id="tr-d">An owner creates a tour from a completed analysis, then pins steps. For each step the server reads the file from the analysis snapshot, extracts the line range, stores the snippet and a SHA-256 of its normalized lines, and marks the step Healthy. Optional checkpoints hold a question, two to six options, the correct index and an explanation. Trainees then answer steps in order; the server enforces ordering and records attempts and first-try correctness.</desc>
+            <defs><marker id="tr-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head"/></marker></defs>
+            <text x="10" y="20" class="t-xs">OWNER</text>
+            <rect x="10" y="30" width="170" height="70" rx="10" class="box"/>
+            <text x="95" y="56" text-anchor="middle" class="t-sm">create tour</text>
+            <text x="95" y="74" text-anchor="middle" class="t-xs">COMPLETED analysis</text>
+            <text x="95" y="88" text-anchor="middle" class="t-xs">base_commit_sha = its SHA</text>
+            <rect x="210" y="30" width="250" height="70" rx="10" class="box-brand"/>
+            <text x="335" y="52" text-anchor="middle" class="t-sm" style="fill:var(--fg)">pin step (server-side)</text>
+            <text x="335" y="70" text-anchor="middle" class="t-xs">extract lines from file_nodes.content</text>
+            <text x="335" y="86" text-anchor="middle" class="t-xs t-mono">snippet_hash = sha256(normalized lines)</text>
+            <rect x="490" y="30" width="190" height="70" rx="10" class="box"/>
+            <text x="585" y="56" text-anchor="middle" class="t-sm">checkpoint (optional)</text>
+            <text x="585" y="74" text-anchor="middle" class="t-xs">question · 2–6 options</text>
+            <text x="585" y="88" text-anchor="middle" class="t-xs">correct_index · explanation</text>
+            <rect x="710" y="30" width="180" height="70" rx="10" class="box"/>
+            <text x="800" y="56" text-anchor="middle" class="t-sm">publish</text>
+            <text x="800" y="74" text-anchor="middle" class="t-xs">PUBLIC or PRIVATE</text>
+            <path class="edge" d="M180 65 H206" marker-end="url(#tr-arrow)"/>
+            <path class="edge" d="M460 65 H486" marker-end="url(#tr-arrow)"/>
+            <path class="edge" d="M680 65 H706" marker-end="url(#tr-arrow)"/>
+            <text x="10" y="138" class="t-xs">TRAINEE</text>
+            <rect x="10" y="148" width="210" height="70" rx="10" class="box"/>
+            <text x="115" y="174" text-anchor="middle" class="t-sm">GET tour</text>
+            <text x="115" y="192" text-anchor="middle" class="t-xs">checkpoint = question + options only</text>
+            <rect x="250" y="148" width="260" height="70" rx="10" class="box-brand"/>
+            <text x="380" y="170" text-anchor="middle" class="t-sm" style="fill:var(--fg)">POST …/steps/{id}/answer</text>
+            <text x="380" y="188" text-anchor="middle" class="t-xs">earlier steps incomplete → 409 CONFLICT</text>
+            <text x="380" y="204" text-anchor="middle" class="t-xs">wrong → retry · first try recorded</text>
+            <rect x="540" y="148" width="170" height="70" rx="10" class="box"/>
+            <text x="625" y="174" text-anchor="middle" class="t-sm">correct</text>
+            <text x="625" y="192" text-anchor="middle" class="t-xs">completed + explanation</text>
+            <rect x="740" y="148" width="150" height="70" rx="10" class="box"/>
+            <text x="815" y="174" text-anchor="middle" class="t-sm">progress</text>
+            <text x="815" y="192" text-anchor="middle" class="t-xs">% complete · dashboard</text>
+            <path class="edge" d="M220 183 H246" marker-end="url(#tr-arrow)"/>
+            <path class="edge" d="M510 183 H536" marker-end="url(#tr-arrow)"/>
+            <path class="edge" d="M710 183 H736" marker-end="url(#tr-arrow)"/>
+            <path class="edge-dash" d="M800 102 C800 126 115 120 115 144" marker-end="url(#tr-arrow)"/>
+          </svg>
+        </div>
+      </figure>
+      <h3 id="tours-pin">Pinning a step</h3>
+      <p><code>POST /api/v1/tours/{tour_id}/steps</code> with <code>file_path</code>, <code>start_line</code>, <code>end_line</code>, <code>title</code>, optional <code>body_markdown</code>, <code>checkpoint</code> and <code>position</code>. The client never sends code: the server reads the file from the tour's analysis snapshot, slices the 1-based inclusive range and stores</p>
+      <ul>
+        <li><code>snippet_snapshot</code> — the raw lines exactly as pinned;</li>
+        <li><code>snippet_hash</code> — SHA-256 of the lines after <em>normalisation</em> (each line stripped, internal whitespace runs collapsed to one space, blank lines kept, joined with <code>\n</code>). Re-indenting code therefore does not change the hash.</li>
+      </ul>
+      <p>The new step starts <span class="badge drift-HEALTHY">Healthy</span>. A path that is not in the snapshot is <code>FILE_NOT_IN_SNAPSHOT</code>; a range outside the file is <code>INVALID_LINE_RANGE</code> (with <code>details.loc</code>). Steps can be edited (title, Markdown, checkpoint, <code>remove_checkpoint</code>), reordered with <code>PUT …/steps/order</code> (every step id exactly once) or deleted (positions are compacted).</p>
+
+      <h3 id="tours-visibility">Owner vs trainee visibility</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th>Owner</th><th>Signed-in non-owner</th><th>Anonymous</th></tr></thead>
+        <tbody>
+          <tr><td>Read a <code>PUBLIC</code> tour</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+          <tr><td>Read a <code>PRIVATE</code> tour</td><td>Yes</td><td><code>404 NOT_FOUND</code></td><td><code>404 NOT_FOUND</code></td></tr>
+          <tr><td>Checkpoint fields</td><td><code>question</code>, <code>options</code>, <code>correct_index</code>, <code>explanation</code></td><td><code>question</code>, <code>options</code> only</td><td><code>question</code>, <code>options</code> only</td></tr>
+          <tr><td>Edit, reorder, delete, sync, resolve</td><td>Yes</td><td><code>403 FORBIDDEN</code></td><td><code>401 UNAUTHORIZED</code></td></tr>
+          <tr><td>Answer steps / track progress</td><td>Yes</td><td>Yes</td><td><code>401</code> (sign-in required)</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 id="tours-progress">Checkpoints &amp; ordered completion</h3>
+      <ul>
+        <li><code>POST …/steps/{step_id}/answer</code> with <code>selected_index</code> (or <code>null</code> to acknowledge a step without a checkpoint). An index outside the options is <code>VALIDATION_ERROR</code>.</li>
+        <li>If any earlier step (by position) is not completed by this user the answer is rejected with <code>409 CONFLICT</code> — “Complete the previous steps first”.</li>
+        <li>Each answer increments <code>attempts</code>; <code>first_try_correct</code> is recorded on the first attempt of a step with a checkpoint; a correct answer marks the step completed. The <code>explanation</code> is returned <em>only</em> when the answer is correct.</li>
+        <li><code>GET …/progress</code> returns completed step ids and <code>percent_complete</code>; the owner's dashboard aggregates completed steps, first-try accuracy and last activity per trainee.</li>
+      </ul>
+
+      <h2 id="drift">4 · Drift engine: Sync &amp; verify</h2>
+      <p><code>POST /api/v1/tours/{tour_id}/sync</code> (owner only) re-checks every step against the newest commit of the tour's branch.</p>
+      <ol class="steps">
+        <li><strong>Resolve the latest commit</strong> of the branch the tour's analysis was made on.</li>
+        <li><strong>Ensure it is analyzed.</strong> If that commit already has a completed analysis it is reused (an unchanged branch costs no pipeline run); otherwise the pipeline runs <em>inline</em> in the request, or waits up to 120 s for a worker that already owns the job. A failed analysis surfaces its stored error.</li>
+        <li><strong>Evaluate every step</strong> with the decision tree below against the file contents of the new snapshot.</li>
+        <li><strong>Apply results:</strong> auto-fixed steps get their new line numbers (and snapshot) immediately; review steps get <code>proposed_start_line</code>/<code>proposed_end_line</code>, <code>proposed_snippet</code>, <code>drift_similarity</code> and a unified <code>drift_diff</code>; every step records <code>last_checked_at</code>/<code>last_checked_commit_sha</code>.</li>
+        <li><strong>Move the tour forward</strong> (<code>analysis_id</code>, <code>base_commit_sha</code>, <code>last_synced_at</code>) and append a <code>tour_sync_runs</code> row with the from/to commits and per-status counts.</li>
+        <li><strong>Return the sync report:</strong> per-step previous/new status and line ranges, counts, and <code>up_to_date</code> when nothing changed.</li>
+      </ol>
+
+      <h3 id="drift-tree">Decision tree</h3>
+      <figure>
+        <div class="diagram">
+          <svg viewBox="0 0 900 430" role="img" aria-labelledby="dt-t dt-d">
+            <title id="dt-t">Drift detection decision tree</title>
+            <desc id="dt-d">First, if the file no longer exists the step is BROKEN_FILE_DELETED. Otherwise, if the same line range still hashes to the stored snippet hash the step is HEALTHY. Otherwise, if an exact normalized window match exists anywhere in the file, the step is DRIFTED_AUTO_FIXED and moved to the match nearest the original start. Otherwise the step is OUTDATED_NEEDS_REVIEW; if the best fuzzy window reaches a similarity of 0.75 it is proposed as the new location, otherwise the original range clamped to the file is proposed. A unified diff is always attached for review.</desc>
+            <defs><marker id="dt-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="arrow-head"/></marker></defs>
+            <rect x="320" y="14" width="260" height="56" rx="10" class="box"/>
+            <text x="450" y="38" text-anchor="middle" class="t-sm" style="fill:var(--fg)">File exists in the new snapshot?</text>
+            <text x="450" y="56" text-anchor="middle" class="t-xs">same file_path</text>
+            <rect x="320" y="110" width="260" height="56" rx="10" class="box"/>
+            <text x="450" y="134" text-anchor="middle" class="t-sm" style="fill:var(--fg)">Same lines still hash to snippet_hash?</text>
+            <text x="450" y="152" text-anchor="middle" class="t-xs">normalized SHA-256</text>
+            <rect x="320" y="206" width="260" height="56" rx="10" class="box"/>
+            <text x="450" y="230" text-anchor="middle" class="t-sm" style="fill:var(--fg)">Exact normalized window match?</text>
+            <text x="450" y="248" text-anchor="middle" class="t-xs">same length, anywhere in the file</text>
+            <rect x="320" y="302" width="260" height="56" rx="10" class="box"/>
+            <text x="450" y="326" text-anchor="middle" class="t-sm" style="fill:var(--fg)">Best fuzzy window ratio ≥ 0.75?</text>
+            <text x="450" y="344" text-anchor="middle" class="t-xs">difflib · lengths n−2 … n+2</text>
+
+            <rect x="20" y="14" width="220" height="56" rx="10" fill="color-mix(in srgb, var(--drift-broken) 16%, transparent)" stroke="var(--drift-broken)" stroke-width="1.5"/>
+            <text x="130" y="38" text-anchor="middle" class="t-sm t-mono" style="fill:var(--fg)">BROKEN_FILE_DELETED</text>
+            <text x="130" y="56" text-anchor="middle" class="t-xs">re-pin to another file or delete</text>
+            <rect x="660" y="110" width="220" height="56" rx="10" fill="color-mix(in srgb, var(--drift-healthy) 16%, transparent)" stroke="var(--drift-healthy)" stroke-width="1.5"/>
+            <text x="770" y="134" text-anchor="middle" class="t-sm t-mono" style="fill:var(--fg)">HEALTHY</text>
+            <text x="770" y="152" text-anchor="middle" class="t-xs">nothing to do</text>
+            <rect x="660" y="206" width="220" height="56" rx="10" fill="color-mix(in srgb, var(--drift-autofixed) 16%, transparent)" stroke="var(--drift-autofixed)" stroke-width="1.5"/>
+            <text x="770" y="230" text-anchor="middle" class="t-sm t-mono" style="fill:var(--fg)">DRIFTED_AUTO_FIXED</text>
+            <text x="770" y="248" text-anchor="middle" class="t-xs">moved to match nearest original start</text>
+            <rect x="660" y="302" width="220" height="56" rx="10" fill="color-mix(in srgb, var(--drift-review) 16%, transparent)" stroke="var(--drift-review)" stroke-width="1.5"/>
+            <text x="770" y="322" text-anchor="middle" class="t-sm t-mono" style="fill:var(--fg)">OUTDATED_NEEDS_REVIEW</text>
+            <text x="770" y="340" text-anchor="middle" class="t-xs">proposal = best fuzzy window</text>
+            <rect x="20" y="302" width="220" height="56" rx="10" fill="color-mix(in srgb, var(--drift-review) 16%, transparent)" stroke="var(--drift-review)" stroke-width="1.5"/>
+            <text x="130" y="322" text-anchor="middle" class="t-sm t-mono" style="fill:var(--fg)">OUTDATED_NEEDS_REVIEW</text>
+            <text x="130" y="340" text-anchor="middle" class="t-xs">proposal = original range, clamped</text>
+
+            <path class="edge" d="M318 42 H244" marker-end="url(#dt-arrow)"/><text x="280" y="34" text-anchor="middle" class="t-xs">no</text>
+            <path class="edge" d="M450 72 V106" marker-end="url(#dt-arrow)"/><text x="458" y="94" class="t-xs">yes</text>
+            <path class="edge" d="M582 138 H656" marker-end="url(#dt-arrow)"/><text x="618" y="130" text-anchor="middle" class="t-xs">yes</text>
+            <path class="edge" d="M450 168 V202" marker-end="url(#dt-arrow)"/><text x="458" y="190" class="t-xs">no</text>
+            <path class="edge" d="M582 234 H656" marker-end="url(#dt-arrow)"/><text x="618" y="226" text-anchor="middle" class="t-xs">yes</text>
+            <path class="edge" d="M450 264 V298" marker-end="url(#dt-arrow)"/><text x="458" y="286" class="t-xs">no</text>
+            <path class="edge" d="M582 330 H656" marker-end="url(#dt-arrow)"/><text x="618" y="322" text-anchor="middle" class="t-xs">yes</text>
+            <path class="edge" d="M318 330 H244" marker-end="url(#dt-arrow)"/><text x="280" y="322" text-anchor="middle" class="t-xs">no</text>
+            <text x="450" y="400" text-anchor="middle" class="t-xs">Both review outcomes store similarity, proposed lines and a unified diff (snapshot → current) for the side-by-side review.</text>
+          </svg>
+        </div>
+        <figcaption>From <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/backend/app/engine/drift_detector.py">engine/drift_detector.py</a>. The matcher is animated on the <a href="algorithms.html#drift">algorithms page</a>.</figcaption>
+      </figure>
+      <p>Status legend: <span class="badge drift-HEALTHY">Healthy</span> <span class="badge drift-DRIFTED_AUTO_FIXED">Auto-fixed</span> <span class="badge drift-OUTDATED_NEEDS_REVIEW">Needs review</span> <span class="badge drift-BROKEN_FILE_DELETED">File deleted</span> <span class="badge drift-UNVERIFIED">Unverified</span> (the column default; steps created through the API start Healthy).</p>
+
+      <h3 id="drift-resolve">Resolve actions</h3>
+      <p><code>POST /api/v1/tours/{tour_id}/steps/{step_id}/resolve</code> with an <code>action</code>. Every successful resolution re-extracts the snippet from the tour's (new) snapshot, recomputes the hash, clears the proposal and marks the step <span class="badge drift-HEALTHY">Healthy</span>.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Action</th><th>Effect</th><th>Allowed when</th></tr></thead>
+        <tbody>
+          <tr><td><code>accept_proposed</code></td><td>Re-pin to <code>proposed_start_line</code>–<code>proposed_end_line</code>.</td><td>Step is Needs review / File deleted <em>and</em> a proposal exists; otherwise <code>409 CONFLICT</code>.</td></tr>
+          <tr><td><code>keep_original</code></td><td>Re-pin the same line numbers against the new code.</td><td>Step is Needs review / File deleted and the file still exists; otherwise <code>409 CONFLICT</code>.</td></tr>
+          <tr><td><code>repin</code></td><td>Re-pin to the given <code>start_line</code>/<code>end_line</code> (both required) in the same file.</td><td>Any status. Out-of-range lines are <code>INVALID_LINE_RANGE</code>.</td></tr>
+        </tbody>
+      </table></div>
+      <p>For a deleted file, the builder's <strong>Re-pin to another file</strong> creates a new step at the same position in the chosen file (keeping title, explanation and checkpoint) and deletes the old one.</p>
+
+      <h3 id="drift-history">Sync runs history</h3>
+      <p>Each sync stores a <code>tour_sync_runs</code> row: who triggered it, <code>from_commit_sha</code> → <code>to_commit_sha</code> and a count per drift status. The dashboard's <em>Tour health</em> tab shows the last 10 runs per tour together with the <strong>health score</strong> — the share of steps that are Healthy or Auto-fixed.</p>
+    </article>
+
+    <nav class="pager" aria-label="Pagination">
+      <a href="architecture.html"><small>Previous</small>← Architecture</a>
+      <a class="next" href="algorithms.html"><small>Next</small>Algorithms →</a>
+    </nav>
+    <div class="page-meta">
+      <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/docs/workflows.html">Edit this page on GitHub</a>
+      <span class="muted">Described from <a href="https://github.com/AadithyaAle/Repoatlas/tree/main/backend/app/services">backend/app/services</a>.</span>
+    </div>
+  </main>
+
+  <aside class="toc" aria-label="On this page">
+    <div data-toc><h2>On this page</h2></div>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <div class="inner">
+    <span>© RepoAtlas contributors · MIT License</span>
+    <nav aria-label="Footer">
+      <a href="getting-started.html">Guide</a>
+      <a href="api.html">API</a>
+      <a href="self-hosting.html">Self-hosting</a>
+      <a href="https://github.com/AadithyaAle/Repoatlas">GitHub</a>
+      <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">Security</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

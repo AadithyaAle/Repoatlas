@@ -1,0 +1,93 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+    paths: ["docs/**", "README.md", "CONTRIBUTING.md", "SECURITY.md", "backend/README.md",
+            "frontend/README.md", ".github/workflows/docs.yml", "backend/app/schemas/**",
+            "backend/app/api/**"]
+  pull_request:
+    paths: ["docs/**", "README.md", "CONTRIBUTING.md", "SECURITY.md", "backend/README.md",
+            "frontend/README.md", ".github/workflows/docs.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  links:
+    name: Check links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lychee (README, markdown and HTML docs)
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress --include-fragments --max-retries 3
+            --exclude-path node_modules --exclude-path frontend/node_modules
+            --exclude-path docs/404.html
+            --exclude '^https://api\.example\.invalid'
+            --exclude '^http://localhost'
+            --exclude '^https://aadithyaale\.github\.io/Repoatlas'
+            README.md CONTRIBUTING.md SECURITY.md backend/README.md frontend/README.md
+            'docs/**/*.html'
+          fail: true
+
+  build:
+    name: Build Pages artifact
+    needs: links
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Embed latest OpenAPI schema in the API reference
+        working-directory: backend
+        run: uv sync --frozen --no-dev && uv run python -m app.scripts.dump_openapi > ../docs/openapi.json
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  verify-live:
+    name: Check links on the live site
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for Pages CDN
+        run: sleep 30
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress --max-retries 5 --retry-wait-time 10
+            --exclude '^http://localhost'
+            README.md
+            https://aadithyaale.github.io/Repoatlas/
+            https://aadithyaale.github.io/Repoatlas/getting-started.html
+            https://aadithyaale.github.io/Repoatlas/architecture.html
+            https://aadithyaale.github.io/Repoatlas/workflows.html
+            https://aadithyaale.github.io/Repoatlas/algorithms.html
+            https://aadithyaale.github.io/Repoatlas/api.html
+            https://aadithyaale.github.io/Repoatlas/self-hosting.html
+            https://aadithyaale.github.io/Repoatlas/faq.html
+          fail: true
