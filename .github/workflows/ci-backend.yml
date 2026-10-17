@@ -1,0 +1,76 @@
+name: CI · Backend
+
+on:
+  push:
+    branches: [main]
+    paths: ["backend/**", ".github/workflows/ci-backend.yml"]
+  pull_request:
+    paths: ["backend/**", ".github/workflows/ci-backend.yml"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: backend
+
+jobs:
+  quality:
+    name: Lint · Types · Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: atlas
+          POSTGRES_PASSWORD: atlas
+          POSTGRES_DB: repoatlas_test
+        ports: ["5433:5432"]
+        options: >-
+          --health-cmd "pg_isready -U atlas -d repoatlas_test"
+          --health-interval 3s --health-timeout 3s --health-retries 20
+    env:
+      DATABASE_URL: postgresql+asyncpg://atlas:atlas@localhost:5433/repoatlas_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+      - name: Install
+        run: uv sync --frozen
+      - name: Ruff
+        run: uv run ruff format --check . && uv run ruff check .
+      - name: Mypy
+        run: uv run mypy app
+      - name: Migrations apply and match models
+        run: uv run alembic upgrade head && uv run alembic check && uv run alembic downgrade base
+      - name: Pytest
+        run: uv run pytest --cov=app --cov-report=term-missing:skip-covered
+
+  contract:
+    name: OpenAPI contract in sync with frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+      - run: uv sync --frozen --no-dev
+      - name: Compare generated OpenAPI with committed frontend/openapi.json
+        run: |
+          uv run python -m app.scripts.dump_openapi > /tmp/openapi.json
+          diff -u ../frontend/openapi.json /tmp/openapi.json || {
+            echo "::error::API schema changed. Run 'npm run gen:api' in frontend/ and commit."; exit 1; }
+
+  docker:
+    name: Docker image builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t repoatlas-api .
