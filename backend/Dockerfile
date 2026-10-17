@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:1
 # RepoAtlas API image. Build: docker build -t repoatlas-api backend
 
 FROM ghcr.io/astral-sh/uv:0.9.5 AS uv
@@ -13,11 +12,9 @@ ENV UV_COMPILE_BYTECODE=1 \
 WORKDIR /app
 # Dependencies first (cached layer), then the project itself.
 COPY pyproject.toml uv.lock README.md ./
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen --no-dev --no-install-project
+RUN uv sync --frozen --no-dev --no-install-project --no-cache
 COPY app ./app
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen --no-dev
+RUN uv sync --frozen --no-dev --no-cache
 
 # ---------- runtime ----------
 FROM python:3.12-slim AS runtime
@@ -33,7 +30,8 @@ COPY --from=builder --chown=app:app /app/.venv ./.venv
 COPY --chown=app:app app ./app
 COPY --chown=app:app migrations ./migrations
 COPY --chown=app:app alembic.ini ./
-COPY --chown=app:app --chmod=755 scripts/start.sh ./scripts/start.sh
+COPY --chown=app:app scripts/start.sh ./scripts/start.sh
+RUN chmod 755 ./scripts/start.sh
 USER app
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
