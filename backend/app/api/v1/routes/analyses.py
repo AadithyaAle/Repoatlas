@@ -4,14 +4,15 @@ from fastapi import APIRouter, Query
 
 from app.api.deps import DbSession
 from app.schemas.atlas import AnalysisOut, BlastRadiusOut, FileContentOut, GraphOut
-from app.schemas.common import ApiResponse
+from app.schemas.common import ApiResponse, ok
+from app.services import analysis_query_service, graph_service, serializers
 
 router = APIRouter(prefix="/analyses", tags=["analyses"])
 
 
 @router.get("/{analysis_id}", response_model=ApiResponse[AnalysisOut], summary="Analysis status")
 async def get_analysis(analysis_id: uuid.UUID, db: DbSession) -> ApiResponse[AnalysisOut]:
-    raise NotImplementedError
+    return ok(serializers.analysis_out(await graph_service.get_analysis(db, analysis_id)))
 
 
 @router.get(
@@ -20,7 +21,7 @@ async def get_analysis(analysis_id: uuid.UUID, db: DbSession) -> ApiResponse[Ana
     summary="Dependency graph (409 ANALYSIS_NOT_READY until COMPLETED)",
 )
 async def get_graph(analysis_id: uuid.UUID, db: DbSession) -> ApiResponse[GraphOut]:
-    raise NotImplementedError
+    return ok(await analysis_query_service.get_graph(db, analysis_id))
 
 
 @router.get(
@@ -31,7 +32,7 @@ async def get_graph(analysis_id: uuid.UUID, db: DbSession) -> ApiResponse[GraphO
 async def get_file(
     analysis_id: uuid.UUID, db: DbSession, path: str = Query(min_length=1, max_length=1024)
 ) -> ApiResponse[FileContentOut]:
-    raise NotImplementedError
+    return ok(await analysis_query_service.get_file(db, analysis_id, path))
 
 
 @router.get(
@@ -42,4 +43,4 @@ async def get_file(
 async def get_blast_radius(
     analysis_id: uuid.UUID, db: DbSession, path: str = Query(min_length=1, max_length=1024)
 ) -> ApiResponse[BlastRadiusOut]:
-    raise NotImplementedError
+    return ok(await analysis_query_service.get_blast_radius(db, analysis_id, path))
