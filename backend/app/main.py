@@ -54,6 +54,18 @@ async def _close_github_client() -> None:
     get_github_client.cache_clear()
 
 
+async def _close_gemini_client() -> None:
+    from app.services.ai_service import get_gemini_client
+
+    if get_gemini_client.cache_info().currsize == 0:
+        return
+    try:
+        await get_gemini_client().aclose()
+    except Exception:
+        logger.warning("Failed to close Gemini client", exc_info=True)
+    get_gemini_client.cache_clear()
+
+
 async def _dispose_engine() -> None:
     from app.db.session import get_engine
 
@@ -80,6 +92,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
             await stop_embedded_worker(*worker)
             logger.info("Embedded analysis worker stopped")
         await _close_github_client()
+        await _close_gemini_client()
         await _dispose_engine()
 
 
@@ -96,7 +109,7 @@ def create_app() -> FastAPI:
         ),
         contact={
             "name": "RepoAtlas maintainers",
-            "url": "https://github.com/AadithyaAle/repoatlas",
+            "url": "https://github.com/AadithyaAle/Repoatlas",
         },
         license_info={"name": "MIT", "identifier": "MIT"},
         servers=[{"url": "/", "description": "Current host"}],

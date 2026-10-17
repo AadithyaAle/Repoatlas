@@ -37,7 +37,7 @@ CI runs `npm run lint && npm run typecheck && npm run test && npm run build`.
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | FastAPI base URL (paths include `/api/v1`) |
 | `NEXT_PUBLIC_SUPABASE_URL` | — | Leave blank to run without auth |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | — | `sb_publishable_…`; legacy `NEXT_PUBLIC_SUPABASE_ANON_KEY` also accepted |
-| `NEXT_PUBLIC_DOCS_URL` | `https://aadithyaale.github.io/repoatlas/` | "Docs" nav link |
+| `NEXT_PUBLIC_DOCS_URL` | `https://aadithyaale.github.io/Repoatlas/` | "Docs" nav link |
 | `NEXT_PUBLIC_SITE_URL` | `http://localhost:3000` | metadata base / OAuth fallback origin |
 
 Validated in `src/lib/env.ts` (zod). Invalid or blank values fall back to defaults. Without

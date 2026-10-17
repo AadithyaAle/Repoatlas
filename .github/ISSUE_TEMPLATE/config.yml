@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Documentation
-    url: https://aadithyaale.github.io/repoatlas/
+    url: https://aadithyaale.github.io/Repoatlas/
     about: Usage guides, architecture and API reference
   - name: Security vulnerability
-    url: https://github.com/AadithyaAle/repoatlas/security/advisories/new
+    url: https://github.com/AadithyaAle/Repoatlas/security/advisories/new
     about: Please report security issues privately

@@ -7,7 +7,7 @@ Only the latest release on `main` receives security fixes.
 ## Reporting a vulnerability
 
 Please **do not open a public issue**. Report privately through
-[GitHub Security Advisories](https://github.com/AadithyaAle/repoatlas/security/advisories/new).
+[GitHub Security Advisories](https://github.com/AadithyaAle/Repoatlas/security/advisories/new).
 Include steps to reproduce, affected endpoints/components and impact. You will receive an
 acknowledgement within 72 hours.
 

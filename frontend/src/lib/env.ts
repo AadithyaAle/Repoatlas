@@ -7,7 +7,7 @@ import { z } from "zod";
  */
 
 const DEFAULT_API_URL = "http://localhost:8000";
-const DEFAULT_DOCS_URL = "https://aadithyaale.github.io/repoatlas/";
+const DEFAULT_DOCS_URL = "https://aadithyaale.github.io/Repoatlas/";
 const DEFAULT_SITE_URL = "http://localhost:3000";
 
 const url = z.url({ protocol: /^https?$/ });
@@ -54,7 +54,7 @@ export const env = {
   ),
   supabaseUrl,
   supabaseKey,
-  githubRepoUrl: "https://github.com/AadithyaAle/repoatlas",
+  githubRepoUrl: "https://github.com/AadithyaAle/Repoatlas",
 } as const;
 
 export type SupabaseConfig = { url: string; key: string };

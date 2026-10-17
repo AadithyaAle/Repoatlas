@@ -2774,7 +2774,7 @@
   "info": {
     "contact": {
       "name": "RepoAtlas maintainers",
-      "url": "https://github.com/AadithyaAle/repoatlas"
+      "url": "https://github.com/AadithyaAle/Repoatlas"
     },
     "description": "AST dependency graphs, blast-radius simulation and self-healing onboarding tours for GitHub repositories. Every endpoint returns the envelope `{success, data, error}`.",
     "license": {
