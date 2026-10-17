@@ -6,6 +6,7 @@ import * as React from "react";
 import { toast } from "sonner";
 
 import { AuthProvider } from "@/components/auth/auth-provider";
+import { ApiWarmup } from "@/components/common/api-warmup";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { isApiError, toApiError } from "@/lib/api/errors";
@@ -56,6 +57,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <AuthProvider>
           <TooltipProvider>
             {children}
+            <ApiWarmup />
             <Toaster richColors closeButton position="bottom-right" />
           </TooltipProvider>
         </AuthProvider>

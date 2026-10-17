@@ -12,6 +12,7 @@ import {
 import * as React from "react";
 
 import { CyclesDialog } from "@/components/graph/cycles-dialog";
+import { ExportReportButton } from "@/components/graph/export-report-button";
 import { FileSearch } from "@/components/graph/file-search";
 import type { GraphIndex } from "@/components/graph/graph-index";
 import { LANGUAGE_META } from "@/components/graph/graph-style";
@@ -161,6 +162,7 @@ export function GraphToolbar({
         </div>
 
         <div className="ml-auto flex items-center gap-1.5">
+          <ExportReportButton graph={graph} />
           <CyclesDialog
             cycles={graph.cycles}
             circularFileCount={index.circularCount}
