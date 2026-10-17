@@ -136,6 +136,18 @@ def create_app() -> FastAPI:
     )
     app.add_middleware(RequestContextMiddleware)
     app.include_router(api_router)
+
+    @app.get("/", include_in_schema=False)
+    async def root() -> dict[str, str]:
+        return {
+            "service": "RepoAtlas API",
+            "version": VERSION,
+            "health": "/api/v1/health",
+            "openapi": "/openapi.json",
+            "interactive_docs": "/docs",
+            "documentation": "https://aadithyaale.github.io/Repoatlas/",
+        }
+
     return app
 
 
