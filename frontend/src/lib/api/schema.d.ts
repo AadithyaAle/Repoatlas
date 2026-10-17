@@ -519,6 +519,13 @@ export interface components {
             /** Success */
             success: boolean;
         };
+        /** ApiResponse[DeletedOut] */
+        ApiResponse_DeletedOut_: {
+            data?: components["schemas"]["DeletedOut"] | null;
+            error?: components["schemas"]["ErrorBody"] | null;
+            /** Success */
+            success: boolean;
+        };
         /** ApiResponse[FileContentOut] */
         ApiResponse_FileContentOut_: {
             data?: components["schemas"]["FileContentOut"] | null;
@@ -529,6 +536,13 @@ export interface components {
         /** ApiResponse[GraphOut] */
         ApiResponse_GraphOut_: {
             data?: components["schemas"]["GraphOut"] | null;
+            error?: components["schemas"]["ErrorBody"] | null;
+            /** Success */
+            success: boolean;
+        };
+        /** ApiResponse[HealthOut] */
+        ApiResponse_HealthOut_: {
+            data?: components["schemas"]["HealthOut"] | null;
             error?: components["schemas"]["ErrorBody"] | null;
             /** Success */
             success: boolean;
@@ -578,26 +592,6 @@ export interface components {
         /** ApiResponse[TourProgressOut] */
         ApiResponse_TourProgressOut_: {
             data?: components["schemas"]["TourProgressOut"] | null;
-            error?: components["schemas"]["ErrorBody"] | null;
-            /** Success */
-            success: boolean;
-        };
-        /** ApiResponse[dict[str, bool]] */
-        ApiResponse_dict_str__bool__: {
-            /** Data */
-            data?: {
-                [key: string]: boolean;
-            } | null;
-            error?: components["schemas"]["ErrorBody"] | null;
-            /** Success */
-            success: boolean;
-        };
-        /** ApiResponse[dict[str, str]] */
-        ApiResponse_dict_str__str__: {
-            /** Data */
-            data?: {
-                [key: string]: string;
-            } | null;
             error?: components["schemas"]["ErrorBody"] | null;
             /** Success */
             success: boolean;
@@ -692,6 +686,20 @@ export interface components {
             repos: components["schemas"]["RepoAnalyticsOut"][];
             /** Tours */
             tours: components["schemas"]["TourHealthOut"][];
+        };
+        /** DeletedOut */
+        DeletedOut: {
+            /**
+             * Deleted
+             * @default true
+             * @constant
+             */
+            deleted?: true;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
         };
         /**
          * DriftStatus
@@ -790,6 +798,19 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** HealthOut */
+        HealthOut: {
+            /**
+             * Database
+             * @constant
+             */
+            database: "ok";
+            /**
+             * Status
+             * @constant
+             */
+            status: "ok";
         };
         /**
          * ImportKind
@@ -1002,6 +1023,27 @@ export interface components {
             /** Up To Date */
             up_to_date: boolean;
         };
+        /** SyncRunOut */
+        SyncRunOut: {
+            /** Counts */
+            counts: {
+                [key: string]: number;
+            };
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** From Commit Sha */
+            from_commit_sha: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** To Commit Sha */
+            to_commit_sha: string;
+        };
         /** SyncStepResult */
         SyncStepResult: {
             /** File Path */
@@ -1047,9 +1089,7 @@ export interface components {
             /** Health Score */
             health_score: number;
             /** Sync History */
-            sync_history: {
-                [key: string]: unknown;
-            }[];
+            sync_history: components["schemas"]["SyncRunOut"][];
             tour: components["schemas"]["TourSummaryOut"];
             /** Trainees */
             trainees: components["schemas"]["TraineeProgressOut"][];
@@ -1433,7 +1473,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ApiResponse_dict_str__str__"];
+                    "application/json": components["schemas"]["ApiResponse_HealthOut_"];
                 };
             };
         };
@@ -1669,7 +1709,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ApiResponse_dict_str__bool__"];
+                    "application/json": components["schemas"]["ApiResponse_DeletedOut_"];
                 };
             };
             /** @description Validation Error */
@@ -1837,7 +1877,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ApiResponse_dict_str__bool__"];
+                    "application/json": components["schemas"]["ApiResponse_DeletedOut_"];
                 };
             };
             /** @description Validation Error */

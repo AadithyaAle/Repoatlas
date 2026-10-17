@@ -100,8 +100,8 @@ class Analysis(TimestampMixin, Base):
     parse_warning_count: Mapped[int | None] = mapped_column(Integer)
     unresolved_imports: Mapped[int | None] = mapped_column(Integer)
     external_imports: Mapped[int | None] = mapped_column(Integer)
-    language_breakdown: Mapped[dict[str, int] | None] = mapped_column(JSONB)
-    cycles: Mapped[list[list[str]] | None] = mapped_column(JSONB)
+    language_breakdown: Mapped[dict[str, int] | None] = mapped_column(JSONB(none_as_null=True))
+    cycles: Mapped[list[list[str]] | None] = mapped_column(JSONB(none_as_null=True))
 
     repository: Mapped[Repository] = relationship(back_populates="analyses")
     files: Mapped[list["FileNode"]] = relationship(
@@ -207,7 +207,7 @@ class TourStep(TimestampMixin, Base):
     snippet_hash: Mapped[str] = mapped_column(String(64), nullable=False)
     snippet_snapshot: Mapped[str] = mapped_column(Text, nullable=False)
     # {"question": str, "options": [str, ...], "correct_index": int, "explanation": str | None}
-    checkpoint: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
+    checkpoint: Mapped[dict[str, Any] | None] = mapped_column(JSONB(none_as_null=True))
 
     drift_status: Mapped[DriftStatus] = mapped_column(
         _enum(DriftStatus, "drift_status"), default=DriftStatus.UNVERIFIED, nullable=False

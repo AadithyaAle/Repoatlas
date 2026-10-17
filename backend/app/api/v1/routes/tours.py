@@ -6,6 +6,7 @@ from app.api.deps import AuthUser, DbSession, OptionalUser
 from app.schemas.atlas import (
     AnswerOut,
     AnswerRequest,
+    DeletedOut,
     ResolveDriftRequest,
     StepCreate,
     StepOut,
@@ -57,10 +58,8 @@ async def update_tour(
     raise NotImplementedError
 
 
-@router.delete("/{tour_id}", response_model=ApiResponse[dict[str, bool]])
-async def delete_tour(
-    tour_id: uuid.UUID, db: DbSession, user: AuthUser
-) -> ApiResponse[dict[str, bool]]:
+@router.delete("/{tour_id}", response_model=ApiResponse[DeletedOut])
+async def delete_tour(tour_id: uuid.UUID, db: DbSession, user: AuthUser) -> ApiResponse[DeletedOut]:
     raise NotImplementedError
 
 
@@ -86,10 +85,10 @@ async def update_step(
     raise NotImplementedError
 
 
-@router.delete("/{tour_id}/steps/{step_id}", response_model=ApiResponse[dict[str, bool]])
+@router.delete("/{tour_id}/steps/{step_id}", response_model=ApiResponse[DeletedOut])
 async def delete_step(
     tour_id: uuid.UUID, step_id: uuid.UUID, db: DbSession, user: AuthUser
-) -> ApiResponse[dict[str, bool]]:
+) -> ApiResponse[DeletedOut]:
     raise NotImplementedError
 
 

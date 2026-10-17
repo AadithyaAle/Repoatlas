@@ -533,6 +533,39 @@
         "title": "ApiResponse[DashboardOut]",
         "type": "object"
       },
+      "ApiResponse_DeletedOut_": {
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DeletedOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ErrorBody"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "success": {
+            "title": "Success",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ],
+        "title": "ApiResponse[DeletedOut]",
+        "type": "object"
+      },
       "ApiResponse_FileContentOut_": {
         "properties": {
           "data": {
@@ -597,6 +630,39 @@
           "success"
         ],
         "title": "ApiResponse[GraphOut]",
+        "type": "object"
+      },
+      "ApiResponse_HealthOut_": {
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HealthOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ErrorBody"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "success": {
+            "title": "Success",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ],
+        "title": "ApiResponse[HealthOut]",
         "type": "object"
       },
       "ApiResponse_MetaOut_": {
@@ -828,80 +894,6 @@
           "success"
         ],
         "title": "ApiResponse[TourProgressOut]",
-        "type": "object"
-      },
-      "ApiResponse_dict_str__bool__": {
-        "properties": {
-          "data": {
-            "anyOf": [
-              {
-                "additionalProperties": {
-                  "type": "boolean"
-                },
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Data"
-          },
-          "error": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ErrorBody"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "success": {
-            "title": "Success",
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "success"
-        ],
-        "title": "ApiResponse[dict[str, bool]]",
-        "type": "object"
-      },
-      "ApiResponse_dict_str__str__": {
-        "properties": {
-          "data": {
-            "anyOf": [
-              {
-                "additionalProperties": {
-                  "type": "string"
-                },
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Data"
-          },
-          "error": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ErrorBody"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "success": {
-            "title": "Success",
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "success"
-        ],
-        "title": "ApiResponse[dict[str, str]]",
         "type": "object"
       },
       "ApiResponse_list_RepositorySummaryOut__": {
@@ -1220,6 +1212,26 @@
         "title": "DashboardOut",
         "type": "object"
       },
+      "DeletedOut": {
+        "properties": {
+          "deleted": {
+            "const": true,
+            "default": true,
+            "title": "Deleted",
+            "type": "boolean"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "DeletedOut",
+        "type": "object"
+      },
       "DriftStatus": {
         "enum": [
           "UNVERIFIED",
@@ -1487,6 +1499,26 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HealthOut": {
+        "properties": {
+          "database": {
+            "const": "ok",
+            "title": "Database",
+            "type": "string"
+          },
+          "status": {
+            "const": "ok",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "database"
+        ],
+        "title": "HealthOut",
         "type": "object"
       },
       "ImportKind": {
@@ -2129,6 +2161,47 @@
         "title": "SyncReportOut",
         "type": "object"
       },
+      "SyncRunOut": {
+        "properties": {
+          "counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/DriftStatus"
+            },
+            "title": "Counts",
+            "type": "object"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "from_commit_sha": {
+            "title": "From Commit Sha",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "to_commit_sha": {
+            "title": "To Commit Sha",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "from_commit_sha",
+          "to_commit_sha",
+          "counts",
+          "created_at"
+        ],
+        "title": "SyncRunOut",
+        "type": "object"
+      },
       "SyncStepResult": {
         "properties": {
           "file_path": {
@@ -2250,8 +2323,7 @@
           },
           "sync_history": {
             "items": {
-              "additionalProperties": true,
-              "type": "object"
+              "$ref": "#/components/schemas/SyncRunOut"
             },
             "title": "Sync History",
             "type": "array"
@@ -3009,7 +3081,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponse_dict_str__str__"
+                  "$ref": "#/components/schemas/ApiResponse_HealthOut_"
                 }
               }
             },
@@ -3333,7 +3405,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponse_dict_str__bool__"
+                  "$ref": "#/components/schemas/ApiResponse_DeletedOut_"
                 }
               }
             },
@@ -3657,7 +3729,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponse_dict_str__bool__"
+                  "$ref": "#/components/schemas/ApiResponse_DeletedOut_"
                 }
               }
             },

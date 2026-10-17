@@ -358,10 +358,18 @@ class TraineeProgressOut(Schema):
     last_activity_at: datetime | None
 
 
+class SyncRunOut(Schema):
+    id: uuid.UUID
+    from_commit_sha: str
+    to_commit_sha: str
+    counts: dict[DriftStatus, int]
+    created_at: datetime
+
+
 class TourHealthOut(Schema):
     tour: TourSummaryOut
     health_score: float  # % of steps HEALTHY or DRIFTED_AUTO_FIXED
-    sync_history: list[dict[str, object]]  # [{created_at, from, to, counts}], newest first, max 10
+    sync_history: list[SyncRunOut]  # newest first, max 10
     trainees: list[TraineeProgressOut]
 
 
@@ -387,6 +395,16 @@ class AIStepDraftOut(Schema):
     checkpoint: CheckpointIn | None
     model: str
     cached: bool
+
+
+class HealthOut(Schema):
+    status: Literal["ok"]
+    database: Literal["ok"]
+
+
+class DeletedOut(Schema):
+    id: uuid.UUID
+    deleted: Literal[True] = True
 
 
 class MetaOut(Schema):

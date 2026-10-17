@@ -70,7 +70,7 @@ async def _signing_key(token: str, alg: str) -> Any:
         except jwt.PyJWKClientConnectionError as exc:
             logger.warning("JWKS fetch failed: %s", type(exc).__name__)
             raise AppError(
-                ErrorCode.INTERNAL_ERROR, "Authentication service unavailable", status_code=503
+                ErrorCode.SERVICE_UNAVAILABLE, "Authentication service unavailable"
             ) from exc
         except (jwt.PyJWKClientError, jwt.InvalidTokenError) as exc:
             raise _unauthorized("Token signing key not recognized") from exc
