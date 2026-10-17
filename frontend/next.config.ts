@@ -2,6 +2,10 @@ import path from "node:path";
 
 import type { NextConfig } from "next";
 
+import { assertNoSecretSupabaseKeys } from "./src/lib/supabase/key-guard";
+
+assertNoSecretSupabaseKeys(process.env);
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
