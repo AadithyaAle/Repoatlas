@@ -25,6 +25,7 @@ from app.db.models import Analysis, AnalysisStatus, EdgeRow, FileNode, Repositor
 from app.engine.pipeline import analyze_sources
 from app.engine.types import AnalysisResult, FileRole
 from app.schemas.atlas import parse_repo_url
+from app.services import graph_service
 from app.services.github_service import GitHubClient, RepoRef, Snapshot
 
 logger = logging.getLogger(__name__)
@@ -113,6 +114,7 @@ async def _claim_or_create(
 
 
 async def _delete_results(db: AsyncSession, analysis_id: uuid.UUID) -> None:
+    graph_service.invalidate(analysis_id)
     await db.execute(delete(EdgeRow).where(EdgeRow.analysis_id == analysis_id))
     await db.execute(delete(FileNode).where(FileNode.analysis_id == analysis_id))
 
