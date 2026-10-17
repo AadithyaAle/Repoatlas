@@ -453,3 +453,26 @@ def test_unicode_source_lines_are_correct() -> None:
     source = "// héllo wörld 🌍\nconst s = '日本語';\nimport x from './x';\n"
     parsed = parse_file("a.js", source)
     assert _refs(parsed) == [("./x", ImportKind.STATIC, 3, ("default",))]
+
+
+def test_ts_generic_call_signatures_do_not_raise_false_warning() -> None:
+    # tree-sitter-typescript 0.23 cannot parse a generic call signature after another member
+    # (valid TS, e.g. zustand). Errors confined to type-only syntax cannot hide imports/exports.
+    source = (
+        'import { a } from "./a"\n'
+        "export type UseBound<S> = {\n"
+        "  (): S\n"
+        "  <U>(selector: (state: S) => U): U\n"
+        "} & S\n"
+        "export const create = () => a\n"
+    )
+    parsed = parse_file("src/react.ts", source)
+    assert parsed.parse_warning is None
+    assert [i.specifier for i in parsed.imports] == ["./a"]
+    assert parsed.exports == ["UseBound", "create"]
+
+
+def test_ts_real_syntax_error_outside_types_still_warns() -> None:
+    parsed = parse_file("src/broken.ts", "type T = { a: string }\nconst x = (1 +;\n")
+    assert parsed.parse_warning is not None
+    assert parsed.parse_warning.startswith("Syntax error line 2")

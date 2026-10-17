@@ -265,10 +265,20 @@ def _has_type_keyword(node: Node) -> bool:
     return any(child.type == "type" for child in node.children)
 
 
+# Pure type-level syntax: an error inside these cannot hide an import/export, and
+# tree-sitter-typescript 0.23 mis-parses some valid constructs here (generic call signatures).
+_TYPE_ONLY_NODES = frozenset(
+    {"type_alias_declaration", "interface_declaration", "type_annotation", "object_type"}
+)
+
+
 def _first_error(root: Node) -> Node | None:
+    """First error/missing node that is not confined to type-only syntax."""
     stack = [root]
     while stack:
         node = stack.pop()
+        if node.type in _TYPE_ONLY_NODES:
+            continue
         if node.is_error or node.is_missing:
             return node
         stack.extend(reversed([c for c in node.children if c.has_error or c.is_missing]))
@@ -278,13 +288,10 @@ def _first_error(root: Node) -> Node | None:
 def _parse_js(source: str, grammar: str, parsed: ParsedFile) -> None:
     tree = _parser(grammar).parse(source.encode("utf-8", errors="surrogatepass"))
     root = tree.root_node
-    if root.has_error:
-        error = _first_error(root)
-        if error is not None and error.is_missing:
-            parsed.parse_warning = f"Syntax error line {_line(error)}: missing {error.type}"
-        else:
-            line = _line(error) if error is not None else 1
-            parsed.parse_warning = f"Syntax error line {line}: unexpected token"
+    error = _first_error(root) if root.has_error else None
+    if error is not None:
+        detail = f"missing {error.type}" if error.is_missing else "unexpected token"
+        parsed.parse_warning = f"Syntax error line {_line(error)}: {detail}"
 
     for statement in root.named_children:
         if statement.type == "import_statement":
