@@ -41,3 +41,41 @@ class RateLimit:
     remaining: int | None
     reset_at: datetime | None
     authenticated: bool
+
+
+class GitHubClient:
+    """Wraps one shared `httpx.AsyncClient`. Construct with `token`/`base_url` from Settings."""
+
+    def __init__(self, token: str | None, base_url: str = "https://api.github.com") -> None:
+        raise NotImplementedError
+
+    @property
+    def last_rate_limit(self) -> RateLimit | None:
+        raise NotImplementedError
+
+    async def resolve_ref(self, owner: str, name: str, branch: str | None) -> RepoRef:
+        raise NotImplementedError
+
+    async def download_snapshot(
+        self,
+        owner: str,
+        name: str,
+        commit_sha: str,
+        *,
+        max_files: int,
+        max_file_bytes: int,
+        max_tarball_bytes: int,
+    ) -> Snapshot:
+        raise NotImplementedError
+
+    async def get_rate_limit(self) -> RateLimit:
+        """GET /rate_limit (does not count against the quota)."""
+        raise NotImplementedError
+
+    async def aclose(self) -> None:
+        raise NotImplementedError
+
+
+def get_github_client() -> GitHubClient:
+    """Process-wide singleton built from Settings (FastAPI dependency / worker use)."""
+    raise NotImplementedError
