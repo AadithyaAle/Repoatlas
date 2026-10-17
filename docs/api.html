@@ -88,7 +88,8 @@
           <tr><th scope="row">Format</th><td>JSON request and response bodies (<code>Content-Type: application/json</code>); responses over 1 kB are gzip-compressed when the client accepts it.</td></tr>
           <tr><th scope="row">Schema</th><td>OpenAPI 3.1. A running server also serves its own document at <code>/openapi.json</code> and FastAPI's interactive explorers at <code>/docs</code> and <code>/redoc</code>.</td></tr>
           <tr><th scope="row">Tracing</th><td>Send <code>X-Request-ID</code> (1–128 chars of <code>A–Z a–z 0–9 . _ : -</code>) to correlate logs; otherwise one is generated. It is always echoed in the response headers.</td></tr>
-          <tr><th scope="row">CORS</th><td>Browser origins must be listed in the server's <code>CORS_ORIGINS</code>; any <code>localhost</code> port is allowed in development.</td></tr>
+          <tr><th scope="row">CORS</th><td>Browser origins must be listed in the server's <code>CORS_ORIGINS</code> (JSON list or comma-separated); any <code>localhost</code> port is allowed in development.</td></tr>
+          <tr><th scope="row">Index</th><td><code>GET /</code> (outside <code>/api/v1</code>, not part of the schema) returns a small JSON index: service name, version and links to <code>/api/v1/health</code>, <code>/openapi.json</code>, <code>/docs</code> and this documentation.</td></tr>
         </tbody>
       </table></div>
 

@@ -44,7 +44,11 @@ Validated in `src/lib/env.ts` (zod). Invalid or blank values fall back to defaul
 Supabase the app still works: graph features are anonymous, and auth UI shows a disabled
 "Sign-in not configured" state.
 
-Supabase: enable the GitHub provider and add `<site>/auth/callback` to the redirect URLs.
+Supabase: enable the GitHub provider and add `<site>/auth/callback` to the redirect URLs. Use the
+**publishable** key only: `next.config.ts` fails the build if any `NEXT_PUBLIC_*` variable holds a
+Supabase secret / service-role key.
+
+Deployment: Vercel project with **Root Directory `frontend`**; pushes to `main` deploy automatically.
 
 ## Structure
 
@@ -55,17 +59,24 @@ src/
                             · /tours/[id]/edit · /dashboard · /login · /auth/callback
   components/
     ui/                     shadcn/ui primitives
-    common/                 ErrorState, EmptyState, PageHeader, RateLimitBanner, RelativeTime
+    common/                 ErrorState, EmptyState, PageHeader, RateLimitBanner, RelativeTime,
+                            ApiWarmup (silent /health ping on first load)
     layout/                 SiteHeader, SiteFooter, ThemeToggle, Logo
     auth/                   AuthProvider/useSession, AuthButton, LoginCard/SignInPrompt
     analysis/               AnalysisView (progress), AnalysisStepper, badges
     explore/                AnalyzeForm, RecentRepos, demo repos
-    graph/                  GraphWorkspace (placeholder for the graph feature)
-    tours/, repo/, dashboard/
+    graph/                  GraphWorkspace, GraphCanvas (React Flow + dagre), FileInspector,
+                            RiskMeter, RoleBadge, CyclesDialog, ExportReportButton
+    code/                   CodeViewer, DiffViewer (Monaco)
+    tours/                  TourBuilder, TourPlayer, DriftReviewSheet, SyncReportDialog, DriftBadge
+    dashboard/, repo/, charts/
   hooks/                    useIsClient, useNow
   lib/
     api/                    schema.d.ts (generated), client.ts, hooks.ts, errors.ts, types.ts
-    supabase/               client.ts (browser), server.ts (RSC/route handlers), proxy.ts
+    graph/                  layout (dagre), filters, folder colours
+    report/                 ARCHITECTURE.md generator (summary, Mermaid, risk, roles, cycles)
+    supabase/               client.ts, server.ts, proxy.ts, key-guard.ts (build-time secret check)
+    tours/, dashboard/      pure helpers (navigation, validation, health, formatting)
     env.ts, repo-url.ts, analysis-steps.ts, utils.ts
 ```
 

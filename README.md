@@ -28,7 +28,9 @@
 </p>
 
 > The API runs on Render's free plan, so the **first request after a period of inactivity can take
-> about 50 seconds** while the instance wakes up.
+> about 50 seconds** while the instance wakes up. The web app sends a silent health request on first
+> page load ([`api-warmup.tsx`](frontend/src/components/common/api-warmup.tsx)) so the API usually
+> finishes booting while you read the landing page.
 
 ## Problem statement
 
@@ -63,6 +65,7 @@ already computed.
 | **2. Blast radius & cycles** | Click any file to see who imports it directly and transitively (reverse BFS), an impact % and depth-weighted risk score, import cycles (3-colour DFS + Tarjan SCC), and architectural roles (Entry Point, Core Utility, God Module, Leaf, Isolated). | [`graph_algorithms.py`](backend/app/engine/graph_algorithms.py), [`frontend/src/components/graph`](frontend/src/components/graph) |
 | **3. Pin-to-code tours** | Maintainers select lines in the code viewer, write Markdown and add multiple-choice checkpoints. Trainees play the tour; the canvas pans to each file, the lines are highlighted, and steps unlock in order once the checkpoint is answered. | [`tour_service.py`](backend/app/services/tour_service.py), [`progress_service.py`](backend/app/services/progress_service.py), [`frontend/src/components/tours`](frontend/src/components/tours) |
 | **4. Self-healing drift engine** | "Sync & verify" compares each step's SHA-256 snippet hash against the latest commit: `HEALTHY`, `DRIFTED_AUTO_FIXED` (moved, lines updated), `OUTDATED_NEEDS_REVIEW` (changed, diff + proposed location) or `BROKEN_FILE_DELETED`, with accept / keep / re-pin actions. | [`drift_detector.py`](backend/app/engine/drift_detector.py), [`drift_service.py`](backend/app/services/drift_service.py) |
+| **Architecture report export** | One click in the graph toolbar downloads an `ARCHITECTURE.md`: summary metrics, a Mermaid diagram of the most central files, the riskiest files (same reverse-BFS formulas as the API), roles, cycles and commit-pinned permalinks. Generated in the browser. | [`architecture-report.ts`](frontend/src/lib/report/architecture-report.ts), [`export-report-button.tsx`](frontend/src/components/graph/export-report-button.tsx) |
 | **Dashboard** | Repository analytics (roles, languages, riskiest files), tour health with sync history, trainee progress and first-try accuracy, and your own learning progress. | [`dashboard_service.py`](backend/app/services/dashboard_service.py), [`frontend/src/components/dashboard`](frontend/src/components/dashboard) |
 | **AI step drafts (optional)** | Draft a step title, explanation and checkpoint for a pinned range, grounded in the file's role, imports, dependents and blast radius. Output is schema-validated, cached and rate-limited. | [`ai_service.py`](backend/app/services/ai_service.py) |
 
@@ -117,8 +120,11 @@ Browser ──► Next.js (Vercel) ──► FastAPI /api/v1 (Render, Docker) �
   backoff for GitHub, and path-traversal/symlink/size guards on archive extraction.
 - **Security.** Only public repos are analyzed, and code is parsed, never executed. JWTs are verified
   (JWKS or HS256, audience, expiry). Ownership is checked server-side, and checkpoint answers are
-  never sent to trainees ([`serializers.py`](backend/app/services/serializers.py)). See
-  [SECURITY.md](SECURITY.md).
+  never sent to trainees ([`serializers.py`](backend/app/services/serializers.py)). Row Level
+  Security is enabled on every table
+  ([migration `0002`](backend/migrations/versions/0002_enable_row_level_security.py)), secrets are
+  masked in logs, and the frontend build refuses Supabase secret keys in public variables
+  ([`key-guard.ts`](frontend/src/lib/supabase/key-guard.ts)). See [SECURITY.md](SECURITY.md).
 
 Data model and request lifecycle diagrams:
 [Architecture docs](https://aadithyaale.github.io/Repoatlas/architecture.html).
@@ -177,7 +183,7 @@ Never commit real values.
 | Variable | Required | Description |
 |---|---|---|
 | `DATABASE_URL` | yes | PostgreSQL URL (Supabase: transaction pooler, port 6543) |
-| `CORS_ORIGINS` | yes (prod) | JSON list of allowed web origins, e.g. `["https://repoatlas.vercel.app"]` |
+| `CORS_ORIGINS` | yes (prod) | Allowed web origins, as a JSON list or comma-separated, e.g. `https://repoatlas-nine.vercel.app,http://localhost:3000` |
 | `SUPABASE_URL` | for auth | Used to fetch the JWKS that verifies access tokens |
 | `SUPABASE_JWT_SECRET` | legacy only | HS256 secret for projects without asymmetric signing keys |
 | `GITHUB_TOKEN` | recommended | Read-only token; raises the GitHub limit from 60 to 5,000 requests/hour |
@@ -191,7 +197,7 @@ Never commit real values.
 |---|---|---|
 | `NEXT_PUBLIC_API_URL` | yes | Base URL of the API |
 | `NEXT_PUBLIC_SUPABASE_URL` | for auth | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | for auth | Supabase publishable (anon) key |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | for auth | Supabase **publishable** key (`sb_publishable_…`). The build fails if a secret key is placed in any `NEXT_PUBLIC_` variable. |
 | `NEXT_PUBLIC_SITE_URL` | yes (prod) | Public URL of the web app, used for OAuth redirects |
 | `NEXT_PUBLIC_DOCS_URL` | no | Documentation URL (defaults to GitHub Pages) |
 

@@ -92,6 +92,7 @@
           <tr><td>What is an edge</td><td>Only imports that resolve to another analyzed file in the same repository. <strong>External packages</strong> (<code>react</code>, <code>numpy</code>, the standard library) are counted as external imports but are not edges. <strong>Asset imports</strong> in JS/TS (<code>.css</code>, <code>.svg</code>, <code>.json</code>, images, fonts, <code>.md</code>, <code>.vue</code>, …) are ignored entirely. Imports that should resolve but don't (e.g. an alias missing from <code>tsconfig</code>) are counted as unresolved.</td></tr>
           <tr><td>Dynamic imports</td><td><code>import("…")</code> and <code>require("…")</code> are detected only when the argument is a <strong>string literal</strong> (or a template literal without <code>${…}</code>). Computed paths, Python <code>importlib.import_module()</code> / <code>__import__()</code> and runtime plugin loading are invisible to static analysis.</td></tr>
           <tr><td>Snapshots</td><td>Each analysis is pinned to one commit. To see newer code, analyze again (unchanged commits are served from cache) or run <em>Sync &amp; verify</em> on a tour.</td></tr>
+          <tr><td>Parse warnings</td><td>A file gets a warning only when the parser had to recover from a syntax error that could affect its imports or exports. tree-sitter-typescript 0.23 rejects some valid TypeScript type syntax (e.g. generic call signatures in object types); errors confined to type-only constructs are therefore ignored, because types cannot contain imports. Files with a warning still contribute every import that could be recovered.</td></tr>
           <tr><td>Tours</td><td>Checkpoints have 2–6 options; steps are completed strictly in order; a step pins one contiguous line range in one file.</td></tr>
         </tbody>
       </table></div>
@@ -102,6 +103,8 @@
         <li><strong>Archives are handled in memory</strong> with guards: only regular files are read (no symlinks or hardlinks), absolute and <code>..</code> paths are rejected, sizes are capped and binary or non-UTF-8 files are skipped.</li>
         <li><strong>What is stored:</strong> repository metadata, the analysis results and the <em>text of the analyzed source files at the pinned commit</em> (so the code viewer, tour pinning and drift checks work without calling GitHub again). Because only public repositories are accepted, this is code that is already public.</li>
         <li><strong>Identity:</strong> sign-in is GitHub OAuth through Supabase Auth with no repository scopes. The API stores the Supabase user id and GitHub username on tours, sync runs and progress. Access tokens are verified per request and never logged.</li>
+        <li><strong>Database access</strong> goes only through the API. Supabase exposes tables through its Data API with the browser-visible key, so every table has <strong>Row Level Security</strong> enabled with no policies — direct access from browsers is denied. The frontend build fails if a Supabase secret key is ever placed in a public (<code>NEXT_PUBLIC_</code>) variable.</li>
+        <li><strong>Secrets in configuration</strong> (database URL, GitHub token, Gemini key, JWT secret) are typed as secret values and masked in logs, error reports and debug output.</li>
         <li><strong>Checkpoint answers</strong> (<code>correct_index</code>, <code>explanation</code>) are only ever sent to the tour owner; trainees receive the explanation only after answering correctly.</li>
         <li>Report vulnerabilities as described in the <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/SECURITY.md">security policy</a>.</li>
       </ul>
@@ -128,6 +131,10 @@
       <p>Drift detection looks for the snippet in the same path, so a renamed file shows up as <span class="badge drift-BROKEN_FILE_DELETED">File deleted</span>. Use <em>Re-pin to another file</em> in the builder; title, explanation and checkpoint are kept.</p>
       <h3 id="faq-branches">Can I analyze a branch other than the default?</h3>
       <p>Yes — paste a <code>/tree/&lt;branch&gt;</code> URL or open “Choose a branch”. The branch is resolved to its current commit, and tours created from that analysis sync against the same branch.</p>
+      <h3 id="faq-report">Can I take the analysis with me?</h3>
+      <p>Yes — <strong>Export report</strong> in the graph toolbar downloads an <code>ARCHITECTURE.md</code> with a Mermaid diagram of the central files, the riskiest files, roles and cycles, all linked to the analyzed commit. See <a href="getting-started.html#export-report">Export an architecture report</a>. The raw data is also available from <code>GET /api/v1/analyses/{id}/graph</code>.</p>
+      <h3 id="faq-slow-first">Why is the very first request slow?</h3>
+      <p>The public demo API runs on Render's free plan, which sleeps when idle and needs about 50 seconds to wake. The web app sends a silent health request as soon as any page loads, so the API usually finishes booting while you read the landing page.</p>
       <h3 id="faq-self-host">Can I run my own instance?</h3>
       <p>Yes. It is MIT-licensed and runs on free tiers — see <a href="self-hosting.html">Self-hosting</a>. On your own instance you can raise <code>MAX_FILES</code> and the size limits.</p>
     </article>

@@ -160,7 +160,7 @@
               <div class="mock-row">
                 <span class="mock-input" style="max-width:220px">Search files…  /</span>
                 <span class="mock-chip cyc">⟳ Cycles 6</span><span class="mock-chip">Hide tests</span><span class="mock-chip">Hide isolated 4</span>
-                <span style="margin-left:auto" class="mock-row"><span class="mock-btn">List cycles</span><span class="mock-btn">⇄ LR</span><span class="mock-btn">▤</span></span>
+                <span style="margin-left:auto" class="mock-row"><span class="mock-btn">Export report</span><span class="mock-btn">List cycles</span><span class="mock-btn">⇄ LR</span><span class="mock-btn">▤</span></span>
               </div>
               <div class="mock-row">
                 <small class="muted">ROLES</small>
@@ -209,6 +209,7 @@
         <li><strong>Cycles</strong> isolates files and imports that are part of a circular dependency (disabled when there are none).</li>
         <li><strong>Hide tests</strong> hides test files and fixtures; <strong>Hide isolated</strong> hides files with no project imports in either direction.</li>
         <li><strong>Role</strong> and <strong>language</strong> chips filter by classification; counts are shown on each chip. <strong>Clear filters</strong> resets everything.</li>
+        <li><strong>Export report</strong> downloads an <code>ARCHITECTURE.md</code> summary of the analysis — see <a href="#export-report">below</a>.</li>
         <li>The <strong>LR / TB</strong> button switches the layout direction; the panel button collapses the inspector on desktop.</li>
         <li>The statistics show visible / total <strong>Files</strong> and <strong>Imports</strong> and the number of reported <strong>Cycles</strong> (shown as <code>100+</code> when the report cap is reached).</li>
       </ul>
@@ -284,6 +285,17 @@
         <p class="shot-note">Illustrated layout · screenshot slot <code>cycles.png</code></p>
       </figure>
       <p>Cycles come from an iterative three-colour DFS (concrete cycles) combined with Tarjan's strongly connected components (complete membership). See <a href="algorithms.html#cycles">Algorithms → cycle detection</a>.</p>
+
+      <h3 id="export-report">Export an architecture report</h3>
+      <p>Click <strong>Export report</strong> in the graph toolbar to download <code>ARCHITECTURE-&lt;owner&gt;-&lt;repo&gt;-&lt;sha&gt;.md</code>. The file is generated in your browser from the graph that is already loaded — no extra request — and renders directly on GitHub. It contains:</p>
+      <ul>
+        <li><strong>Summary</strong> — files, lines of code, internal imports, cycles, files in a cycle, god modules and parse warnings.</li>
+        <li><strong>Most central files</strong> — a <a href="https://mermaid.js.org/syntax/flowchart.html">Mermaid</a> flowchart of the 15 highest-PageRank files and the imports between them, coloured by role, with dotted arrows for cyclic imports.</li>
+        <li><strong>Riskiest files to change</strong> — the top 10 by blast-radius risk, computed with exactly the same reverse-BFS formulas as the API.</li>
+        <li><strong>Architectural roles</strong> with their rules, and the lists of god modules, core utilities and entry points.</li>
+        <li><strong>Import cycles</strong>, <strong>languages</strong> and any <strong>parse warnings</strong>.</li>
+      </ul>
+      <p>Every file is linked with a GitHub permalink pinned to the analyzed commit, so the report's links keep working after the repository changes. Commit it to your repository as onboarding material, or attach it to a design review. Source: <a href="https://github.com/AadithyaAle/Repoatlas/blob/main/frontend/src/lib/report/architecture-report.ts">architecture-report.ts</a>.</p>
 
       <h2 id="create-tour">6 · Create a tour</h2>
       <p>Tours are created from a repository page (<code>/repos/owner/name</code>) once the repository has a completed analysis. Sign in with GitHub first.</p>

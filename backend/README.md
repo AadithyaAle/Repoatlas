@@ -46,7 +46,7 @@ comments.
 | `ENVIRONMENT` | `development` | `production` switches logs to single-line JSON |
 | `LOG_LEVEL` | `INFO` | Root log level |
 | `DATABASE_URL` | local docker DB | Async SQLAlchemy URL (`postgres://` is rewritten to asyncpg); Supabase: pooler URL |
-| `CORS_ORIGINS` | `["http://localhost:3000"]` | JSON list of allowed browser origins |
+| `CORS_ORIGINS` | `http://localhost:3000` | Allowed browser origins, comma-separated or a JSON list |
 | `GITHUB_TOKEN` | – | Optional; raises the GitHub rate limit from 60 to 5000 req/h |
 | `SUPABASE_URL` | – | Used to fetch the JWKS for verifying access tokens (RS256/ES256) |
 | `SUPABASE_JWT_SECRET` | – | Only for projects still on legacy HS256 JWT secrets |
