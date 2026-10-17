@@ -1,9 +1,10 @@
+import json
 import os
 from functools import lru_cache
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import Field, SecretStr, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -24,7 +25,8 @@ class Settings(BaseSettings):
         description="SQLAlchemy async URL. Supabase: use the pooler connection string.",
     )
 
-    cors_origins: list[str] = ["http://localhost:3000"]
+    # Accepts a JSON list or comma-separated origins (dashboards make JSON easy to get wrong).
+    cors_origins: Annotated[list[str], NoDecode] = ["http://localhost:3000"]
 
     # GitHub: optional server token raises the rate limit from 60 to 5000 req/h.
     github_token: SecretStr | None = None
@@ -50,6 +52,15 @@ class Settings(BaseSettings):
     # Optional LLM features
     gemini_api_key: SecretStr | None = None
     gemini_model: str = "gemini-2.5-flash"
+
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def _parse_origins(cls, v: object) -> object:
+        if not isinstance(v, str):
+            return v
+        raw = v.strip()
+        items = json.loads(raw) if raw.startswith("[") else raw.split(",")
+        return [o.strip().strip("'\"").rstrip("/") for o in items if o.strip().strip("'\"")]
 
     @field_validator("database_url", mode="before")
     @classmethod
