@@ -7,8 +7,10 @@ services:
     runtime: docker
     plan: free
     region: singapore
-    rootDir: backend
-    dockerfilePath: ./Dockerfile
+    rootDir: backend # only changes under backend/ trigger deploys
+    # dockerfilePath / dockerContext are relative to the REPO ROOT, not rootDir
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
     healthCheckPath: /api/v1/health
     autoDeploy: true
     envVars:
