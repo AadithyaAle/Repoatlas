@@ -1,0 +1,63 @@
+[project]
+name = "repoatlas-backend"
+version = "0.1.0"
+description = "RepoAtlas API: AST dependency graphs, blast-radius simulation and self-healing code tours."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+dependencies = [
+  "fastapi>=0.135",
+  "uvicorn[standard]>=0.50",
+  "pydantic>=2.12",
+  "pydantic-settings>=2.10",
+  "sqlalchemy[asyncio]>=2.0.40",
+  "asyncpg>=0.30",
+  "alembic>=1.16",
+  "httpx>=0.28",
+  "pyjwt[crypto]>=2.10",
+  "tree-sitter>=0.25",
+  "tree-sitter-javascript>=0.23",
+  "tree-sitter-typescript>=0.23",
+]
+
+[project.optional-dependencies]
+ai = ["google-genai>=1.0"]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.4",
+  "pytest-asyncio>=1.0",
+  "pytest-cov>=6.0",
+  "respx>=0.22",
+  "ruff>=0.12",
+  "mypy>=1.17",
+  "aiosqlite>=0.21",
+]
+
+[tool.uv]
+# Supply-chain guard: never resolve packages published in the last 7 days.
+exclude-newer = "2026-10-10T00:00:00Z"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["app", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "ASYNC", "RUF"]
+# B008: FastAPI Depends/Query defaults. UP046/47: keep `Generic[T]` for Pydantic generic models.
+ignore = ["B008", "UP046", "UP047"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+ignore_missing_imports = true
+exclude = ["migrations/"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+addopts = "-q"
