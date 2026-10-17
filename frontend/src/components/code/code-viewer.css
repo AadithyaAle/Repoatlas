@@ -1,0 +1,14 @@
+/* Monaco decorations used by <CodeViewer/> (Monaco renders these classes inside its own DOM). */
+.monaco-editor .atlas-line-highlight {
+  background-color: color-mix(in oklab, var(--primary) 20%, transparent);
+}
+
+.monaco-editor .atlas-line-highlight-gutter {
+  background-color: var(--primary);
+  width: 3px !important;
+  margin-left: 3px;
+}
+
+.atlas-code-viewer {
+  overflow: hidden;
+}

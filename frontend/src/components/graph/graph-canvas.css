@@ -1,0 +1,53 @@
+/* Theme the React Flow canvas with RepoAtlas tokens (scoped to the graph canvas only). */
+.atlas-graph.react-flow {
+  --xy-background-color: transparent;
+  --xy-background-pattern-dots-color: color-mix(in oklab, var(--foreground) 18%, transparent);
+  --xy-minimap-background-color: var(--card);
+  --xy-minimap-mask-background-color: color-mix(in oklab, var(--background) 70%, transparent);
+  --xy-minimap-mask-stroke-color: var(--border);
+  --xy-minimap-node-background-color: var(--muted);
+  --xy-controls-button-background-color: var(--card);
+  --xy-controls-button-background-color-hover: var(--accent);
+  --xy-controls-button-color: var(--foreground);
+  --xy-controls-button-color-hover: var(--accent-foreground);
+  --xy-controls-button-border-color: var(--border);
+  --xy-controls-box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.25);
+  --xy-attribution-background-color: transparent;
+  --xy-edge-stroke: var(--muted-foreground);
+}
+
+.atlas-graph .react-flow__controls {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.atlas-graph .react-flow__minimap {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.atlas-graph .react-flow__node-file {
+  cursor: pointer;
+  border-radius: 0.5rem;
+}
+
+.atlas-graph .react-flow__node-file:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+.atlas-graph .react-flow__attribution {
+  color: var(--muted-foreground);
+}
+
+.atlas-graph .react-flow__attribution a {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-graph .react-flow__edge.animated path {
+    animation: none;
+  }
+}
