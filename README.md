@@ -13,6 +13,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 [**Live app**](https://repoatlas-nine.vercel.app) ·
+[**Demo video**](https://drive.google.com/file/d/1WjeTujOL5G_jlRuTYPn-PpE2xXy4zoOz/view?usp=sharing) ·
 [**Documentation**](https://aadithyaale.github.io/Repoatlas/) ·
 [Getting started](https://aadithyaale.github.io/Repoatlas/getting-started.html) ·
 [Architecture](https://aadithyaale.github.io/Repoatlas/architecture.html) ·
@@ -23,8 +24,16 @@
 
 ---
 
+## Demo video
+
+**[▶ Watch the 3-minute demo](https://drive.google.com/file/d/1WjeTujOL5G_jlRuTYPn-PpE2xXy4zoOz/view?usp=sharing)** — problem and live links, repository ingestion and the
+dependency graph, blast radius and cycle detection, the pin-to-code tour builder with AI drafts,
+the tour player, self-healing drift sync, and the dashboard.
+
+[![RepoAtlas demo video: click to watch on Google Drive](docs/assets/screenshots/blast-radius.png)](https://drive.google.com/file/d/1WjeTujOL5G_jlRuTYPn-PpE2xXy4zoOz/view?usp=sharing)
+
 <p align="center">
-  <img src="docs/assets/screenshots/blast-radius.png" alt="RepoAtlas graph workspace showing the blast radius of src/vanilla.ts in pmndrs/zustand: 26 impacted files, risk score 43.4 (critical)" width="900">
+  <img src="docs/assets/screenshots/graph.png" alt="RepoAtlas dependency graph of pmndrs/zustand with role filters and the most central files by PageRank" width="900">
 </p>
 
 > The API runs on Render's free plan, so the **first request after a period of inactivity can take
