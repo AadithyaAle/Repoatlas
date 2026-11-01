@@ -50,7 +50,7 @@ jobs:
         working-directory: backend
         run: uv sync --frozen --no-dev && uv run python -m app.scripts.dump_openapi > ../docs/openapi.json
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: docs
 
