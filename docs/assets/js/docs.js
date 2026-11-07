@@ -266,8 +266,10 @@
   // To add screenshots, just drop PNGs with the documented names into assets/screenshots/.
   function initShots() {
     var imgs = document.querySelectorAll("figure.shot img[data-src]");
+    var safe = /^assets\/screenshots\/[\w.-]+\.(png|jpe?g|webp|gif)$/;
     for (var i = 0; i < imgs.length; i++) {
-      imgs[i].setAttribute("src", imgs[i].getAttribute("data-src"));
+      var src = imgs[i].getAttribute("data-src") || "";
+      if (safe.test(src)) imgs[i].setAttribute("src", src);
     }
   }
 

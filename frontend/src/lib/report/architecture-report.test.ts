@@ -127,6 +127,17 @@ describe("buildArchitectureReport", () => {
     const text = buildArchitectureReport({ graph: withIssues, repo: null, generatedAt: new Date() });
     expect(text).toContain("1. `b.ts` → `d.ts` → `b.ts`");
     expect(text).toContain("Syntax error line 3: unexpected \\| token");
+  });
+
+  it("escapes backslashes before pipes so table cells cannot be broken out of", () => {
+    const tricky: Graph = {
+      ...diamond,
+      nodes: diamond.nodes.map((n) =>
+        n.path === "c.ts" ? { ...n, parse_warning: "bad \\| cell\r\nnext" } : n,
+      ),
+    };
+    const text = buildArchitectureReport({ graph: tricky, repo: null, generatedAt: new Date() });
+    expect(text).toContain("bad \\\\\\| cell next");
     expect(text).toContain("# Architecture report — Repository");
   });
 

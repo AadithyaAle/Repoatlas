@@ -1,6 +1,7 @@
 """Async Alembic environment. URL from `app.core.config` (DATABASE_URL), metadata from models."""
 
 import asyncio
+import importlib
 from logging.config import fileConfig
 
 from alembic import context
@@ -9,8 +10,9 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from app.core.config import get_settings
-from app.db import models  # noqa: F401  (registers tables on Base.metadata)
 from app.db.base import Base
+
+importlib.import_module("app.db.models")  # registers every table on Base.metadata
 
 config = context.config
 if config.config_file_name is not None:

@@ -20,6 +20,7 @@ from sqlalchemy.orm import selectinload
 
 from app.core.config import get_settings
 from app.core.errors import AppError, ErrorCode
+from app.core.log_safety import log_value
 from app.db.base import utcnow
 from app.db.models import Analysis, AnalysisStatus, EdgeRow, FileNode, Repository
 from app.engine.pipeline import analyze_sources
@@ -272,7 +273,7 @@ async def enqueue_analysis(
         a.status == AnalysisStatus.FAILED or (force and a.status == AnalysisStatus.COMPLETED)
     ):
         await _reset(db, a, ref.branch, user_id)
-        logger.info("analysis %s reset for re-run (force=%s)", a.id, force)
+        logger.info("analysis %s reset for re-run (force=%s)", a.id, log_value(force))
     await db.commit()
     loaded = await _load(db, a.id)
     assert loaded is not None

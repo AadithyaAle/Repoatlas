@@ -86,7 +86,7 @@ async def test_validation_error_envelope(client: httpx.AsyncClient) -> None:
     assert errors
     assert errors[0]["loc"] == ["body", "repo_url"]
     assert set(errors[0]) == {"loc", "msg", "type"}  # input is never echoed back
-    assert "github.com" in errors[0]["msg"]
+    assert "Expected a public GitHub repository URL" in errors[0]["msg"]
 
 
 async def test_request_id_echoed(client: httpx.AsyncClient) -> None:

@@ -112,7 +112,7 @@ export function computeRisks(graph: Graph): FileRisk[] {
 
 /** Escapes text for Markdown table cells. */
 function cell(text: string): string {
-  return text.replace(/\|/g, "\\|").replace(/\n/g, " ");
+  return text.replace(/\\/g, "\\\\").replace(/\|/g, "\\|").replace(/\r?\n/g, " ");
 }
 
 function code(text: string): string {

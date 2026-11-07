@@ -3,6 +3,7 @@ import hashlib
 import uuid
 from datetime import timedelta
 
+import httpx
 import pytest
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -36,8 +37,12 @@ SHA = "c" * 40
 SOURCES = {"a.py": "import b\n", "b.py": "import a\n", "c.py": "def f():\n    pass\n"}
 
 
+def _no_network(request: httpx.Request) -> httpx.Response:
+    raise AssertionError(f"unexpected HTTP request in test: {request.url}")
+
+
 class FakeGitHub(GitHubClient):
-    """Duck-typed GitHubClient returning canned data (no HTTP)."""
+    """GitHubClient returning canned data; any real HTTP request fails the test."""
 
     def __init__(
         self,
@@ -45,6 +50,7 @@ class FakeGitHub(GitHubClient):
         snapshot: Snapshot | None = None,
         error: Exception | None = None,
     ) -> None:
+        super().__init__(None, transport=httpx.MockTransport(_no_network))
         self.sha = sha
         self.snapshot = snapshot or Snapshot(
             sources=dict(SOURCES), config_files={}, total_source_files=5, truncated=True

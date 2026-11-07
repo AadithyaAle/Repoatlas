@@ -4,6 +4,7 @@ Unit tests (tests/unit) are pure. Integration tests (tests/integration) use a re
 `docker compose up -d db` (test DB `repoatlas_test` on localhost:5433).
 """
 
+import importlib
 import os
 import time
 import uuid
@@ -25,9 +26,10 @@ import pytest
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db import models  # noqa: F401  (register tables)
 from app.db.base import Base
 from app.db.session import get_engine, get_sessionmaker
+
+importlib.import_module("app.db.models")  # registers every table on Base.metadata
 
 TEST_JWT_SECRET = os.environ["SUPABASE_JWT_SECRET"]
 

@@ -14,10 +14,15 @@ from app.services.github_service import GitHubClient, RepoRef, get_github_client
 SHA = "a" * 40
 
 
+def _no_network(request: httpx.Request) -> httpx.Response:
+    raise AssertionError(f"unexpected HTTP request in test: {request.url}")
+
+
 class FakeGitHub(GitHubClient):
-    """Duck-typed GitHubClient (no HTTP)."""
+    """GitHubClient with canned responses; any real HTTP request fails the test."""
 
     def __init__(self, error: AppError | None = None) -> None:
+        super().__init__(None, transport=httpx.MockTransport(_no_network))
         self.error = error
         self.calls = 0
 

@@ -26,6 +26,7 @@ import httpx
 
 from app.core.config import get_settings
 from app.core.errors import AppError, ErrorCode
+from app.core.log_safety import log_value
 from app.engine.ast_parser import SUPPORTED_EXTENSIONS
 
 logger = logging.getLogger(__name__)
@@ -247,7 +248,12 @@ class GitHubClient:
             try:
                 resp = await self._client.send(request, stream=stream)
             except httpx.TransportError as exc:  # includes timeouts
-                logger.warning("GitHub GET %s failed (attempt %d): %r", path, attempt + 1, exc)
+                logger.warning(
+                    "GitHub GET %s failed (attempt %d): %s",
+                    log_value(path),
+                    attempt + 1,
+                    log_value(exc),
+                )
                 if last:
                     raise AppError(
                         ErrorCode.GITHUB_UNAVAILABLE, "GitHub is unreachable, try again later"
@@ -258,7 +264,10 @@ class GitHubClient:
                     return resp
                 await resp.aclose()
                 logger.warning(
-                    "GitHub GET %s -> %d (attempt %d)", path, resp.status_code, attempt + 1
+                    "GitHub GET %s -> %d (attempt %d)",
+                    log_value(path),
+                    resp.status_code,
+                    attempt + 1,
                 )
                 if last:
                     raise AppError(
@@ -315,7 +324,7 @@ class GitHubClient:
             return AppError(
                 ErrorCode.GITHUB_REPO_NOT_FOUND, f"Repository {slug} not found or is private"
             )
-        logger.warning("GitHub error for %s: %d %s", slug, status, message)
+        logger.warning("GitHub error for %s: %d %s", log_value(slug), status, log_value(message))
         return AppError(
             ErrorCode.GITHUB_UNAVAILABLE,
             f"GitHub rejected the request for {slug} ({status})",
